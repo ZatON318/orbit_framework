@@ -1,0 +1,15 @@
+/deathmatch/backups/*
+/deathmatch/databases/*
+/deathmatch/linux-libs/*
+/deathmatch/logs/*
+/deathmatch/resource-archive/*
+/deathmatch/resource-cache/*
+/deathmatch/dbconmy.dll
+/deathmatch/deathmatch.dll
+/deathmatch/internal.db
+/deathmatch/libmysql.dll
+/deathmatch/local.conf
+/deathmatch/lua5.1.dll
+/deathmatch/pcre3.dll
+/deathmatch/registry.db
+/deathmatch/server-id.keys

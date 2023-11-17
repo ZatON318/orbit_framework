@@ -1,0 +1,21 @@
+<settings>
+	<setting name="@mysql.production_server" value="0"/>
+
+	<setting name="@mysql.socket" value="unix_socket=/var/run/mysqld/mysqld.sock" />
+	<setting name="@mysql.database" value="mtasa" />
+	<setting name="@mysql.username" value="root" />
+	<setting name="@mysql.password" value="cC7/eD2#jV3#" />
+	<setting name="@mysql.hostname" value="89.173.13.37" />
+	<setting name="@mysql.port" value="49154" />
+
+	<setting name="@usercontrolpanel.website_pass" value="WEBSITE_PASSWORD" />
+
+	<setting name="@integration.forumsAPIKey" value="FORUMS_API_KEY" />
+	<setting name="imgurClient" value="b8c727b9f79e525" />
+
+	<setting name="@payday.inactivityscanner_vehicles" value="1" />
+	<setting name="@payday.inactivityscanner_interiors" value="1" />
+	<setting name="@item-world.inactivityscanner_items" value="2" />
+
+	<setting name="show_chat_icon" value="[true]"/>
+</settings>
