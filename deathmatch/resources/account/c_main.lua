@@ -255,7 +255,7 @@ addEventHandler('onClientMouseLeave', label, function()
 end, false)
 
 addEventHandler('onClientGUIClick', label, function()
-	local url = "http://dev.owlgaming.net"
+	local url = "https://opendev.gitbook.io"
 	--triggerEvent('debug:releases', localPlayer)
 	setClipboard(url)
 	outputChatBox("Copied '".. url .. "' to clipboard!")
