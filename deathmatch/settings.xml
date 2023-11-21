@@ -1,21 +1,41 @@
 <settings>
-	<setting name="@mysql.production_server" value="0"/>
+	<setting name="@mysql.production_server" value="0" /> <!-- 1 = Live server 0 = Local/Dev server -->
+	<setting name="mntk_key" value="bez_kluca"/> <!-- zatial to nesluzi na nic ale v buducnu bude -->
 
+	<!-- MySQL -->
 	<setting name="@mysql.socket" value="unix_socket=/var/run/mysqld/mysqld.sock" />
+	<!-- MTA DB -->
 	<setting name="@mysql.database" value="mtasa" />
 	<setting name="@mysql.username" value="root" />
-	<setting name="@mysql.password" value="cC7/eD2#jV3#" />
-	<setting name="@mysql.hostname" value="89.173.13.37" />
+	<setting name="@mysql.password" value="pass" />
+	<setting name="@mysql.hostname" value="192.168.0.100" />
 	<setting name="@mysql.port" value="49154" />
+	<!-- Core DB -->
+	<setting name="@mysql.core_database" value="mtasa" />
+	<setting name="@mysql.core_username" value="root" />
+	<setting name="@mysql.core_password" value="pass" />
+	<setting name="@mysql.core_hostname" value="192.168.0.100" />
+	<setting name="@mysql.core_port" value="49154" />
 
-	<setting name="@usercontrolpanel.website_pass" value="WEBSITE_PASSWORD" />
+	<!--<setting name="@usercontrolpanel.website_pass" value="WEBSITE_PASSWORD" />-->
 
-	<setting name="@integration.forumsAPIKey" value="FORUMS_API_KEY" />
-	<setting name="imgurClient" value="b8c727b9f79e525" />
+	<!-- Forums API Key -->
+	<!--<setting name="@integration.forumsAPIKey" value="FORUMS_API_KEY" /> -->
+	<!-- Imgur Client ID used to get dimensions of skins and item-texture stuff -->
+	<!--<setting name="imgurClient" value="7b5390f21a2784b" />-->
 
+	<!-- Scanner -->
 	<setting name="@payday.inactivityscanner_vehicles" value="1" />
 	<setting name="@payday.inactivityscanner_interiors" value="1" />
 	<setting name="@item-world.inactivityscanner_items" value="2" />
 
 	<setting name="show_chat_icon" value="[true]"/>
+
+	<!--
+		Inactivity scanner modes: 0: disabled, 1: enabled
+		item deletion modes: 0: off, 1: delete all items after 30 days, 2: delete only exterior items after 30 days
+		Notes (72) are deleted after 3 days.
+		Storage items 81 (fridge), 103 (fridge), 223 (storage generic) and 231 (shipping container) are excempt from deletion
+		Other excempt items: 169 (keyless digital door lock)
+	-->
 </settings>
