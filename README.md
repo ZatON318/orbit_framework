@@ -1,4 +1,4 @@
-# Open Development - Open Source RP Gamemode
+# Orbit Development - Open Source RP Gamemode
 
 # Questions & Answers
 - Proč Open Source? 🌐
