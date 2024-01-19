@@ -13,3 +13,7 @@
 /deathmatch/pcre3.dll
 /deathmatch/registry.db
 /deathmatch/server-id.keys
+
+/deathmatch/settings.xml
+/deathmatch/resources/logs/*
+/deathmatch/resources\[rexo]/*
