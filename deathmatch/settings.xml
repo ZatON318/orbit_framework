@@ -2,11 +2,19 @@
 	<setting name="@mysql.production_server" value="1"/>
 
 	<setting name="@mysql.socket" value="unix_socket=/var/run/mysqld/mysqld.sock" />
+<<<<<<< HEAD
+	<setting name="@mysql.database" value="mta" />
+	<setting name="@mysql.username" value="root" />
+	<setting name="@mysql.password" value="FMehTE3sRsL6" />
+	<setting name="@mysql.hostname" value="89.173.13.37" />
+	<setting name="@mysql.port" value="49159" />
+=======
 	<setting name="@mysql.database" value="instertdbname" />
 	<setting name="@mysql.username" value="insertusername" />
 	<setting name="@mysql.password" value="insertpassword" />
 	<setting name="@mysql.hostname" value="insterthostname" />
 	<setting name="@mysql.port" value="3306" />
+>>>>>>> 5522321ab177140c4befa59a54872ee273648389
 
 	<setting name="@usercontrolpanel.website_pass" value="WEBSITE_PASSWORD" />
 
