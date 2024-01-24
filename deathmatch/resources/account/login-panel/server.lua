@@ -170,19 +170,6 @@ function playerLogin(username,password,checksave)
 					setElementDataEx(client, "punishment:points", tonumber(accountData['punishpoints']), true)
 					setElementDataEx(client, "punishment:date", accountData['punishdate'], true)
 				
-					--Admins serial whitelist
-					if not exports.serialwhitelist:check(client) then
-						triggerClientEvent(client,"set_warning_text",client,"Login","You can't join this server using this computer.")
-						--REMOVE STAFF PERMISSIONS / MAXIME
-						setElementDataEx(client, "admin_level", 0, true)
-						setElementDataEx(client, "supporter_level", 0, true)
-						setElementDataEx(client, "vct_level", 0, true)
-						setElementDataEx(client, "mapper_level", 0, true)
-						setElementDataEx(client, "scripter_level", 0, true)
-						setElementDataEx(client, "fmt_level", 0, true)
-						return false
-					end
-				
 					exports['report']:reportLazyFix(client)
 				
 					setElementDataEx(client, "adminreports", tonumber(accountData_mta["adminreports"]), true)
