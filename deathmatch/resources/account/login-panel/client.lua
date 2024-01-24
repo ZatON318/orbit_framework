@@ -57,17 +57,14 @@ function open_log_reg_pannel()
 		panel.login.main = guiCreateStaticImage( X, Y, 350, 350, "/login-panel/login_window.png", false )
 		guiSetEnabled (panel.login.main, false)
 
-		--panel.login.logo = guiCreateStaticImage( (sw-logoSize[1])/2, logoSize[2]/2, logoSize[1], logoSize[2], "/login-panel/OwlLogo7.png", false )
-		panel.login.logo = guiCreateStaticImage( (sw-logoSize[1])/2, (sh-logoSize[2])/2 , logoSize[1], logoSize[2], "/login-panel/OwlLogo7.png", false )
+		panel.login.logo = guiCreateStaticImage( (sw-logoSize[1])/2, (sh-logoSize[2])/2 , logoSize[1], logoSize[2], "/login-panel/OrbitLogo.png", false )
 		local x, y = guiGetPosition( panel.login.logo, false )
 		--guiSetPosition( panel.login.logo, x, -logoSize[2], false )
 
 
 		--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		panel.login.login = guiCreateStaticImage( X + 23, Y + 349-120, 301, 44, "/login-panel/login.png", false )
+		panel.login.login = guiCreateButton( X + 23, Y + 349-120, 301, 44, "Přihlásit se", false )
 		addEventHandler("onClientGUIClick",panel.login.login,onClickBtnLogin, false )
-		addEventHandler( "onClientMouseEnter",panel.login.login,LoginSH)
-		addEventHandler("onClientMouseLeave",panel.login.login,SErem)
 
 		panel.login.username = guiCreateEdit(X + 20,Y + 220-120,310,35,"",false)
 		panel.login.password = guiCreateEdit(X + 20,Y + 295-120,310,35,"",false)
@@ -87,7 +84,7 @@ function open_log_reg_pannel()
 		guiLabelSetVerticalAlign(lbl_about_legth,"center")
 		guiLabelSetHorizontalAlign(lbl_about_legth,"center",false)
 		]]
-		panel.login.remember = guiCreateCheckBox(X + 230,Y + 275-120,100,20,"(Remember me!)",false,false)
+		panel.login.remember = guiCreateCheckBox(X + 230,Y + 275-120,100,20,"Zapamatovat údaje",false,false)
 		guiSetFont(panel.login.remember,"default-small")
 
 		panel.login.error = guiCreateLabel(X,Y + 325-120,364,31,"Error_login_tab",false)
@@ -104,10 +101,8 @@ function open_log_reg_pannel()
 
 
 		--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		panel.login.register = guiCreateStaticImage( X + 23, Y + 401-120, 301, 44, "/login-panel/signup.png", false ) -- A gomb
+		panel.login.register = guiCreateButton( X + 23, Y + 401-120, 301, 44, "Registrace", false ) -- A gomb
 		addEventHandler("onClientGUIClick",panel.login.register,OnBtnRegister, false )
-		addEventHandler( "onClientMouseEnter",panel.login.register,SignupSH)
-		addEventHandler("onClientMouseLeave",panel.login.register,SErem)
 
 		panel.login.toplabel = guiCreateLabel(X - 70,Y + 388+70-120,500,30,"",false)
 		guiLabelSetColor(panel.login.toplabel,255,234,55)
@@ -148,16 +143,12 @@ function open_log_reg_pannel()
 		addEventHandler("onClientGUIChanged", panel.login.email, resetRegButtons)
 
 		--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		panel.login.register2 = guiCreateStaticImage( X + 182, Y + 401+6+70-120, 143, 45, "/login-panel/register.png", false )--guiCreateStaticImage( X + 23, Y + 409, 301, 44, "/login-panel/register2.png", false )
+		panel.login.register2 = guiCreateButton( X + 182, Y + 401+6+70-120, 143, 45, "Zaregistrovat se", false )
 		addEventHandler("onClientGUIClick",panel.login.register2,onClickBtnRegister, false )
-		addEventHandler( "onClientMouseEnter",panel.login.register2,Register2SH)
-		addEventHandler("onClientMouseLeave",panel.login.register2,SErem)
 		guiSetVisible(panel.login.register2,false)
 
-		panel.login.cancel = guiCreateStaticImage( X + 23, Y + 401+6+70-120, 143, 45, "/login-panel/cancel.png", false ) -- A gomb
+		panel.login.cancel = guiCreateButton( X + 23, Y + 401+6+70-120, 143, 45, "Zpět", false ) -- A gomb
 		addEventHandler("onClientGUIClick",panel.login.cancel,onClickCancel, false )
-		addEventHandler( "onClientMouseEnter",panel.login.cancel,CancelSH)
-		addEventHandler("onClientMouseLeave",panel.login.cancel,SErem)
 		guiSetVisible(panel.login.cancel,false)
 
 		showCursor(true)

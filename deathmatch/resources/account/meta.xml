@@ -7,18 +7,7 @@
     <file src="login-panel/login_window.png" />
     <file src="login-panel/register_window.png" />
 
-    <file src="login-panel/login.png" />
-    <file src="login-panel/register.png" />
-
-    <file src="login-panel/sh.png" />
-    <file src="login-panel/shr.png" />
-
-    <file src="login-panel/cancel.png" />
-    <file src="login-panel/cancel2.png" />
-
-    <file src="login-panel/signup.png" />
-    <file src="login-panel/signup2.png" />
-    <file src="login-panel/OwlLogo7.png" />
+    <file src="login-panel/OrbitLogo.png" />
 
     <script src="g_events.lua" type="server" />
     <script src="g_events.lua" type="client" />
