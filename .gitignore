@@ -15,9 +15,8 @@
 /deathmatch/server-id.keys
 
 /deathmatch/settings.xml
-<<<<<<< HEAD
 /deathmatch/resources/logs/*
 /deathmatch/resources\[rexo]/*
-=======
 /deathmatch/resources/logs/*
->>>>>>> 5522321ab177140c4befa59a54872ee273648389
+
+/resources/settings.xml
