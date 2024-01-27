@@ -552,7 +552,7 @@ function displayRegisterConpleteText(username)
 	local extend = 100
 	local yoffset = 150
 
-	GUIEditor.window[1] = guiCreateWindow(667, 381, 357, 189+extend, "Congratulations! Account has been successfully created!", false)
+	GUIEditor.window[1] = guiCreateWindow(667, 381, 357, 189+extend, "Gratulujeme! Účet byl úspěšně vytvořen!", false)
 	exports.global:centerWindow(GUIEditor.window[1])
 	--local x, y = guiGetPosition(GUIEditor.window[1], false)
 	--guiSetPosition(GUIEditor.window[1], x, y+yoffset, false)
@@ -560,18 +560,16 @@ function displayRegisterConpleteText(username)
     guiWindowSetMovable(GUIEditor.window[1], false)
     guiWindowSetSizable(GUIEditor.window[1], false)
     guiSetProperty(GUIEditor.window[1], "AlwaysOnTop", "True")
-    local temp = "An email contains instructions to activate your account has been dispatched, please check your email's inbox.\n\nIf for some reasons you don't receive the email, please check your junk box or try to dispatch another activation email at https://owlgaming.net/account/"
-    GUIEditor.label[1] = guiCreateLabel(8, 50, 339, 121+extend, "Your OwlGaming MTA account for '"..username.."' is almost ready for action!\n\n"..temp.."\n\nSincerely, \nOwlGaming Community OwlGaming Development Team\"", false, GUIEditor.window[1])
+    GUIEditor.label[1] = guiCreateLabel(8, 50, 339, 121+extend, "Váš účet pro OwlGaming MTA s názvem '"..username.."' je téměř připraven k použití!\n\nNyní se můžete přihlásit a začít hrát.\n\nS pozdravem, \n Orbit komunita a dev tým", false, GUIEditor.window[1])
     guiLabelSetHorizontalAlign(GUIEditor.label[1], "left", true)
 
-    GUIEditor.button[1] = guiCreateButton(10, 153+extend, 337, 26, "Copy Activation Link", false, GUIEditor.window[1])
+    GUIEditor.button[1] = guiCreateButton(10, 153+extend, 337, 26, "Přihlásit", false, GUIEditor.window[1])
     addEventHandler("onClientGUIClick", GUIEditor.button[1], function()
     	if source == GUIEditor.button[1] then
     		if isElement(GUIEditor.window[1]) then
     			destroyElement(GUIEditor.window[1])
     			GUIEditor = nil
     			switchToLoginPanel()
-    			setClipboard("https://owlgaming.net/account/")
     		end
     	else
     		cancelEvent()
