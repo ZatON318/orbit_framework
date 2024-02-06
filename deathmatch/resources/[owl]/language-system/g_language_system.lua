@@ -1,4 +1,6 @@
 languages = {
+	"Čeština",
+	"Slovenčina",
 	"English",
 	"Russian",
 	"German",
@@ -43,6 +45,8 @@ languages = {
 }
 
 flags = {
+	"cz",
+	"sk",
 	"gb",
 	"ru",
 	"de",
@@ -88,7 +92,7 @@ flags = {
 
 
 function getLanguageName(language)
-	return languages[language] or 'English'
+	return languages[language] or 'Čeština'
 end
 
 function getLanguageCount()

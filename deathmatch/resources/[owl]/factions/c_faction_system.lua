@@ -8,6 +8,8 @@ local promotionLabel = {}
 local promotionRadio = {}
 local ftab = {}
 
+local pluginshop = nil
+
 local function checkF3( )
 	if not f3state and getKeyState( "f3" ) then
 		hideFactionMenu( )
@@ -40,7 +42,7 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 		local teamName = getTeamName(theTeam)
 		local playerName = getPlayerName(thePlayer)
 		triggerEvent( 'hud:blur', resourceRoot, 6, false, 0.5, nil )
-		gFactionWindow = guiCreateWindow(0.1, 0.25, 0.85, 0.525, "Faction Menu", true)
+		gFactionWindow = guiCreateWindow(0.1, 0.25, 0.85, 0.525, "Frakční Menu", true)
 		local width, height = guiGetSize(gFactionWindow, false)
 		if height < 500 then
 			guiSetSize(gFactionWindow, width, 500, false)
@@ -75,21 +77,21 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 		end, false)]]
 
 		tabs = guiCreateTabPanel(0.008, 0.01, 0.985, 0.97, true, ftab[factionID])
-		tabOverview = guiCreateTab("Overview", tabs)
+		tabOverview = guiCreateTab("Přehled", tabs)
 
 		-- Make members list
 		gMemberGrid = guiCreateGridList(0.01, 0.015, 0.8, 0.905, true, tabOverview)
 
-		colName = guiGridListAddColumn(gMemberGrid, "Name", 0.20)
-		colRank = guiGridListAddColumn(gMemberGrid, "Rank", 0.20)
+		colName = guiGridListAddColumn(gMemberGrid, "Jméno", 0.20)
+		colRank = guiGridListAddColumn(gMemberGrid, "Hodnost", 0.20)
 		colOnline = guiGridListAddColumn(gMemberGrid, "Status", 0.115)
-		colLastLogin = guiGridListAddColumn(gMemberGrid, "Last Login", 0.13)
+		colLastLogin = guiGridListAddColumn(gMemberGrid, "Poslední přihlášení", 0.13)
 
 		local factionType = tonumber(getElementData(theTeam, "type"))
 
 		if (factionType==2) or (factionType==3) or (factionType==4) or (factionType==5) or (factionType==6) or (factionType==7) then -- Added Mechanic type \ Adams
 			--colLocation = guiGridListAddColumn(gMemberGrid, "Location", 0.12)
-			colWage = guiGridListAddColumn(gMemberGrid, "Wage ($)", 0.06)
+			colWage = guiGridListAddColumn(gMemberGrid, "Plat ($)", 0.06)
 		--else
 			--colLocation = guiGridListAddColumn(gMemberGrid, "Location", 0.1)
 		end
@@ -176,39 +178,39 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 		membersOffline = counterOffline
 
 		-- Update the window title
-		guiSetText(ftab[factionID], tostring(teamName) .. " (" .. counterOnline .. " of " .. (counterOnline+counterOffline) .. " Members Online)")
+		guiSetText(ftab[factionID], tostring(teamName) .. " (" .. counterOnline .. " z " .. (counterOnline+counterOffline) .. " Členové Online)")
 
 		-- Make the buttons
 		if (hasMemberPermissionTo(localPlayer, factionID, "del_member")) then
-			gButtonKick = guiCreateButton(0.825, 0.076, 0.16, 0.06, "Boot Member", true, tabOverview)
+			gButtonKick = guiCreateButton(0.825, 0.076, 0.16, 0.06, "Vyhodit Člena", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonKick, btKickPlayer, false)
 		end	
 		if (hasMemberPermissionTo(localPlayer, factionID, "change_member_rank")) then
-			gButtonPromote = guiCreateButton(0.825, 0.1526, 0.16, 0.06, "Promote/Demote Member", true, tabOverview)
+			gButtonPromote = guiCreateButton(0.825, 0.1526, 0.16, 0.06, "Povýšit/Degradovat člena", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonPromote, btPromotePlayer, false)	
 		end
 		
 		if (factionType==2) or (factionType==3) or (factionType==4) or (factionType==5) or (factionType==6) or (factionType==7) then -- Added Mechanic type \ Adams
 			if (hasMemberPermissionTo(localPlayer, factionID, "modify_ranks")) then
-				gButtonEditRanks = guiCreateButton(0.825, 0.2292, 0.16, 0.06, "Edit Ranks and Wages", true, tabOverview)
+				gButtonEditRanks = guiCreateButton(0.825, 0.2292, 0.16, 0.06, "Upravit hodnosti a mzdy", true, tabOverview)
 				addEventHandler("onClientGUIClick", gButtonEditRanks, btEditRanks, false)
 			end	
 		else
 			if (hasMemberPermissionTo(localPlayer, factionID, "modify_ranks")) then
-				gButtonEditRanks = guiCreateButton(0.825, 0.2292, 0.16, 0.06, "Edit Ranks", true, tabOverview)
+				gButtonEditRanks = guiCreateButton(0.825, 0.2292, 0.16, 0.06, "Upravit Opravnění", true, tabOverview)
 				addEventHandler("onClientGUIClick", gButtonEditRanks, btEditRanks, false)
 			end	
 		end
 		if (hasMemberPermissionTo(localPlayer, factionID, "edit_motd")) then
-			gButtonEditMOTD = guiCreateButton(0.825, 0.3058, 0.16, 0.06, "Edit MOTD", true, tabOverview)
+			gButtonEditMOTD = guiCreateButton(0.825, 0.3058, 0.16, 0.06, "Upravit MOTD", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonEditMOTD, btEditMOTD, false)
 		end	
 		if (hasMemberPermissionTo(localPlayer, factionID, "add_member")) then
-			gButtonInvite = guiCreateButton(0.825, 0.3824, 0.16, 0.06, "Invite Member", true, tabOverview)
+			gButtonInvite = guiCreateButton(0.825, 0.3824, 0.16, 0.06, "Pozvat člena", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonInvite, btInvitePlayer, false)
 		end	
 		if (hasMemberPermissionTo(localPlayer, factionID, "respawn_vehs")) then
-			gButtonRespawnui = guiCreateButton(0.825, 0.459, 0.16, 0.06, "Respawn Vehicles", true, tabOverview)
+			gButtonRespawnui = guiCreateButton(0.825, 0.459, 0.16, 0.06, "Respawn vozidla", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonRespawnui, showrespawn, false)
 		end
 
@@ -221,7 +223,7 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 
 			if factionType >= 2 then 
 				if (hasMemberPermissionTo(localPlayer, factionID, "set_member_duty")) then
-					gButtonPerk = guiCreateButton(0.825, _y, 0.16, 0.06, "Manage Duty Perks", true, tabOverview)
+					gButtonPerk = guiCreateButton(0.825, _y, 0.16, 0.06, "Správa Duty", true, tabOverview)
 					addEventHandler("onClientGUIClick", gButtonPerk, btButtonPerk, false)
 				end	
 			end
@@ -229,16 +231,16 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 			
 
 			if (hasMemberPermissionTo(localPlayer, factionID, "respawn_vehs")) then
-				tabVehicles = guiCreateTab("(Leader) Vehicles", tabs)
+				tabVehicles = guiCreateTab("(Leader) Vozidel", tabs)
 
 				gVehicleGrid = guiCreateGridList(0.01, 0.015, 0.8, 0.905, true, tabVehicles)
 
 				colVehID = guiGridListAddColumn(gVehicleGrid, "ID (VIN)", 0.1)
 				colVehModel = guiGridListAddColumn(gVehicleGrid, "Model", 0.30)
-				colVehPlates = guiGridListAddColumn(gVehicleGrid, "Plate", 0.1)
-				colVehLocation = guiGridListAddColumn(gVehicleGrid, "Location", 0.4)
-				gButtonVehRespawn = guiCreateButton(0.825, 0.076, 0.16, 0.06, "Respawn Vehicle", true, tabVehicles)
-				gButtonAllVehRespawn = guiCreateButton(0.825, 0.1526, 0.16, 0.06, "Respawn All Vehicles", true, tabVehicles)
+				colVehPlates = guiGridListAddColumn(gVehicleGrid, "ŠPZ", 0.1)
+				colVehLocation = guiGridListAddColumn(gVehicleGrid, "Lokace", 0.4)
+				gButtonVehRespawn = guiCreateButton(0.825, 0.076, 0.16, 0.06, "Respawn Vozidla", true, tabVehicles)
+				gButtonAllVehRespawn = guiCreateButton(0.825, 0.1526, 0.16, 0.06, "Respawnout všechna vozidla", true, tabVehicles)
 
 				for index, vehID in ipairs(vehicleIDs) do
 					local row = guiGridListAddRow(gVehicleGrid)
@@ -252,13 +254,13 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 			end	
 
 			if (hasMemberPermissionTo(localPlayer, factionID, "manage_interiors")) then
-				tabProperties = guiCreateTab("(Leader) Properties", tabs)
+				tabProperties = guiCreateTab("(Leader) Majetek", tabs)
 
 				gPropertyGrid = guiCreateGridList(0.01, 0.015, 0.8, 0.905, true, tabProperties)
 
 				colProID = guiGridListAddColumn(gPropertyGrid, "ID", 0.1)
-				colName = guiGridListAddColumn(gPropertyGrid, "Name", 0.30)
-				colProLocation = guiGridListAddColumn(gPropertyGrid, "Location", 0.4)
+				colName = guiGridListAddColumn(gPropertyGrid, "Jmeno", 0.30)
+				colProLocation = guiGridListAddColumn(gPropertyGrid, "Lokace", 0.4)
 
 				for index, int in ipairs(properties) do
 					local row = guiGridListAddRow(gPropertyGrid)
@@ -331,15 +333,31 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 	
 			if factionType >= 2 then
 				if (hasMemberPermissionTo(localPlayer, factionID, "modify_duty_settings")) then	
-					tabDuty = guiCreateTab("(Leader) Duty Settings", tabs)
+					tabDuty = guiCreateTab("(Leader) Nastavení Duty", tabs)
 					addEventHandler("onClientGUITabSwitched", tabDuty, createDutyMain)
 				end
 			end
 
+
+			if hasMemberPermissionTo(localPlayer, factionID, "edit_plugins") then
+				tabFPlug = guiCreateTab("Pluginy", tabs)
+				plugins = triggerServerEvent("faction-system.getFactionPlugins", root, factionID)
+				plugList = guiCreateGridList(0.01, 0.015, 0.5, 0.905, true, tabFPlug)
+				local colName = guiGridListAddColumn(plugList, 'Plugin', 0.2)
+				local colPopis = guiGridListAddColumn(plugList, 'Popis', 0.5)
+				local colRank = guiGridListAddColumn(plugList, 'Aktivni', 0.2)
+				
+				gButtonPlugSwitch = guiCreateButton(0.52, 0.05, 0.2, 0.08, "Vypnout / Zapnout Plugin", true, tabFPlug)
+				gButtonPlugShop = guiCreateButton(0.52, 0.2, 0.2, 0.08, "Plugin Shop", true, tabFPlug)
+				setElementData(gButtonPlugShop,"factionID", factionID)
+				addEventHandler("onClientGUIClick", gButtonPlugSwitch, btSwitchPlugin, false)
+				addEventHandler("onClientGUIClick", gButtonPlugShop, btPlugShopOpen, false)
+				addEventHandler("onClientGUIClick", gButtonPlugShop, hideFactionMenu, false)
+			end
 		
 
-			gButtonQuit = guiCreateButton(0.825, 0.7834, 0.16, 0.06, "Leave Faction", true, tabOverview)
-			gButtonExit = guiCreateButton(0.825, 0.86, 0.16, 0.06, "Exit Menu", true, tabOverview)
+			gButtonQuit = guiCreateButton(0.825, 0.7834, 0.16, 0.06, "Opustit Frakci", true, tabOverview)
+			gButtonExit = guiCreateButton(0.825, 0.86, 0.16, 0.06, "Zavřít Nabídku", true, tabOverview)
 			gMOTDLabel = guiCreateLabel(0.015, 0.935, 0.95, 0.15, tostring(motd), true, tabOverview)
 			guiSetFont(gMOTDLabel, "default-bold-small")
 
@@ -680,9 +698,9 @@ function btKickPlayer(button, state)
 	if (button=="left") and (state=="up") and (source==gButtonKick) then
 		local playerName = string.gsub(guiGridListGetItemText(gMemberGrid, guiGridListGetSelectedItem(gMemberGrid), 1), " ", "_")
 
-		--if (playerName==getPlayerName(getLocalPlayer())) then
-			--outputChatBox("You cannot kick yourself, quit instead.", thePlayer)
-		--[[else]]if (playerName~="") then
+		if (playerName==getPlayerName(getLocalPlayer())) then
+			outputChatBox("You cannot kick yourself, quit instead.", thePlayer)
+		elseif (playerName~="") then
 			local row = guiGridListGetSelectedItem(gMemberGrid)
 			guiGridListRemoveRow(gMemberGrid, row)
 
@@ -721,7 +739,7 @@ function gotPackages(factionPackages)
 	local x = scrWidth/2 - (width/2)
 	local y = scrHeight/2 - (height/2)
 
-	wPerkWindow = guiCreateWindow(x, y, width, height, "Faction perks for "..playerName, false)
+	wPerkWindow = guiCreateWindow(x, y, width, height, "Duty pro "..playerName, false)
 
 	local factionPerks = false
 	for k, v in ipairs(arrUsernames) do -- Find the player
@@ -756,8 +774,8 @@ function gotPackages(factionPackages)
 		table.insert(bPerkChkTable, tmpChk)
 	end
 
-	bPerkSave = guiCreateButton(0.05, 0.900, 0.9, 0.045, "Save", true, wPerkWindow)
-	bPerkClose = guiCreateButton(0.05, 0.950, 0.9, 0.045, "Close", true, wPerkWindow)
+	bPerkSave = guiCreateButton(0.05, 0.900, 0.9, 0.045, "Uložit", true, wPerkWindow)
+	bPerkClose = guiCreateButton(0.05, 0.950, 0.9, 0.045, "Zavřít", true, wPerkWindow)
 	addEventHandler("onClientGUIClick", bPerkSave,
 		function (button, state)
 			if (source == bPerkSave) and (button=="left") and (state=="up") then
@@ -1021,17 +1039,17 @@ function loadFaction(tab)
 	end
 
 	tabs = guiCreateTabPanel(0.008, 0.01, 0.985, 0.97, true, tab)
-	tabOverview = guiCreateTab("Overview", tabs)
+	tabOverview = guiCreateTab("Přehled", tabs)
 	-- Make members list
 	gMemberGrid = guiCreateGridList(0.01, 0.015, 0.8, 0.905, true, tabOverview)
-	colName = guiGridListAddColumn(gMemberGrid, "Name", 0.20)
-	colRank = guiGridListAddColumn(gMemberGrid, "Rank", 0.20)
+	colName = guiGridListAddColumn(gMemberGrid, "Jméno", 0.20)
+	colRank = guiGridListAddColumn(gMemberGrid, "Hodnost", 0.20)
 	colOnline = guiGridListAddColumn(gMemberGrid, "Status", 0.115)
-	colLastLogin = guiGridListAddColumn(gMemberGrid, "Last Login", 0.13)
+	colLastLogin = guiGridListAddColumn(gMemberGrid, "Poslední přihlášení", 0.13)
 
 	-- Some buttons
-	gButtonQuit = guiCreateButton(0.825, 0.7834, 0.16, 0.06, "Leave Faction", true, tabOverview)
-	gButtonExit = guiCreateButton(0.825, 0.86, 0.16, 0.06, "Exit Menu", true, tabOverview)
+	gButtonQuit = guiCreateButton(0.825, 0.7834, 0.16, 0.06, "Opustit Frakci", true, tabOverview)
+	gButtonExit = guiCreateButton(0.825, 0.86, 0.16, 0.06, "Zavřít Nabídku", true, tabOverview)
 	addEventHandler("onClientGUIClick", gButtonQuit, btQuitFaction, false)
 	addEventHandler("onClientGUIClick", gButtonExit, hideFactionMenu, false)
 
@@ -1065,7 +1083,7 @@ function fillFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 
 	local factionType = tonumber(getElementData(theTeam, "type"))
 	if (factionType==2) or (factionType==3) or (factionType==4) or (factionType==5) or (factionType==6) or (factionType==7) then -- Added Mechanic type \ Adams
-		colWage = guiGridListAddColumn(gMemberGrid, "Wage ($)", 0.06)
+		colWage = guiGridListAddColumn(gMemberGrid, "Plat ($)", 0.06)
 	end
 
 	if phone then
@@ -1159,23 +1177,23 @@ function fillFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 
 		-- Make the buttons
 		if (hasMemberPermissionTo(localPlayer, factionID, "del_member")) then
-			gButtonKick = guiCreateButton(0.825, 0.076, 0.16, 0.06, "Boot Member", true, tabOverview)
+			gButtonKick = guiCreateButton(0.825, 0.076, 0.16, 0.06, "Vyhodit Člena", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonKick, btKickPlayer, false)
 		end	
 
 		if (hasMemberPermissionTo(localPlayer, factionID, "change_member_rank")) then
-			gButtonPromote = guiCreateButton(0.825, 0.1526, 0.16, 0.06, "Promote/Demote Member", true, tabOverview)
+			gButtonPromote = guiCreateButton(0.825, 0.1526, 0.16, 0.06, "Povýšit/Degradovat člena", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonPromote, btPromotePlayer, false)	
 		end
 		
 		if (factionType==2) or (factionType==3) or (factionType==4) or (factionType==5) or (factionType==6) or (factionType==7) then -- Added Mechanic type \ Adams
 			if (hasMemberPermissionTo(localPlayer, factionID, "modify_ranks")) then
-				gButtonEditRanks = guiCreateButton(0.825, 0.2292, 0.16, 0.06, "Edit Ranks and Wages", true, tabOverview)
+				gButtonEditRanks = guiCreateButton(0.825, 0.2292, 0.16, 0.06, "Upravit hodnosti a mzdy", true, tabOverview)
 				addEventHandler("onClientGUIClick", gButtonEditRanks, btEditRanks, false)
 			end	
 		else
 			if (hasMemberPermissionTo(localPlayer, factionID, "modify_ranks")) then
-				gButtonEditRanks = guiCreateButton(0.825, 0.2292, 0.16, 0.06, "Edit Ranks", true, tabOverview)
+				gButtonEditRanks = guiCreateButton(0.825, 0.2292, 0.16, 0.06, "Upravit hodnosti", true, tabOverview)
 				addEventHandler("onClientGUIClick", gButtonEditRanks, btEditRanks, false)
 			end	
 		end
@@ -1186,7 +1204,7 @@ function fillFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 		end	
 		
 		if (hasMemberPermissionTo(localPlayer, factionID, "add_member")) then
-			gButtonInvite = guiCreateButton(0.825, 0.3824, 0.16, 0.06, "Invite Member", true, tabOverview)
+			gButtonInvite = guiCreateButton(0.825, 0.3824, 0.16, 0.06, "Pozvat člena", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonInvite, btInvitePlayer, false)
 		end	
 
@@ -1207,14 +1225,14 @@ function fillFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 			gButtonRespawnui = guiCreateButton(0.825, 0.459, 0.16, 0.06, "Respawn Vehicles", true, tabOverview)
 			addEventHandler("onClientGUIClick", gButtonRespawnui, showrespawn, false)
 
-			tabVehicles = guiCreateTab("(Leader) Vehicles", tabs)
+			tabVehicles = guiCreateTab("(Leader) Vozidla", tabs)
 
 			gVehicleGrid = guiCreateGridList(0.01, 0.015, 0.8, 0.905, true, tabVehicles)
 
 			colVehID = guiGridListAddColumn(gVehicleGrid, "ID (VIN)", 0.1)
 			colVehModel = guiGridListAddColumn(gVehicleGrid, "Model", 0.30)
-			colVehPlates = guiGridListAddColumn(gVehicleGrid, "Plate", 0.1)
-			colVehLocation = guiGridListAddColumn(gVehicleGrid, "Location", 0.4)
+			colVehPlates = guiGridListAddColumn(gVehicleGrid, "ŠPZ", 0.1)
+			colVehLocation = guiGridListAddColumn(gVehicleGrid, "Lokace", 0.4)
 			gButtonVehRespawn = guiCreateButton(0.825, 0.076, 0.16, 0.06, "Respawn Vehicle", true, tabVehicles)
 			gButtonAllVehRespawn = guiCreateButton(0.825, 0.1526, 0.16, 0.06, "Respawn All Vehicles", true, tabVehicles)
 
@@ -1230,13 +1248,13 @@ function fillFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 		end	
 
 		if (hasMemberPermissionTo(localPlayer, factionID, "manage_interiors")) then
-			tabProperties = guiCreateTab("(Leader) Properties", tabs)
+			tabProperties = guiCreateTab("(Leader) Majetek", tabs)
 
 			gPropertyGrid = guiCreateGridList(0.01, 0.015, 0.8, 0.905, true, tabProperties)
 
 			colProID = guiGridListAddColumn(gPropertyGrid, "ID", 0.1)
-			colName = guiGridListAddColumn(gPropertyGrid, "Name", 0.30)
-			colProLocation = guiGridListAddColumn(gPropertyGrid, "Location", 0.4)
+			colName = guiGridListAddColumn(gPropertyGrid, "Jmeno", 0.30)
+			colProLocation = guiGridListAddColumn(gPropertyGrid, "Lokace", 0.4)
 
 			for index, int in ipairs(properties) do
 				local row = guiGridListAddRow(gPropertyGrid)
@@ -1310,9 +1328,24 @@ function fillFactionMenu(motd, memberUsernames, memberRanks, memberPerks, member
 
 		if factionType >= 2 then
 			if (hasMemberPermissionTo(localPlayer, factionID, "modify_duty_settings")) then	
-				tabDuty = guiCreateTab("(Leader) Duty Settings", tabs)
+				tabDuty = guiCreateTab("(Leader) Nastavení Duty", tabs)
 				addEventHandler("onClientGUITabSwitched", tabDuty, createDutyMain)
 			end
+		end
+
+		if hasMemberPermissionTo(localPlayer, factionID, "edit_plugins") then
+			tabFPlug = guiCreateTab("Pluginy", tabs)
+			plugins = triggerServerEvent("faction-system.getFactionPlugins", root, factionID)
+			plugList = guiCreateGridList(0.01, 0.015, 0.5, 0.905, true, tabFPlug)
+			local colName = guiGridListAddColumn(plugList, 'Plugin', 0.2)
+			local colPopis = guiGridListAddColumn(plugList, 'Popis', 0.5)
+			local colRank = guiGridListAddColumn(plugList, 'Aktivni', 0.2)
+			
+			gButtonPlugSwitch = guiCreateButton(0.52, 0.05, 0.2, 0.08, "Vypnout / Zapnout Plugin", true, tabFPlug)
+			gButtonPlugShop = guiCreateButton(0.52, 0.2, 0.2, 0.08, "Plugin Shop", true, tabFPlug)
+			addEventHandler("onClientGUIClick", gButtonPlugSwitch, btSwitchPlugin, false)
+			addEventHandler("onClientGUIClick", gButtonPlugShop, btPlugShopOpen, false)
+			addEventHandler("onClientGUIClick", gButtonPlugShop, hideFactionMenu, false)
 		end
 
 	gMOTDLabel = guiCreateLabel(0.015, 0.935, 0.95, 0.15, tostring(motd), true, tabOverview)
@@ -1440,64 +1473,65 @@ function fillFinance(factionID, bankThisWeek, bankPrevWeek, bankmoney, vehiclesv
 	guiComboBoxAddItem(financeCombo, "Last week")
 	--]]
 
-	tabWeeklyStatement = guiCreateTab("Weekly Statement", financeTabs)
+	tabWeeklyStatement = guiCreateTab("Týdenní výpis", financeTabs)
 
 		weeklyStatementGridlist = guiCreateGridList(13, 11, 395, 298, false, tabWeeklyStatement)
 		statementColText = guiGridListAddColumn(weeklyStatementGridlist, "", 0.4)
-		statementColLast = guiGridListAddColumn(weeklyStatementGridlist, "Last week", 0.25)
-		statementColThis = guiGridListAddColumn(weeklyStatementGridlist, "This week", 0.25)
+		statementColLast = guiGridListAddColumn(weeklyStatementGridlist, "Minulý týden", 0.25)
+		statementColThis = guiGridListAddColumn(weeklyStatementGridlist, "Tento týden", 0.25)
 
 		assetsGridlist = guiCreateGridList(639, 11, 395, 298, false, tabWeeklyStatement)
-		guiGridListAddColumn(assetsGridlist, "Assets", 0.65)
-		guiGridListAddColumn(assetsGridlist, "Value", 0.25)
+		guiGridListAddColumn(assetsGridlist, "Aktiva", 0.65)
+		guiGridListAddColumn(assetsGridlist, "Hodnota", 0.25)
 
 		local row = guiGridListAddRow(assetsGridlist)
-		guiGridListSetItemText(assetsGridlist, row, 1, "Bank Account", false, false)
+		guiGridListSetItemText(assetsGridlist, row, 1, "Bankovní Účet", false, false)
 		if not bankmoney then bankmoney = 0 end
 		guiGridListSetItemText(assetsGridlist, row, 2, "$"..tostring(exports.global:formatMoney(bankmoney)), false, false)
 		local row = guiGridListAddRow(assetsGridlist)
-		guiGridListSetItemText(assetsGridlist, row, 1, "Vehicles", false, false)
+		guiGridListSetItemText(assetsGridlist, row, 1, "Vozidla", false, false)
 		if not vehiclesvalue then vehiclesvalue = 0 end
 		guiGridListSetItemText(assetsGridlist, row, 2, "$"..tostring(exports.global:formatMoney(vehiclesvalue)), false, false)
 		local row = guiGridListAddRow(assetsGridlist)
-		guiGridListSetItemText(assetsGridlist, row, 1, "Properties", false, false)
+		guiGridListSetItemText(assetsGridlist, row, 1, "Majetek", false, false)
 		if not propertiesvalue then propertiesvalue = 0 end
 		guiGridListSetItemText(assetsGridlist, row, 2, "$"..tostring(exports.global:formatMoney(propertiesvalue)), false, false)
 
 		local row = guiGridListAddRow(assetsGridlist)
-		guiGridListSetItemText(assetsGridlist, row, 1, "TOTAL", false, false)
+		guiGridListSetItemText(assetsGridlist, row, 1, "Celkově", false, false)
 		guiGridListSetItemText(assetsGridlist, row, 2, "$"..tostring(exports.global:formatMoney(bankmoney+vehiclesvalue+propertiesvalue)), false, false)
 
-        local label1 = guiCreateLabel(413, 10, 156, 30, "Faction finance information goes maximum 2 weeks back.", false, tabWeeklyStatement)
+        local label1 = guiCreateLabel(413, 10, 156, 30, "Informace o financování frakce jsou maximálně 2 týdny zpět.", false, tabWeeklyStatement)
         	guiSetFont(label1, "default-small")
         	guiLabelSetHorizontalAlign(label1, "left", true)
 
-        local label2 = guiCreateLabel(413, 292, 156, 15, "Double-click a line to show details.", false, tabWeeklyStatement)
+        local label2 = guiCreateLabel(413, 292, 156, 15, "Poklepáním na řádek zobrazíte podrobnosti.", false, tabWeeklyStatement)
         	guiSetFont(label2, "default-small")
 
-	tabTransactions = guiCreateTab("Transactions", financeTabs)
+	tabTransactions = guiCreateTab("Transakce", financeTabs)
 		transactionsGridlist = guiCreateGridList(0, 0, 1, 1, true, tabTransactions)
 		local transactionColumns = {
 			{ "ID", 0.09 },
 			{ "Type", 0.03 },
-			{ "From", 0.2 },
-			{ "To", 0.2 },
-			{ "Amount", 0.07 },
-			{ "Date", 0.1 },
-			{ "Week", 0.03 },
-			{ "Reason", 0.24 }
+			{ "Odesílatel", 0.2 },
+			{ "Přijimatel", 0.2 },
+			{ "Množství", 0.07 },
+			{ "Datum", 0.1 },
+			{ "Týden", 0.03 },
+			{ "Důvod", 0.24 }
 		}
 		for key, value in ipairs(transactionColumns) do
 			guiGridListAddColumn(transactionsGridlist, value[1], value[2] or 0.1)
 		end
 
 	local factionName = getFactionName(factionID)
+	outputConsole(factionName)
 
 	thisWeek_income = {}
 	thisWeek_expenses = {}
 	lastWeek_income = {}
 	lastWeek_expenses = {}
-
+	outputConsole("#thisWeek_income="..tostring(bankThisWeek[1].amount))
 	for k,v in ipairs(bankThisWeek) do
 		--outputDebugString("v.to = "..tostring(v.to))
 		--[[
@@ -1529,13 +1563,13 @@ function fillFinance(factionID, bankThisWeek, bankPrevWeek, bankmoney, vehiclesv
 		end
 	end
 
-	--outputDebugString("#thisWeek_income="..tostring(#thisWeek_income))
+	--outputConsole("#thisWeek_income="..tostring(#thisWeek_income))
 	--outputDebugString("#thisWeek_expenses="..tostring(#thisWeek_expenses))
 	--outputDebugString("#lastWeek_income="..tostring(#lastWeek_income))
 	--outputDebugString("#lastWeek_expenses="..tostring(#lastWeek_expenses))
 
 	transactionsByCategories = {
-		["Income"] = {
+		["Příjmy"] = {
 			["Incoming Transfers"] = { ["thisWeek"] = {}, ["lastWeek"] = {} },
 			["Bank Deposits"] = { ["thisWeek"] = {}, ["lastWeek"] = {} },
 			["Sales"] = { ["thisWeek"] = {}, ["lastWeek"] = {} },
@@ -1545,7 +1579,7 @@ function fillFinance(factionID, bankThisWeek, bankPrevWeek, bankmoney, vehiclesv
 			["Impound"] = { ["thisWeek"] = {}, ["lastWeek"] = {} },
 			["Other"] = { ["thisWeek"] = {}, ["lastWeek"] = {} },
 		},
-		["Expenses"] = {
+		["Výdaje"] = {
 			["Outgoing Transfers"] = { ["thisWeek"] = {}, ["lastWeek"] = {} },
 			["Bank Withdrawals"] = { ["thisWeek"] = {}, ["lastWeek"] = {} },
 			["Wages"] = { ["thisWeek"] = {}, ["lastWeek"] = {} },
@@ -1582,93 +1616,93 @@ function fillFinance(factionID, bankThisWeek, bankPrevWeek, bankmoney, vehiclesv
 	for k,v in ipairs(thisWeek_income) do
 		local doWeek = "thisWeek"
 		if v.type == 2 or v.type == 3 then
-			table.insert(transactionsByCategories["Income"]["Incoming Transfers"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Incoming Transfers"][doWeek], v)
 		elseif v.type == 1 or v.type == 5 then
-			table.insert(transactionsByCategories["Income"]["Bank Deposits"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Bank Deposits"][doWeek], v)
 		elseif v.type == 11 then
-			table.insert(transactionsByCategories["Income"]["Taxes"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Taxes"][doWeek], v)
 		elseif v.type == 12 then
-			table.insert(transactionsByCategories["Income"]["Bank Interest"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Bank Interest"][doWeek], v)
 		elseif v.type == 13 then
-			table.insert(transactionsByCategories["Income"]["Sales"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Sales"][doWeek], v)
 		elseif v.type == 14 then
-			table.insert(transactionsByCategories["Income"]["Insurance"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Insurance"][doWeek], v)
 		elseif v.type == 16 then
-			table.insert(transactionsByCategories["Income"]["Impound"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Impound"][doWeek], v)
 		else
-			table.insert(transactionsByCategories["Income"]["Other"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Other"][doWeek], v)
 		end
 	end
 	for k,v in ipairs(thisWeek_expenses) do
 		local doWeek = "thisWeek"
 		if v.type == 2 or v.type == 3 then
-			table.insert(transactionsByCategories["Expenses"]["Outgoing Transfers"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Outgoing Transfers"][doWeek], v)
 		elseif v.type == 0 or v.type == 4 then
-			table.insert(transactionsByCategories["Expenses"]["Bank Withdrawals"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Bank Withdrawals"][doWeek], v)
 		elseif v.type == 6 then
-			table.insert(transactionsByCategories["Expenses"]["Wages"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Wages"][doWeek], v)
 		elseif v.type == 9 then
-			table.insert(transactionsByCategories["Expenses"]["Fuel"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Fuel"][doWeek], v)
 		elseif v.type == 10 then
-			table.insert(transactionsByCategories["Expenses"]["Repair"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Repair"][doWeek], v)
 		elseif v.type == 11 then
-			table.insert(transactionsByCategories["Expenses"]["Taxes"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Taxes"][doWeek], v)
 		elseif v.type == 12 then
-			table.insert(transactionsByCategories["Expenses"]["Bank Interest"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Bank Interest"][doWeek], v)
 		elseif v.type == 14 then
-			table.insert(transactionsByCategories["Expenses"]["Insurance"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Insurance"][doWeek], v)
 		elseif v.type == 15 then
-			table.insert(transactionsByCategories["Expenses"]["Supplies"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Supplies"][doWeek], v)
 		elseif v.type == 16 then
-			table.insert(transactionsByCategories["Expenses"]["Impound"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Impound"][doWeek], v)
 		else
-			table.insert(transactionsByCategories["Expenses"]["Other"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Other"][doWeek], v)
 		end
 	end
 	for k,v in ipairs(lastWeek_income) do
 		local doWeek = "lastWeek"
 		if v.type == 2 or v.type == 3 then
-			table.insert(transactionsByCategories["Income"]["Incoming Transfers"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Incoming Transfers"][doWeek], v)
 		elseif v.type == 1 or v.type == 5 then
-			table.insert(transactionsByCategories["Income"]["Bank Deposits"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Bank Deposits"][doWeek], v)
 		elseif v.type == 11 then
-			table.insert(transactionsByCategories["Income"]["Taxes"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Taxes"][doWeek], v)
 		elseif v.type == 12 then
-			table.insert(transactionsByCategories["Income"]["Bank Interest"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Bank Interest"][doWeek], v)
 		elseif v.type == 13 then
-			table.insert(transactionsByCategories["Income"]["Sales"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Sales"][doWeek], v)
 		elseif v.type == 14 then
-			table.insert(transactionsByCategories["Income"]["Insurance"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Insurance"][doWeek], v)
 		elseif v.type == 16 then
-			table.insert(transactionsByCategories["Income"]["Impound"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Impound"][doWeek], v)
 		else
-			table.insert(transactionsByCategories["Income"]["Other"][doWeek], v)
+			table.insert(transactionsByCategories["Příjmy"]["Other"][doWeek], v)
 		end
 	end
 	for k,v in ipairs(lastWeek_expenses) do
 		local doWeek = "lastWeek"
 		if v.type == 2 or v.type == 3 then
-			table.insert(transactionsByCategories["Expenses"]["Outgoing Transfers"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Outgoing Transfers"][doWeek], v)
 		elseif v.type == 0 or v.type == 4 then
-			table.insert(transactionsByCategories["Expenses"]["Bank Withdrawals"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Bank Withdrawals"][doWeek], v)
 		elseif v.type == 6 then
-			table.insert(transactionsByCategories["Expenses"]["Wages"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Wages"][doWeek], v)
 		elseif v.type == 9 then
-			table.insert(transactionsByCategories["Expenses"]["Fuel"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Fuel"][doWeek], v)
 		elseif v.type == 10 then
-			table.insert(transactionsByCategories["Expenses"]["Repair"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Repair"][doWeek], v)
 		elseif v.type == 11 then
-			table.insert(transactionsByCategories["Expenses"]["Taxes"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Taxes"][doWeek], v)
 		elseif v.type == 12 then
-			table.insert(transactionsByCategories["Expenses"]["Bank Interest"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Bank Interest"][doWeek], v)
 		elseif v.type == 14 then
-			table.insert(transactionsByCategories["Expenses"]["Insurance"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Insurance"][doWeek], v)
 		elseif v.type == 15 then
-			table.insert(transactionsByCategories["Expenses"]["Supplies"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Supplies"][doWeek], v)
 		elseif v.type == 16 then
-			table.insert(transactionsByCategories["Expenses"]["Impound"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Impound"][doWeek], v)
 		else
-			table.insert(transactionsByCategories["Expenses"]["Other"][doWeek], v)
+			table.insert(transactionsByCategories["Výdaje"]["Other"][doWeek], v)
 		end
 	end
 
@@ -1709,8 +1743,8 @@ function fillFinance(factionID, bankThisWeek, bankPrevWeek, bankmoney, vehiclesv
 		totals[k] = total
 	end
 
-	local profit_thisWeek = totals["Income"]["thisWeek"] + totals["Expenses"]["thisWeek"]
-	local profit_lastWeek = totals["Income"]["lastWeek"] + totals["Expenses"]["lastWeek"]
+	local profit_thisWeek = totals["Příjmy"]["thisWeek"] + totals["Výdaje"]["thisWeek"]
+	local profit_lastWeek = totals["Příjmy"]["lastWeek"] + totals["Výdaje"]["lastWeek"]
 
 	local row = guiGridListAddRow(weeklyStatementGridlist)
 	guiGridListSetItemText(weeklyStatementGridlist, row, statementColText, "Profit", false, false)
@@ -1835,8 +1869,8 @@ function fillFinance(factionID, bankThisWeek, bankPrevWeek, bankmoney, vehiclesv
 				totals[k] = total
 			end
 
-			local profit_thisWeek = totals["Income"]["thisWeek"] + totals["Expenses"]["thisWeek"]
-			local profit_lastWeek = totals["Income"]["lastWeek"] + totals["Expenses"]["lastWeek"]
+			local profit_thisWeek = totals["Příjmy"]["thisWeek"] + totals["Výdaje"]["thisWeek"]
+			local profit_lastWeek = totals["Příjmy"]["lastWeek"] + totals["Výdaje"]["lastWeek"]
 
 			local row = guiGridListAddRow(weeklyStatementGridlist)
 			guiGridListSetItemText(weeklyStatementGridlist, row, statementColText, "Profit", false, false)
@@ -2156,25 +2190,25 @@ function createDutyMain()
     guiGridListAddColumn(Duty.gridlist[1], "Y", 0.1)
     guiGridListAddColumn(Duty.gridlist[1], "Z", 0.1)
 
-    Duty.button[1] = guiCreateButton(0.005, 0.939, 0.09, 0.0504, "Add location", true, tabDuty)
+    Duty.button[1] = guiCreateButton(0.005, 0.939, 0.09, 0.0504, "Přidat lokaci", true, tabDuty)
     guiSetProperty(Duty.button[1], "NormalTextColour", "FFAAAAAA")
     addEventHandler("onClientGUIClick", Duty.button[1], createDutyLocationMaker, false)
 
-    Duty.label[1] = guiCreateLabel(0.0059, 0.0076, 0.2625, 0.03, "Duty Locations", true, tabDuty)
+    Duty.label[1] = guiCreateLabel(0.0059, 0.0076, 0.2625, 0.03, "Duty Lokace", true, tabDuty)
     guiLabelSetHorizontalAlign(Duty.label[1], "center", false)
-    Duty.button[2] = guiCreateButton(0.1, 0.939, 0.099, 0.0504, "Remove location", true, tabDuty)
+    Duty.button[2] = guiCreateButton(0.1, 0.939, 0.099, 0.0504, "Odebrat lokaci", true, tabDuty)
     guiSetProperty(Duty.button[2], "NormalTextColour", "FFAAAAAA")
     addEventHandler("onClientGUIClick", Duty.button[2], removeLocation, false)
 
-    Duty.button[3] = guiCreateButton(0.205, 0.939, 0.099, 0.0504, "Edit Duty Location", true, tabDuty)
+    Duty.button[3] = guiCreateButton(0.205, 0.939, 0.099, 0.0504, "Upravit Lokaci Duty", true, tabDuty)
     guiSetProperty(Duty.button[3], "NormalTextColour", "FFAAAAAA")
     addEventHandler("onClientGUIClick", Duty.button[3], processLocationEdit, false)
     addEventHandler("onClientGUIDoubleClick", Duty.gridlist[1], processLocationEdit, false)
 
     Duty.gridlist[2] = guiCreateGridList(0.66, 0.046, 0.3, 0.89, true, tabDuty)
     guiGridListAddColumn(Duty.gridlist[2], "ID", 0.2)
-    guiGridListAddColumn(Duty.gridlist[2], "Name", 0.3)
-    guiGridListAddColumn(Duty.gridlist[2], "Locations", 0.4)
+    guiGridListAddColumn(Duty.gridlist[2], "Jmeno", 0.3)
+    guiGridListAddColumn(Duty.gridlist[2], "Lokace", 0.4)
 
     Duty.label[2] = guiCreateLabel(0.68, 0.0076, 0.2636, 0.03, "Duty Perks", true, tabDuty)
     guiLabelSetHorizontalAlign(Duty.label[2], "center", false)
@@ -2591,7 +2625,7 @@ function createLocations()
     addEventHandler("onClientGUIDoubleClick", DutyLocations.gridlist[2], removeLocationFromDuty, false)
     DutyLocations.label[1] = guiCreateLabel(10, 19, 233, 17, "All locations", false, DutyLocations.window[1])
     guiLabelSetHorizontalAlign(DutyLocations.label[1], "center", false)
-    DutyLocations.label[2] = guiCreateLabel(270, 19, 233, 17, "Duty locations", false, DutyLocations.window[1])
+    DutyLocations.label[2] = guiCreateLabel(270, 19, 233, 17, "Duty Lokace", false, DutyLocations.window[1])
     guiLabelSetHorizontalAlign(DutyLocations.label[2], "center", false)
     DutyLocations.button[3] = guiCreateButton(270, 367, 146, 36, "Save", false, DutyLocations.window[1])
     guiSetProperty(DutyLocations.button[3], "NormalTextColour", "FFAAAAAA")
@@ -3030,4 +3064,75 @@ function removeVehicle()
 		locationsg[tonumber(removeid)] = nil
 		refreshUI()
 	end
+end
+
+
+function populatePlugins(plugins)
+	
+	for i,plug in ipairs(plugins) do
+		guiGridListAddRow(plugList, plug[1], plug[2], plug[3])
+	end
+
+end
+addEvent("populatePlugins", true)
+addEventHandler("populatePlugins", resourceRoot, populatePlugins)
+
+function btSwitchPlugin(button, state)
+	if (button=="left") and (state=="up") then
+		local plugin = guiGridListGetItemText(plugList, guiGridListGetSelectedItem(plugList), 1)
+		if(guiGridListGetItemText(plugList, guiGridListGetSelectedItem(plugList), 3) == "Active") then
+			guiGridListSetItemText ( plugList, guiGridListGetSelectedItem(plugList), 3, "Inactive", false, false)
+		else
+			guiGridListSetItemText ( plugList, guiGridListGetSelectedItem(plugList), 3, "Active", false, false)
+		end
+		triggerServerEvent("faction-system.switchPlugin", resourceRoot, plugin, faction_tab)
+	end
+end
+
+
+function populatePluginShop(plugins, ownedPlugins)
+	outputConsole("adding plugins")
+	local canAdd = 1
+	for i,plug in ipairs(plugins) do
+		outputConsole(canAdd)
+		if(ownedPlugins ~= nil)then
+			for y, ownd in ipairs(ownedPlugins) do
+				if (plug[1] == ownd[1])then
+					canAdd = 0
+				end
+			end
+
+			if(canAdd == 1) then
+				guiGridListAddRow(plugShopList, plug[1], plug[2], plug[4], "Ne")
+			else
+				guiGridListAddRow(plugShopList, plug[1], plug[2], plug[4], "Ano")
+			end
+			canAdd = 1
+		else
+			guiGridListAddRow(plugShopList, plug[1], plug[2], plug[4], "Ne")
+			canAdd = 1
+		end
+	end
+end
+addEvent("populatePluginShop", true)
+addEventHandler("populatePluginShop", resourceRoot, populatePluginShop)
+
+function btPlugShopOpen(button, state)
+	pluginshop = guiCreateWindow(0,0, 800,600,"ORBIT Faction Plugin Shop", false)
+	exports.global:centerWindow( pluginshop )
+
+	BtncloseShop = guiCreateButton(0.9, 0.88, 0.2, 0.08, "Zavřit", true, pluginshop)
+	addEventHandler("onClientGUIClick", BtncloseShop, function() destroyElement(pluginshop) end, false)
+
+	plugShopList = guiCreateGridList(0.01, 0.05, 0.8, 0.905, true, pluginshop)
+	local colName = guiGridListAddColumn(plugShopList, 'Plugin', 0.2)
+	local colPopis = guiGridListAddColumn(plugShopList, 'Popis', 0.4)
+	local colRank = guiGridListAddColumn(plugShopList, 'Cena', 0.2)
+	local colBought = guiGridListAddColumn(plugShopList, 'Vlastnen', 0.1)
+
+
+	--factionID = getElementaData(source,"factionID")
+
+	triggerServerEvent("faction-system.getFactionPluginShop", resourceRoot, faction_tab)
+
 end

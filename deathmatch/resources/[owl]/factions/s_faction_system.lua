@@ -1269,3 +1269,25 @@ addEventHandler("faction-system.saveNewRank", root,
 		exports.factions:sendNotiToAllFactionMembers(fID, playerName:gsub("_", " ") .. " was "..highOrLow.." from '" .. getRankName(oldRank) .. "' to '" .. rankName .. "' by "..getPlayerName(client):gsub("_", " "))
 	end
 )
+
+addEvent("faction-system.getFactionPlugins", true)
+addEventHandler("faction-system.getFactionPlugins", root, function(factionID)
+	local factionID = tonumber(factionID)
+	local plugins = getAllFactionPlugins(factionID)
+	triggerClientEvent(client, "populatePlugins", resourceRoot, plugins)
+end)
+
+addEvent("faction-system.switchPlugin", true)
+addEventHandler("faction-system.switchPlugin", root, function(pluginName, factionID)
+	local factionID = tonumber(factionID)
+	local pluginID = getPluginFromName(pluginName)
+	setPluginActivity(pluginID, factionID)
+	--triggerClientEvent(client, "populatePlugins", resourceRoot, plugins)
+end)
+
+addEvent("faction-system.getFactionPluginShop", true)
+addEventHandler("faction-system.getFactionPluginShop", root, function(factionID)
+	local plugins = exports.factions:getPlugins()
+	local ownedPlugins = exports.factions:getAllFactionPlugins(factionID)
+	triggerClientEvent(client, "populatePluginShop", resourceRoot, plugins, ownedPlugins)
+end)

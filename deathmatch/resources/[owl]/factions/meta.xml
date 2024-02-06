@@ -26,6 +26,13 @@
 	<export function="hasMemberPermissionTo" type="server" />
 	<export function="hasMemberPermissionTo" type="client" />
 
+	<script src="plugins_s.lua" type="server"/>
+
+	<export function="haveFactionPlugin" type="server"/>
+	<export function="haveFactionActivePlugin" type="server"/>
+	<export function="isPlayerInFactionWithActivePlugin" type="server"/>
+	<export function="getPlugins" type="server"/>
+	<export function="getAllFactionPlugins" type="server"/>
 
 	<export function="isPlayerInFaction" type="shared"/>
 	<export function="getPlayerFactionRank" type="shared"/>

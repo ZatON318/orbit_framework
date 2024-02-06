@@ -1,5 +1,3 @@
--- // Chaos - Duty allow script
-
 function centerWindow (center_window)
     local screenW, screenH = guiGetScreenSize()
     local windowW, windowH = guiGetSize(center_window, false)

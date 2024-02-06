@@ -20,14 +20,14 @@ function newCharacter_init()
 	gui["_root"] = guiCreateStaticImage(10, screenY/2-225, 255, 475, ":resources/window_body.png", false)
 	--guiWindowSetSizable(gui["_root"], false)
 
-	gui["lblCharName"] = guiCreateLabel(10, 25, 91, 16, "Name:", false, gui["_root"])
+	gui["lblCharName"] = guiCreateLabel(10, 25, 91, 16, "Jmeno:", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblCharName"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblCharName"], "center")
 
 	gui["txtCharName"] = guiCreateEdit(60, 24, 180, 22, "", false, gui["_root"])
 	guiEditSetMaxLength(gui["txtCharName"], 32767)
 
-	gui["lblCharNameExplanation"] = guiCreateLabel(10, 40, 240, 80,"This needs to be in the following format: \n     Firstname Lastname\nFor example: Taylor Jackson.\nYou are not allowed to use famous names.", false, gui["_root"])
+	gui["lblCharNameExplanation"] = guiCreateLabel(10, 40, 240, 80,"Musí být v následujícím formátu: \n Jméno Příjmení\nNapříklad: Taylor Jackson.\nNení povoleno používat slavná jména.", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblCharNameExplanation"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblCharNameExplanation"], "center")
 
@@ -41,11 +41,11 @@ function newCharacter_init()
 	guiLabelSetHorizontalAlign(gui["lblCharDescExplanation"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblCharDescExplanation"], "center")]]
 
-	gui["lblGender"] = guiCreateLabel(10, 160, 46, 13, "Gender:", false, gui["_root"])
+	gui["lblGender"] = guiCreateLabel(10, 160, 46, 13, "Pohlavy:", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblGender"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblGender"], "center")
-	gui["rbMale"] = guiCreateRadioButton(90, 160, 51, 13, "Male", false, gui["_root"])
-	gui["rbFemale"] = guiCreateRadioButton(150, 160, 82, 13, "Female", false, gui["_root"])
+	gui["rbMale"] = guiCreateRadioButton(90, 160, 51, 13, "Muž", false, gui["_root"])
+	gui["rbFemale"] = guiCreateRadioButton(150, 160, 82, 13, "Žena", false, gui["_root"])
 	guiRadioButtonSetSelected ( gui["rbMale"], true)
 	addEventHandler("onClientGUIClick", gui["rbMale"], newCharacter_updateGender, false)
 	addEventHandler("onClientGUIClick", gui["rbFemale"], newCharacter_updateGender, false)
@@ -54,23 +54,23 @@ function newCharacter_init()
 	guiLabelSetHorizontalAlign(gui["lblSkin"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblSkin"], "center")
 
-	gui["btnPrevSkin"] = guiCreateButton(50, 180, 80, 16, "Previous", false, gui["_root"])
+	gui["btnPrevSkin"] = guiCreateButton(50, 180, 80, 16, "Předchozí", false, gui["_root"])
 	addEventHandler("onClientGUIClick", gui["btnPrevSkin"], newCharacter_updateGender, false)
-	gui["btnNextSkin"] = guiCreateButton(150, 180, 80, 16, "Next", false, gui["_root"])
+	gui["btnNextSkin"] = guiCreateButton(150, 180, 80, 16, "Další", false, gui["_root"])
 	addEventHandler("onClientGUIClick", gui["btnNextSkin"], newCharacter_updateGender, false)
 
-	gui["lblRace"] = guiCreateLabel(10, 140, 111, 16, "Race:", false, gui["_root"])
+	gui["lblRace"] = guiCreateLabel(10, 140, 111, 16, "Rasa:", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblRace"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblRace"], "center")
 
-	gui["chkBlack"] =  guiCreateCheckBox ( 60, 140, 55, 16, "Black", true, false, gui["_root"] )
+	gui["chkBlack"] =  guiCreateCheckBox ( 60, 140, 55, 16, "Černa", true, false, gui["_root"] )
 	addEventHandler("onClientGUIClick", gui["chkBlack"] , newCharacter_raceFix, false)
-	gui["chkWhite"] =  guiCreateCheckBox ( 120, 140, 55, 16, "White", false, false, gui["_root"] )
+	gui["chkWhite"] =  guiCreateCheckBox ( 120, 140, 55, 16, "Bíla", false, false, gui["_root"] )
 	addEventHandler("onClientGUIClick", gui["chkWhite"] , newCharacter_raceFix, false)
-	gui["chkAsian"] =  guiCreateCheckBox ( 180, 140, 55, 16, "Asian", false, false, gui["_root"] )
+	gui["chkAsian"] =  guiCreateCheckBox ( 180, 140, 55, 16, "Azijska", false, false, gui["_root"] )
 	addEventHandler("onClientGUIClick", gui["chkAsian"] , newCharacter_raceFix, false)
 
-	gui["lblHeight"] = guiCreateLabel(10, 200, 111, 16, "Height", false, gui["_root"])
+	gui["lblHeight"] = guiCreateLabel(10, 200, 111, 16, "Výška", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblHeight"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblHeight"], "center")
 
@@ -78,7 +78,7 @@ function newCharacter_init()
 	addEventHandler("onClientGUIScroll", gui["scrHeight"], newCharacter_updateScrollBars, false)
 	guiSetProperty(gui["scrHeight"], "StepSize", "0.02")
 
-	gui["lblWeight"] = guiCreateLabel(10, 220, 111, 16, "Weight", false, gui["_root"])
+	gui["lblWeight"] = guiCreateLabel(10, 220, 111, 16, "Váha", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblWeight"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblWeight"], "center")
 
@@ -86,7 +86,7 @@ function newCharacter_init()
 	addEventHandler("onClientGUIScroll", gui["scrWeight"], newCharacter_updateScrollBars, false)
 	guiSetProperty(gui["scrWeight"], "StepSize", "0.01")
 
-	gui["lblAge"] = guiCreateLabel(10, 240, 111, 16, "Age", false, gui["_root"])
+	gui["lblAge"] = guiCreateLabel(10, 240, 111, 16, "Věk", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblAge"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblAge"], "center")
 
@@ -94,7 +94,7 @@ function newCharacter_init()
 	addEventHandler("onClientGUIScroll", gui["scrAge"], newCharacter_updateScrollBars, false)
 	guiSetProperty(gui["scrAge"], "StepSize", "0.0120")
 
-	gui["lblDay"] = guiCreateLabel(10, 282, 111, 16, "Day of birth:", false, gui["_root"])
+	gui["lblDay"] = guiCreateLabel(10, 282, 111, 16, "Den narozeni:", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblDay"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblDay"], "center")
 
@@ -102,25 +102,25 @@ function newCharacter_init()
 	addEventHandler("onClientGUIScroll", gui["scrDay"], newCharacter_updateScrollBars, false)
 	guiSetProperty(gui["scrDay"], "StepSize", "0.0125")
 
-	gui["lblMonth"] = guiCreateLabel(10, 260, 111, 16, "Month of birth", false, gui["_root"])
+	gui["lblMonth"] = guiCreateLabel(10, 260, 111, 16, "Měsic", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblDay"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblDay"], "center")
 
 
-	gui["drpMonth"] =  guiCreateComboBox ( 110, 260, 130, 16, "January", false, gui["_root"])
+	gui["drpMonth"] =  guiCreateComboBox ( 110, 260, 130, 16, "Leden", false, gui["_root"])
 	guiComboBoxAdjustHeight(gui["drpMonth"], 15)
-	guiComboBoxAddItem(gui["drpMonth"], "January")
-	guiComboBoxAddItem(gui["drpMonth"], "February")
-	guiComboBoxAddItem(gui["drpMonth"], "March")
-	guiComboBoxAddItem(gui["drpMonth"], "April")
-	guiComboBoxAddItem(gui["drpMonth"], "May")
-	guiComboBoxAddItem(gui["drpMonth"], "June")
-	guiComboBoxAddItem(gui["drpMonth"], "July")
-	guiComboBoxAddItem(gui["drpMonth"], "August")
-	guiComboBoxAddItem(gui["drpMonth"], "September")
-	guiComboBoxAddItem(gui["drpMonth"], "October")
-	guiComboBoxAddItem(gui["drpMonth"], "November")
-	guiComboBoxAddItem(gui["drpMonth"], "December")
+	guiComboBoxAddItem(gui["drpMonth"], "Leden")
+	guiComboBoxAddItem(gui["drpMonth"], "Únor")
+	guiComboBoxAddItem(gui["drpMonth"], "Březen")
+	guiComboBoxAddItem(gui["drpMonth"], "Duben")
+	guiComboBoxAddItem(gui["drpMonth"], "Květen")
+	guiComboBoxAddItem(gui["drpMonth"], "Červen")
+	guiComboBoxAddItem(gui["drpMonth"], "Červenec")
+	guiComboBoxAddItem(gui["drpMonth"], "Srpen")
+	guiComboBoxAddItem(gui["drpMonth"], "Září")
+	guiComboBoxAddItem(gui["drpMonth"], "Říjen")
+	guiComboBoxAddItem(gui["drpMonth"], "Listopad")
+	guiComboBoxAddItem(gui["drpMonth"], "Prosinec")
 
 	addEventHandler ( "onClientGUIComboBoxAccepted", root,
 		function ( comboBox )
@@ -132,12 +132,12 @@ function newCharacter_init()
 
 
 
-	gui["lblLanguage"] = guiCreateLabel(10, 305, 111, 16, "Language:", false, gui["_root"])
+	gui["lblLanguage"] = guiCreateLabel(10, 305, 111, 16, "Jazyk:", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblLanguage"], "left", false)
 	guiLabelSetVerticalAlign(gui["lblLanguage"], "center")
 
 	gui["btnLanguagePrev"] = guiCreateButton(110, 305, 16, 16, "<", false, gui["_root"])
-	gui["lblLanguageDisplay"] = guiCreateLabel(126, 305, 98, 16, "English", false, gui["_root"])
+	gui["lblLanguageDisplay"] = guiCreateLabel(126, 305, 98, 16, "Čeština", false, gui["_root"])
 	guiLabelSetHorizontalAlign(gui["lblLanguageDisplay"], "center", true)
 	guiLabelSetVerticalAlign(gui["lblLanguageDisplay"], "center", true)
 
@@ -145,13 +145,13 @@ function newCharacter_init()
 	addEventHandler("onClientGUIClick", gui["btnLanguagePrev"] , newCharacter_updateLanguage, false)
 	addEventHandler("onClientGUIClick", gui["btnLanguageNext"] , newCharacter_updateLanguage, false)
 
-	gui["btnLangs"] = guiCreateButton(10, 330, 231, 41, "All Languages", false, gui["_root"])
+	gui["btnLangs"] = guiCreateButton(10, 330, 231, 41, "Všechny jazyky", false, gui["_root"])
 	addEventHandler("onClientGUIClick", gui["btnLangs"] , newCharacter_viewAllLangs, false)
 
-	gui["btnCancel"] = guiCreateButton(10, 370+5, 231, 41, "Cancel", false, gui["_root"])
+	gui["btnCancel"] = guiCreateButton(10, 370+5, 231, 41, "Zrušit", false, gui["_root"])
 	addEventHandler("onClientGUIClick", gui["btnCancel"], newCharacter_cancel, false)
 
-	gui["btnCreateChar"] = guiCreateButton(10,410+10, 231, 41, "Create", false, gui["_root"])
+	gui["btnCreateChar"] = guiCreateButton(10,410+10, 231, 41, "Vytvořit", false, gui["_root"])
 	addEventHandler("onClientGUIClick", gui["btnCreateChar"], newCharacter_attemptCreateCharacter, false)
 	newCharacter_changeSkin()
 	newCharacter_updateScrollBars()
@@ -161,7 +161,7 @@ function newCharacter_viewAllLangs(button)
 	if (source == gui["btnLangs"] and button == "left") then
 		if isElement(gui['langWindow']) then return false end
 
-		gui['langWindow'] = guiCreateWindow(720, 339, 339, 446, "Languages", false)
+		gui['langWindow'] = guiCreateWindow(720, 339, 339, 446, "Jazyky", false)
 		guiWindowSetSizable(gui['langWindow'], false)
 		showCursor(true)
 	
@@ -172,7 +172,7 @@ function newCharacter_viewAllLangs(button)
 			guiGridListAddRow(gui['langWindowGrid'], value)
 		end
 			
-		gui['langWindowCloseBtn'] = guiCreateButton(9, 411, 320, 25, "Close", false, gui['langWindow'])
+		gui['langWindowCloseBtn'] = guiCreateButton(9, 411, 320, 25, "Zavřit", false, gui['langWindow'])
 			
 		addEventHandler("onClientGUIClick", gui['langWindowCloseBtn'], function(button)
 			if (source == gui['langWindowCloseBtn'] and button == "left") then 
@@ -251,15 +251,15 @@ function newCharacter_updateScrollBars()
 
 	--local scrollHeight = tonumber(guiGetProperty(gui["scrHeight"], "ScrollPosition")) * 100
 	--scrollHeight = math.floor((scrollHeight / 2) + 150)
-	guiSetText(gui["lblHeight"], "Height: "..scrollHeight.." CM")
+	guiSetText(gui["lblHeight"], "Výška: "..scrollHeight.." CM")
 
 	--local scrWeight = tonumber(guiGetProperty(gui["scrWeight"], "ScrollPosition")) * 310
 	--scrWeight = math.floor(scrWeight + 40)
-	guiSetText(gui["lblWeight"], "Weight: "..scrWeight.." KG")
+	guiSetText(gui["lblWeight"], "Váha: "..scrWeight.." KG")
 
 	--local scrAge = tonumber(guiGetProperty(gui["scrAge"], "ScrollPosition")) * 100
 	--scrAge = math.floor( (scrAge * 0.8 ) + 16 )
-	guiSetText(gui["lblAge"], "Age: "..scrAge.." years old")
+	guiSetText(gui["lblAge"], "Věk: "..scrAge.." ")
 
 	local year = getBirthday(tonumber(scrAge))
 	selectedMonth = monthToNumber(selectedMonth1)
@@ -272,7 +272,7 @@ function newCharacter_updateScrollBars()
 		scrDay = 1
 	end
 
-	guiSetText(gui["lblDay"], "Day of birth: "..(scrDay or "1"))
+	guiSetText(gui["lblDay"], "Den narozeni: "..(scrDay or "1"))
 end
 
 function newCharacter_changeSkin(diff)

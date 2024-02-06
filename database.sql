@@ -694,7 +694,9 @@ CREATE TABLE `factions` (
   `free_custom_ints` tinyint(1) UNSIGNED DEFAULT '0',
   `free_custom_skins` tinyint(1) UNSIGNED DEFAULT '0',
   `before_tax_value` int(6) NOT NULL DEFAULT '0',
-  `before_wage_charge` int(6) NOT NULL DEFAULT '0'
+  `before_wage_charge` int(6) NOT NULL DEFAULT '0',
+  `plugins` text,
+  `active_plugins` text
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

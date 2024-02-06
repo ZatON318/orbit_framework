@@ -1,0 +1,7 @@
+<meta>
+    <script src="replacer.lua" type="client" />
+    
+    <file src="vehicles/400.txd"></file>
+    <file src="vehicles/400.dff"></file>
+    
+</meta>

@@ -70,7 +70,8 @@ addEventHandler( 'factions:editFaction', resourceRoot, function( data, old_id )
 			end
 		-- if creating new faction.
 		else
-			local qh2 = dbQuery( exports.mysql:getConn('mta'), "INSERT INTO factions SET bankbalance='0', motd='Welcome to the faction.', note = '', name=?, type=?, max_interiors=?, max_vehicles=?, free_custom_ints=?, free_custom_skins=?, before_tax_value=?, before_wage_charge=? ", data.name, data.type, data.max_interiors, data.max_vehicles, data.free_custom_ints, data.free_custom_skins, data.before_tax_value, data.free_wage_amount )
+            default_plugins = "2,"
+			local qh2 = dbQuery( exports.mysql:getConn('mta'), "INSERT INTO factions SET bankbalance='0', motd='Welcome to the faction.', note = '', name=?, type=?, max_interiors=?, max_vehicles=?, free_custom_ints=?, free_custom_skins=?, before_tax_value=?, before_wage_charge=?, plugins=?, active_plugins=? ", data.name, data.type, data.max_interiors, data.max_vehicles, data.free_custom_ints, data.free_custom_skins, data.before_tax_value, data.free_wage_amount, default_plugins, 0 )
 			local res, nums, id = dbPoll( qh2, 10000 )
 			if id and tonumber(id) then
 				data.id = id

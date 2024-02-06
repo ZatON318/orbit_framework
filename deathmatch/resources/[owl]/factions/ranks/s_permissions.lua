@@ -17,6 +17,7 @@ mem_permissions = {
 	[16] = 	{"modify_duty_settings","Modify Duty Settings"}, 	-- 16 and above are perms that do not exist for ALL factions
 	[17] = 	{"set_member_duty",		"Set Member Duties"}, 		-- If you add something you'll have to edit 'getFactionPermissions'
 	[18] = 	{"see_towstats",		"See towstats"}, 
+	[19] =  {"edit_plugins",		"Editovať pluginy frakcie"},
 	}
 
 
