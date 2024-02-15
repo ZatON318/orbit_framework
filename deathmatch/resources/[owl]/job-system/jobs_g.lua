@@ -1,12 +1,12 @@
 function getJobTitleFromID(jobID)
 	if (tonumber(jobID)==1) then
-		return "Delivery Driver"
+		return "Kurýr"
 	elseif (tonumber(jobID)==2) then
-		return "Taxi Driver"
+		return "Řidič taxíku"
 	elseif  (tonumber(jobID)==3) then
-		return "Bus Driver"
+		return "Řidič autobusu"
 	elseif (tonumber(jobID)==4) then
-		return "City Maintenance"
+		return "Údržba města"
 	elseif (tonumber(jobID)==5) then
 		return "Mechanic"
 	elseif (tonumber(jobID)==6) then

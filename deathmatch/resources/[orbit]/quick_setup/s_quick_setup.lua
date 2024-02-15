@@ -17,7 +17,7 @@ addEventHandler("onSetupButtonClicked", root, onSubmitButtonClicked)
 
 function setupBegin(thePlayer, cmd)
 	if exports.integration:isPlayerAdmin( thePlayer ) then
-		triggerClientEvent(thePlayer, resName..":onSetupBegin", resourceRoot)
+		triggerClientEvent(thePlayer, "onSetupBegin", thePlayer)
 	end
 end
 addCommandHandler("setup", setupBegin, false, false)
