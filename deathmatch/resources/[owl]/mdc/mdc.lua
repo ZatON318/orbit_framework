@@ -55,7 +55,7 @@ function cacheOnStart()
 		outputDebugString("mdc-system/mdc.lua: Failed to load pilot licenses!",2)
 	end
 	
-	local anprResult = dbQuery( exports.mysql:getConn('mta'), "SELECT a.*, charactername FROM mdc_anpr a LEFT JOIN characters c ON c.id=a.doneby ORDER BY time ASC" )
+	--[[local anprResult = dbQuery( exports.mysql:getConn('mta'), "SELECT a.*, charactername FROM mdc_anpr a LEFT JOIN characters c ON c.id=a.doneby ORDER BY time ASC" )
 	local results, num_affected_rows, last_insert_id = dbPoll ( anprResult, 10000 )
 	if results and num_affected_rows > 0 then
 		for i, row in ipairs( results ) do
@@ -70,7 +70,7 @@ function cacheOnStart()
 		end
 	else
 		dbFree( anprResult )
-    end
+    end--]]
 
 	local qh = dbQuery( exports.mysql:getConn('mta'), "SELECT a.*, charactername FROM mdc_apb a LEFT JOIN characters c ON c.id=a.doneby ORDER BY time ASC" )
 	local results, num_affected_rows, last_insert_id = dbPoll ( qh, 10000 )

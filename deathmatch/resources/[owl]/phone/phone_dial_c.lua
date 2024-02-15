@@ -8,7 +8,7 @@ p_Sound = {}
 function drawPhoneDial()
 	if isPhoneGUICreated() then
 		curEditPhoneNumber = ""
-		ePhoneNumber = guiCreateEdit(30,100,204,50,"",false,wPhoneMenu)
+		ePhoneNumber = guiCreateEdit(30,60,204,50,"",false,wPhoneMenu)
 		guiEditSetMaxLength(ePhoneNumber, 24)
 		guiSetFont ( ePhoneNumber, font1 )
 		addEventHandler("onClientGUIChanged", ePhoneNumber, function(element)
@@ -34,10 +34,10 @@ function drawPhoneDial()
 		addEventHandler("onClientGUIFocus", ePhoneNumber, onClientGUIFocus_editbox, true)
 		addEventHandler("onClientGUIBlur", ePhoneNumber, onClientGUIBlur_editbox, true)
 
-		bCall = guiCreateButton(30,155,102,30,"Call",false,wPhoneMenu)
-		guiSetFont ( bCall, font1 )
-		bSMSDial = guiCreateButton(30+102,155,102,30,"SMS",false,wPhoneMenu)
-		guiSetFont ( bSMSDial, font1 )
+		bCall = guiCreateButton(30,115,102,30,"Zavolat",false,wPhoneMenu)
+		--guiSetFont ( bCall, font1 )
+		bSMSDial = guiCreateButton(30+102,115,102,30,"SMS",false,wPhoneMenu)
+		--guiSetFont ( bSMSDial, font1 )
 
 		addEventHandler( "onClientGUIAccepted", ePhoneNumber,
 		    function( theElement )
@@ -120,15 +120,15 @@ function startDialing(from, to, popOutOnPhoneCall)
 
 		local bW,bH = 200, 30
 
-		bSpeaker = guiCreateButton(margin+2,posY,bW,bH, "Loudspeaker", false, wPhoneMenu)
-		posY = posY + bH + 2
+		--bSpeaker = guiCreateButton(margin+2,posY,bW,bH, "Loudspeaker", false, wPhoneMenu)
+		--posY = posY + bH + 2
 
-		addEventHandler('onClientGUIClick', bSpeaker, function()
-			if source == bSpeaker then
-				triggerServerEvent('phone:loudspeaker', localPlayer, localPlayer, 'loudspeaker')
-			end
-		end, false
-		)
+		--addEventHandler('onClientGUIClick', bSpeaker, function()
+			--if source == bSpeaker then
+				--triggerServerEvent('phone:loudspeaker', localPlayer, localPlayer, 'loudspeaker')
+			--end
+		--end, false
+		--)
 
 		bEndCall = guiCreateButton(margin+2,posY,bW,bH, "End", false, wPhoneMenu)
 
@@ -173,6 +173,7 @@ function endPhoneCall()
 	triggerServerEvent("phone:cancelPhoneCall", localPlayer, getPhoneCallCost())
 	if isPhoneGUICreated() then
 		guiSetEnabled(wPhoneMenu, true)
+		setElementData(source, "callingWithName", "")
 	end
 end
 
@@ -181,6 +182,7 @@ function finishPhoneCall(reason)
 	killDialingTimers()
 	playSound("sounds/hangup.mp3")
 	local reasonText = "End"
+	setElementData(source, "callingWithName", "")
 	if reason == "out_of_service" then
 		reasonText = "The subscriber you have dialed\n is not in service"
 	elseif reason == "cant_afford" then

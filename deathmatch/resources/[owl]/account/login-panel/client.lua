@@ -560,7 +560,7 @@ function displayRegisterConpleteText(username)
     guiWindowSetMovable(GUIEditor.window[1], false)
     guiWindowSetSizable(GUIEditor.window[1], false)
     guiSetProperty(GUIEditor.window[1], "AlwaysOnTop", "True")
-    GUIEditor.label[1] = guiCreateLabel(8, 50, 339, 121+extend, "Váš účet pro OwlGaming MTA s názvem '"..username.."' je téměř připraven k použití!\n\nNyní se můžete přihlásit a začít hrát.\n\nS pozdravem, \n Orbit komunita a dev tým", false, GUIEditor.window[1])
+    GUIEditor.label[1] = guiCreateLabel(8, 50, 339, 121+extend, "Váš účet pro Orbit MTA s názvem '"..username.."' je téměř připraven k použití!\n\nNyní se můžete přihlásit a začít hrát.\n\nS pozdravem, \n Orbit komunita a dev tým", false, GUIEditor.window[1])
     guiLabelSetHorizontalAlign(GUIEditor.label[1], "left", true)
 
     GUIEditor.button[1] = guiCreateButton(10, 153+extend, 337, 26, "Přihlásit", false, GUIEditor.window[1])

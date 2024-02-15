@@ -1,7 +1,7 @@
 --Globals
 local lUsername, tUsername, lPassword, tPassword, chkRememberLogin, bLogin, bRegister, defaultingTimer = nil
 local newsTitle, newsText, newsAuthor
-local loginTitleText = "OwlGaming MTA Roleplay"
+local loginTitleText = "Orbit MTA Roleplay mode"
 local old_screen
 --Settings block for c_characters.lua/line 87
 loginScreens = {

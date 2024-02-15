@@ -97,7 +97,7 @@ function applyPhone(string, popOutOnPhoneCall, itemName)
 	outputDebugString("[Phone] applyPhone / phonestate = "..phonestate.. " / action = "..string)
 	if string == "phone_in" then
 		--outputDebugString("[Phone] "..getPlayerName(source).." / phone_in")
-		triggerEvent('sendAme', source, "takes out " .. (getElementData(source, "gender") == 0 and "his" or "her") .. " " .. itemName .. ".")
+		triggerEvent('sendAme', source, "vybral " .. (getElementData(source, "gender") == 0 and "his" or "her") .. " " .. itemName .. ".")
 		if getElementData(source, "phone_anim") ~= "0" then
 			if not isElement(phoneO[source]) then
 				phoneO[source] = createObject(330, 0, 0, 0)
@@ -160,7 +160,7 @@ function applyPhone(string, popOutOnPhoneCall, itemName)
 		--resetPhoneState(source)
 		if getElementData(source, "cellphoneGUIStateSynced") then
 			if not popOutOnPhoneCall then
-				triggerEvent('sendAme', source, "puts down "..(getElementData(source, "gender") == 0 and "his" or "her").." " .. itemName .. ".")
+				triggerEvent('sendAme', source, "odložil "..(getElementData(source, "gender") == 0 and "his" or "her").." " .. itemName .. ".")
 			end
 			if getElementData(source, "phone_anim") ~= "0" then
 				setPedAnimation(source, "ped", string, 1, false)
@@ -392,6 +392,10 @@ function callSomeone(thePlayer, commandName, phoneNumber, withNumber)
 						end
 
 						-- Note down some needed details.
+						targetName = getPlayerName(targetPlayer)
+						--iprint("target name:")
+						--iprint(targetName)
+						--setElementData(thePlayer, "callingWithName", targetName)
 						exports.anticheat:changeProtectedElementDataEx(thePlayer, "call.col", publicphone, false)
 						exports.anticheat:changeProtectedElementDataEx(thePlayer, "payphone.number", outboundPhoneNumber, false)
 						exports.anticheat:changeProtectedElementDataEx(thePlayer, "calling", tonumber(realTo), false)

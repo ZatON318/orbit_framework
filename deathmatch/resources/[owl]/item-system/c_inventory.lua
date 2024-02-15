@@ -2,8 +2,6 @@
  * ***********************************************************************************************************************
  * Copyright (c) 2015 OwlGaming Community - All Rights Reserved
  * All rights reserved. This program and the accompanying materials are private property belongs to OwlGaming Community
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
  * ***********************************************************************************************************************
  ]]
 
@@ -54,14 +52,14 @@ local activeTabItem = nil
 local hoverAction = false
 local actionIcons =
 {
-	[TAB_WALLET] = { -48, tocolor( 255, 255, 255, 50 ), "Wallet" },
-	[TAB_ITEMS] = { 48, tocolor( 255, 255, 255, 50 ), "Items" },
-	[TAB_KEYS] = { -203, tocolor( 255, 255, 255, 50 ), "Keys" },
-	[TAB_WEAPONS] = { -204, tocolor( 255, 255, 255, 50 ), "Weapons" },
+	[TAB_WALLET] = { -48, tocolor( 255, 255, 255, 50 ), "Peněženka" },
+	[TAB_ITEMS] = { 48, tocolor( 255, 255, 255, 50 ), "Předměty" },
+	[TAB_KEYS] = { -203, tocolor( 255, 255, 255, 50 ), "Klíče" },
+	[TAB_WEAPONS] = { -204, tocolor( 255, 255, 255, 50 ), "Zbraně" },
 	
-	[ACTION_DROP] = { -202, tocolor( 127, 255, 127, 63 ), "Drop Item", "Hold CTRL while selecting an item to quick drop it." },
-	[ACTION_SHOW] = { -201, tocolor( 127, 127, 255, 63 ), "Show Item" },
-	[ACTION_DESTROY] = { -200, tocolor( 255, 127, 127, 63 ), "Destroy Item", "Hold DELETE while selecting an item to quick delete it." },
+	[ACTION_DROP] = { -202, tocolor( 127, 255, 127, 63 ), "Položit předmět", "Držte tlačítko CTRL při výběru předmětu pro rychlé položení." },
+	[ACTION_SHOW] = { -201, tocolor( 127, 127, 255, 63 ), "Zobrazit předmět" },
+	[ACTION_DESTROY] = { -200, tocolor( 255, 127, 127, 63 ), "Zničit předmět", "Držte tlačítko DELETE při výběru předmětu pro rychlé smazání." },
 	--[ACTION_SPLIT] = { -203, tocolor( 255, 127, 127, 63 ), "Destroy Item", "Press DELETE while selecting an item to automatically delete it." }
 }
 

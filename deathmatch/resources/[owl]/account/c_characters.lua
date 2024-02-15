@@ -322,22 +322,23 @@ function renderAccountStats()
 	dxDrawImage(5+mta_posxOffset, 3+mta_posyOffset, 50, 50, avatar and avatar.tex or ":cache/default.png" , 0, 0, 0, tocolor(255, 255, 255, 255), true)
 	dxDrawText(greeting..", "..username, 46+mta_posxOffset, mta_posyOffset-4, 302+mta_posxOffset, 72+mta_posyOffset, tocolor(255, 255, 255, 255), 0.70, "bankgothic", "center", "center", false, true, true, false, false)
 	w = dxGetTextWidth( credits )
-	dxDrawImage(75+mta_posxOffset, 66+mta_posyOffset, 14, 13, ":donators/gamecoin.png", 0, 0, 0, tocolor(255, 255, 255, 255), true)
-	dxDrawText("GameCoins:", 8+mta_posxOffset, 65+mta_posyOffset, 74, 107+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
-	dxDrawText("Total Hours:", 170+mta_posxOffset, 65+mta_posyOffset, 242, 106+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
+	dxDrawImage(85+mta_posxOffset, 66+mta_posyOffset, 14, 13, ":donators/gamecoin.png", 0, 0, 0, tocolor(255, 255, 255, 255), true)
+	dxDrawText("Herní mince:", 8+mta_posxOffset, 65+mta_posyOffset, 74, 107+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
+	dxDrawText("Celkové hodiny:", 150+mta_posxOffset, 65+mta_posyOffset, 242, 106+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
 	dxDrawText(getElementData(localPlayer, "account:hours") or 0, 244+mta_posxOffset, 65+mta_posyOffset, 311, 109+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default", "left", "top", false, false, true, false, false)
-	dxDrawText(exports.global:formatMoney(credits), 89+mta_posxOffset, 65+mta_posyOffset, 111, 101+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default", "left", "top", false, false, true, false, false)
-	dxDrawText("Account Creation Date:", 8+mta_posxOffset, 88+mta_posyOffset, 137, 124+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
+	dxDrawText(exports.global:formatMoney(credits), 105+mta_posxOffset, 65+mta_posyOffset, 111, 101+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default", "left", "top", false, false, true, false, false)
+	dxDrawText("Datum vytvoření účtu:", 8+mta_posxOffset, 88+mta_posyOffset, 137, 124+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
 	dxDrawText(createdDate, 143+mta_posxOffset, 88+mta_posyOffset, 181, 125+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default", "left", "top", false, false, true, false, false)
-	dxDrawText("Last Played:", 8+mta_posxOffset, 106+mta_posyOffset, 74, 144+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
-	dxDrawText(lastLoginDate or "Never", 81+mta_posxOffset, 106+mta_posyOffset, 171, 148+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default", "left", "top", false, false, true, false, false)
-	dxDrawText("Registered Email:", 8+mta_posxOffset, 125+mta_posyOffset, 113, 169+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
-	dxDrawText(accountEmail, 113+mta_posxOffset, 125+mta_posyOffset, 165, 166+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default", "left", "top", false, false, true, false, false)
+	dxDrawText("Poslední hraní:", 8+mta_posxOffset, 106+mta_posyOffset, 74, 144+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
+	dxDrawText(lastLoginDate or "Nikdy", 100+mta_posxOffset, 106+mta_posyOffset, 171, 148+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default", "left", "top", false, false, true, false, false)
+	dxDrawText("Registrovaný email:", 8+mta_posxOffset, 125+mta_posyOffset, 113, 169+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default-bold", "left", "top", false, false, true, false, false)
+	dxDrawText(accountEmail, 125+mta_posxOffset, 125+mta_posyOffset, 165, 166+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "default", "left", "top", false, false, true, false, false)
+
 
     -- Buttons
     local hoverAccountHis = isInBox( cursorX, cursorY, 3+mta_posxOffset, 3 + width-6+mta_posxOffset, 148+mta_posyOffset, 148 + 18+mta_posyOffset )
     dxDrawRectangle(3+mta_posxOffset, 148+mta_posyOffset, width-6, 18, hoverAccountHis and hover or tocolor(63, 63, 63, 174), true)
-    dxDrawText("Account History", 54+mta_posxOffset, 150+mta_posyOffset, width-54+mta_posxOffset, 183+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "arial", "center", "top", false, false, true, false, false) -- History
+    dxDrawText("Historie účtu"	, 54+mta_posxOffset, 150+mta_posyOffset, width-54+mta_posxOffset, 183+mta_posyOffset, tocolor(255, 255, 255, 255), 1.00, "arial", "center", "top", false, false, true, false, false) -- History
     if justClicked and hoverAccountHis then
     	triggerServerEvent("showAdminHistory", root, localPlayer)
     end
@@ -348,7 +349,7 @@ function renderAccountStats()
     end
     local hoverRefresh = isInBox( cursorX, cursorY, 3+mta_posxOffset, 3 + buttonWidth+mta_posxOffset, 170+mta_posyOffset, 170 + 22+mta_posyOffset )
     dxDrawRectangle(3+mta_posxOffset, 170+mta_posyOffset, buttonWidth, 22, hoverRefresh and hover or tocolor(63, 63, 63, 174), true) -- Refresh Chars
-    dxDrawText("Refresh Characters", 3+mta_posxOffset, 172+mta_posyOffset, buttonWidth+mta_posxOffset, 204+mta_posyOffset,  cooldown and cooldown>=getTickCount()-5000 and tocolor(255, 255, 255, 100) or tocolor(255, 255, 255, 255), 1.00, "arial", "center", "top", false, false, true, false, false)
+    dxDrawText("Refresh Postav", 3+mta_posxOffset, 172+mta_posyOffset, buttonWidth+mta_posxOffset, 204+mta_posyOffset,  cooldown and cooldown>=getTickCount()-5000 and tocolor(255, 255, 255, 100) or tocolor(255, 255, 255, 255), 1.00, "arial", "center", "top", false, false, true, false, false)
     if justClicked and hoverRefresh and not cooldown then
     	triggerServerEvent("updateCharacters", resourceRoot, true)
     	cooldown = getTickCount()
@@ -497,7 +498,7 @@ function Characters_characterSelectionVisisble()
 
 
 	bLogout = guiCreateStaticImage(swidth-width, 0, width, height, ":resources/window_body.png" , false, nil)
-	local text1= guiCreateLabel (0,0,1,1, "Logout", true, bLogout)
+	local text1= guiCreateLabel (0,0,1,1, "Odhlasit", true, bLogout)
 	guiLabelSetHorizontalAlign(text1, "center", true)
 	guiLabelSetVerticalAlign(text1, "center", true)
 
@@ -511,7 +512,7 @@ function Characters_characterSelectionVisisble()
 		end)
 
 	newCharacterButton = guiCreateStaticImage(swidth-width, 53, width, height, ":resources/window_body.png" , false, nil)
-	newCharacterButton_text = guiCreateLabel (0,0,1,1, "Create a new character!", true, newCharacterButton)
+	newCharacterButton_text = guiCreateLabel (0,0,1,1, "Vytvořte si novou postavu!", true, newCharacterButton)
 	guiLabelSetHorizontalAlign(newCharacterButton_text, "center", true)
 	guiLabelSetVerticalAlign(newCharacterButton_text, "center", true)
 	addEventHandler("onClientGUIClick", newCharacterButton, function()
@@ -527,11 +528,8 @@ function Characters_characterSelectionVisisble()
 	end)
 
 	local greetings = {
-		"Howdy",
-		"Welcome",
-		"Hello",
-		"Hey",
-		"Hi",
+		"Ahoj",
+		"Zdarec",
 	}
 	greeting = greetings[math.random(#greetings)]
 	showing = true
@@ -591,15 +589,15 @@ function characterMouseOver()
 			cursorX, cursorY = cursorX * swidth, cursorY * sheight
 			local ox, oy = cursorX-1053, cursorY-564
 			dxDrawImage(805+ox, 432+oy, 109, 105, "img/" .. ("%03d"):format(getElementModel(ped)) .. ".png", 0, 0, 0, tocolor(255, 255, 255, 255), true)
-			local tRace = "Black"
+			local tRace = "Černa"
 			local race = getElementData(ped, "account:charselect:race")
 			if race == 1 then
-				tRace="White"
+				tRace="Bila"
 			elseif race == 2 then
-				tRace="Asian"
+				tRace="Azijska"
 			end
-			local text = "■ Race: "..tRace.."\n■ Gender: "..(getElementData(ped, "account:charselect:gender") == 0 and "Male" or "Female").."\n■ Status: "..(getElementData(ped, "account:charselect:cked") > 0 and "#FF0000Dead" or "#00FF00Alive").."\n#FFFFFF■ Age: "..getElementData(ped, "account:charselect:age").."\n■ Height: "..getElementData(ped, "account:charselect:height").."cm\n■ Weight: "..getElementData(ped, "account:charselect:weight").."kg\n■ Played: "..getElementData(ped, "account:charselect:hoursplayed").."h"
-			local text2 = "■ Race: "..tRace.."\n■ Gender: "..(getElementData(ped, "account:charselect:gender") == 0 and "Male" or "Female").."\n■ Status: "..(getElementData(ped, "account:charselect:cked") > 0 and "Dead" or "Alive").."\n■ Age: "..getElementData(ped, "account:charselect:age").."\n■ Height: "..getElementData(ped, "account:charselect:height").."cm\n■ Weight: "..getElementData(ped, "account:charselect:weight").."kg\n■ Played: "..getElementData(ped, "account:charselect:hoursplayed").."h"
+			local text = "■ Rasa: "..tRace.."\n■ Pohlaví: "..(getElementData(ped, "account:charselect:gender") == 0 and "Muž" or "Žena").."\n■ Stav: "..(getElementData(ped, "account:charselect:cked") > 0 and "#FF0000Mrtvý" or "#00FF00Živý").."\n#FFFFFF■ Věk: "..getElementData(ped, "account:charselect:age").."\n■ Výška: "..getElementData(ped, "account:charselect:height").."cm\n■ Hmotnost: "..getElementData(ped, "account:charselect:weight").."kg\n■ Hrano: "..getElementData(ped, "account:charselect:hoursplayed").."h"
+			local text2 = "■ Rasa: "..tRace.."\n■ Pohlaví: "..(getElementData(ped, "account:charselect:gender") == 0 and "Muž" or "Žena").."\n■ Stav: "..(getElementData(ped, "account:charselect:cked") > 0 and "Mrtvý" or "Živý").."\n■ Věk: "..getElementData(ped, "account:charselect:age").."\n■ Výška: "..getElementData(ped, "account:charselect:height").."cm\n■ Hmotnost: "..getElementData(ped, "account:charselect:weight").."kg\n■ Hrano: "..getElementData(ped, "account:charselect:hoursplayed").."h"
 			if not font1 then font1 = dxCreateFont(':resources/nametags0.ttf') end
 			dxDrawText(text2, 915+ox, 433+oy, 1050+ox, 538+oy, tocolor(0, 0, 0, 255), 1.00, font1 or "default", "left", "top", true, false, true, true, false)
 			dxDrawText(text2, 915+ox, 431+oy, 1050+ox, 536+oy, tocolor(0, 0, 0, 255), 1.00, font1 or "default", "left", "top", true, false, true, true, false)
@@ -609,7 +607,7 @@ function characterMouseOver()
 			dxDrawLine(805+ox, 542+oy, 1017+ox, 542+oy, tocolor(255, 255, 255, 255), 1, true)
 			dxDrawLine(1017+ox, 542+oy, 1054+ox, 563+oy, tocolor(255, 255, 255, 255), 1, true)
 			local name = exports.global:explode(" ", getElementData(ped,"account:charselect:name"))[1]
-			text = string.upper("Click to play as "..name)
+			text = string.upper("Klikněte pro hraní jako" ..name)
 			if not font2 then font2 = dxCreateFont(':interior_system/intNameFont.ttf') end
 			dxDrawText(text, 805+ox, 549+oy, 1017+ox, 565+oy, tocolor(0, 0, 0, 255), 1.00, font2 or "default", "center", "center", true, false, true, false, false)
 			dxDrawText(text, 805+ox, 547+oy, 1017+ox, 563+oy, tocolor(0, 0, 0, 255), 1.00, font2 or "default", "center", "center", true, false, true, false, false)
@@ -781,8 +779,9 @@ function characters_onSpawn(fixedName, adminLevel, gmLevel, location)
 	guiSetInputEnabled(false)
 	showCursor(false)
 	--outputChatBox("You are now playing as '" .. fixedName .. "'.", 0, 255, 0)
-	outputChatBox("Press F1 for Help.", 255, 194, 14)
-	outputChatBox("You can visit the Options menu by pressing 'F10' or /home.", 255, 194, 15)
+	outputChatBox("Stiskněte F1 pro nápovědu.", 255, 194, 14)
+	outputChatBox("Menu můžete otevřít stisknutím 'F10' nebo příkazem /home.", 255, 194, 15)
+
 	outputChatBox(" ")
 	characters_destroyDetailScreen()
 

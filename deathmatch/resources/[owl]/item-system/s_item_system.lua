@@ -8,17 +8,37 @@ local fittingskins = {[0] = {[0] = blackMales, [1] = whiteMales, [2] = asianMale
 local badges = getBadges()
 local masks = getMasks()
 
-armor = {
-	[219]  = {49, "type2", "reaches for their armored vest and puts it over their head", "grabs their armored vest and takes it off"},
-	[220]  = {74, "type3", "reaches for their armored vest and puts it over their head", "grabs their armored vest and takes it off"},
-	[221]  = {100, "type4", "reaches for their armored vest and puts it over their head", "grabs their armored vest and takes it off"},
-}
--- Didn't make this local, since it is also required for the 'giveItem' function in s_item_management
-
 local cokeBottles = {}
 
 function removeAnimation(player)
 	exports.global:removeAnimation(player)
+end
+
+function PridatUtilitu(player, stav, hodnota, hp)
+	--[[
+		Stav 1 = Hlad.
+		Stav 2 = Žízeň.
+		Stav 3 = WC. ( Bude to méně využívaná funkce.)
+	--]]
+	if (stav==1) then
+		local jidlo = getElementData(player, "jidlo")
+
+		setElementData(player, "jidlo", jidlo+hodnota)
+		
+		giveHealth(player, hp)
+	elseif (stav==2) then
+		local piti = getElementData(player, "piti")
+		
+		setElementData(player, "piti", piti+hodnota)
+
+		giveHealth(player, hp)	
+
+		local zvuk = "drink"
+		local players = getElementsByType("player")
+		for k, p in ipairs(players) do
+			triggerClientEvent(p,"zvukplay", player, zvuk, 7)
+		end			
+	end
 end
 
 function giveHealth(player, health)
@@ -28,20 +48,20 @@ function giveHealth(player, health)
 end
 
 function removeOOC(text)
-	if not text then
+	wtext = tostring(text)
+	if not wtext then
+		outputChatBox("Error code IT001")
 		return ""
 	end
-	return tostring(text):gsub("%s*%(%(([^)]+)%)%)%s*","") -- removes the (( )) part
+	return wtext:gsub("%s*%(%(([^)]+)%)%)%s*","") -- removes the (( )) part
 end
 
-shields = { }
-
-local presents = { 1, 7, 8, 15, 11, 12, 19 }
+local shields = { }
+local presents = { 1, 7, 8, 15, 11, 12, 19, 26, 59, 71 }
 local glowstickColor = 1
 --
 -- callbacks
-function useItem(itemSlot, additional)
-	if client and client ~= source then return end
+function useItem(itemSlot, additional, thePlayer)
 
 	if not itemSlot then
 		return
@@ -51,8 +71,6 @@ function useItem(itemSlot, additional)
 	local itemID = items[itemSlot][1]
 	local itemValue = items[itemSlot][2]
 	local itemName = getItemName( itemID, itemValue )
-	local metadata = items[itemSlot][5]
-
 	if isPedDead(source) or getElementData(source, "injuriedanimation") then return end
 
 	local hasItemProtect = hasItem(source, tonumber( itemID ), tostring(itemValue)) or  hasItem(source, tonumber( itemID ), tonumber(itemValue))
@@ -62,8 +80,9 @@ function useItem(itemSlot, additional)
 
 	if itemID then
 		if (itemID==1) then -- hotdog
-			setElementHealth(source, 100)
-			triggerEvent('sendAme', source, "eats a hotdog.")
+			giveHunger(source, 45)
+			takeThirst(source, 3)
+			triggerEvent('sendAme', source, "snědl hotdog.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==3) then -- car key
 			local veh = getPedOccupiedVehicle(source)
@@ -79,10 +98,10 @@ function useItem(itemSlot, additional)
 					if getDistanceBetweenPoints3D(x, y, z, vx, vy, vz) <= 30 then -- car found
 						triggerEvent("lockUnlockOutsideVehicle", source, value)
 					else
-						outputChatBox("You are too far from the vehicle.", source, 255, 194, 14)
+						outputChatBox("Jsi příliš daleko od tohoto vozidla.", source, 255, 194, 14)
 					end
 				else
-					outputChatBox("Invalid Vehicle.", source, 255, 194, 14)
+					outputChatBox("Neexistující vozidlo.", source, 255, 194, 14)
 				end
 			end
 		elseif (itemID==4) or (itemID==5) then -- house key or business key
@@ -98,8 +117,8 @@ function useItem(itemSlot, additional)
 				local interiorID = getElementData(interior, "dbid")
 				if interiorID == itemValue then
 					for _, point in ipairs( { interiorEntrance, interiorExit } ) do
-						if (point.dim == dimension) then
-							local distance = getDistanceBetweenPoints3D(posX, posY, posZ, point.x, point.y, point.z)
+						if (point[5] == dimension) then
+							local distance = getDistanceBetweenPoints3D(posX, posY, posZ, point[1], point[2], point[3])
 							if (distance <= 6) then
 								found = interiorID
 								break
@@ -112,17 +131,18 @@ function useItem(itemSlot, additional)
 			if not found then
 				local possibleElevators = getElementsByType("elevator")
 				for _, elevator in ipairs(possibleElevators) do
-					local elevatorEntrance = exports.interior_system:tempFix( getElementData(elevator, "entrance") )
-					local elevatorExit = exports.interior_system:tempFix( getElementData(elevator, "exit") )
+					local elevatorEntrance = getElementData(elevator, "entrance")
+					local elevatorExit = getElementData(elevator, "exit")
+
 					for _, point in ipairs( { elevatorEntrance, elevatorExit } ) do
-						if (point.dim == dimension) then
-							local distance = getDistanceBetweenPoints3D(posX, posY, posZ, point.x, point.y, point.z)
+						if (point[5] == dimension) then
+							local distance = getDistanceBetweenPoints3D(posX, posY, posZ, point[1], point[2], point[3])
 							if (distance < 6) then
-								if elevatorEntrance.dim == itemValue then
-									found = elevatorEntrance.dim
+								if elevatorEntrance[5] == itemValue then
+									found = elevatorEntrance[5]
 									break
-								elseif elevatorExit.dim == itemValue  then
-									found = elevatorExit.dim
+								elseif elevatorExit[5] == itemValue  then
+									found = elevatorExit[5]
 									break
 								end
 							end
@@ -132,9 +152,9 @@ function useItem(itemSlot, additional)
 			end
 
 			if found then
-				local dbid, entrance, exit, interiorType, interiorElement = exports.interior_system:findProperty( source, found )
+				local dbid, entrance, exit, interiorType, interiorElement = exports['interior-system']:findProperty( source, found )
 				local interiorStatus = getElementData(interiorElement, "status")
-				local locked = interiorStatus.locked and 1 or 0
+				local locked = interiorStatus[3] and 1 or 0
 
 				locked = 1 - locked -- Invert status
 
@@ -143,12 +163,19 @@ function useItem(itemSlot, additional)
 				mysql:query_free("UPDATE interiors SET locked='" .. locked .. "' WHERE id='" .. found .. "' LIMIT 1")
 				if locked == 0 then
 					triggerEvent('sendAme', source, "puts the key in the door to unlock it.")
+					if not (exports.global:hasItem(source, 4, found)) and not (exports.global:hasItem(source, 5, found)) then
+						exports.logs:logMessage("[INTERIOR-UNLOCK] Interior #" .. found .. " was unlocked by " .. getPlayerName(source), 21)
+					end
 				else
 					newRealLockedValue = true
 					triggerEvent('sendAme', source, "puts the key in the door to lock it.")
+
+					if not (exports.global:hasItem(source, 4, found)) and not (exports.global:hasItem(source, 5, found)) then
+						exports.logs:logMessage("[INTERIOR-LOCK] Interior #" .. found .. " was locked by " .. getPlayerName(source), 21)
+					end
 				end
 
-				interiorStatus.locked = newRealLockedValue
+				interiorStatus[3] = newRealLockedValue
 				exports.anticheat:changeProtectedElementDataEx(interiorElement, "status", interiorStatus, true)
 			else
 				outputChatBox("You are too far from the door.", source, 255, 194, 14)
@@ -161,13 +188,13 @@ function useItem(itemSlot, additional)
 			local posX, posY, posZ = getElementPosition(source)
 			local possibleElevators = getElementsByType("elevator")
 			for _, elevator in ipairs(possibleElevators) do
-				local elevatorEntrance = exports.interior_system:tempFix( getElementData(elevator, "entrance") )
-				local elevatorExit = exports.interior_system:tempFix( getElementData(elevator, "exit") )
+				local elevatorEntrance = getElementData(elevator, "entrance")
+				local elevatorExit = getElementData(elevator, "exit")
 				local elevatorID = getElementData(elevator, "dbid")
 				if elevatorID == itemValue then
 					for _, point in ipairs( { elevatorEntrance, elevatorExit } ) do
-						if (point.dim == dimension) then
-							local distance = getDistanceBetweenPoints3D(posX, posY, posZ, point.x, point.y, point.z)
+						if (point[5] == dimension) then
+							local distance = getDistanceBetweenPoints3D(posX, posY, posZ, point[1], point[2], point[3])
 							if (distance < 6) then
 								found = elevator
 								break
@@ -183,104 +210,108 @@ function useItem(itemSlot, additional)
 				triggerEvent( "toggleCarTeleportMode", found, source )
 			end
 		elseif (itemID==8) then -- sandwich
-			giveHealth(source, 50)
+			PridatUtilitu(source, 1, 15, 5)
 			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
 			toggleAllControls(source, true, true, true)
-			triggerEvent('sendAme', source, "eats a sandwich.")
+			triggerClientEvent(source, "onClientPlayerWeaponCheck", source)
+			triggerEvent('sendAme', source, "snědl sandwich.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==9) then -- sprunk
-			giveHealth(source, 30)
+			PridatUtilitu(source, 2, 15, 10)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
 			toggleAllControls(source, true, true, true)
-			triggerEvent('sendAme', source, "drinks a sprunk.")
+			triggerClientEvent(source, "onClientPlayerWeaponCheck", source)
+			triggerEvent('sendAme', source, "vypil sprite z plechovky.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==10) then -- red dice
 			local max = tonumber(itemValue) or 6
 			if max == 1 then
 				max = 6
 			end
-			exports.global:sendLocalText(source, " ✪ " .. getPlayerName(source):gsub("_", " ") .. " rolls a " .. (max == 6 and "" or (max .. "-sided ")) .. "dice and gets " .. math.random( 1, max ) ..".", 255, 51, 102)
+			exports.global:sendLocalText(source, " ✪ " .. getPlayerName(source):gsub("_", " ") .. " hodil " .. (max == 6 and "" or (max .. "-stěnnou ")) .. "kostkou a padlo " .. math.random( 1, max ) ..".", 255, 51, 102)
 		elseif (itemID==11) then -- taco
-			giveHealth(source, 10)
+			PridatUtilitu(source, 1, 15, 5)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
-			triggerEvent('sendAme', source, "eats a taco.")
+			triggerEvent('sendAme', source, "snědl kebab.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==12) then -- cheeseburger
-			giveHealth(source, 10)
+			PridatUtilitu(source, 1, 15, 5)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
 			setTimer(removeAnimation, 4000, 1, source)
-			triggerEvent('sendAme', source, "eats a cheeseburger.")
+			triggerEvent('sendAme', source, "snědl cheeseburger.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==13) then -- donut
-			setElementHealth(source, 100)
+			PridatUtilitu(source, 1, 15, 5)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
-			triggerEvent('sendAme', source, "eats a donut.")
+			triggerEvent('sendAme', source, "snědl donut.")
 			takeItemFromSlot(source, itemSlot)
+		elseif (itemID==232) then -- Dron
+			local dimenze = getElementDimension(source)
+			if (dimenze==0) then
+				triggerClientEvent(source, "hideInventory", source, source)
+				triggerEvent("RZ:StartDrone", source, source)
+				outputChatBox(" #FFEF00Příkazem /drone schováš svého drona.", source, 255, 0, 0, true)
+			else
+				outputChatBox(" #FFEF00Drona nemůžeš použít v jiné dimenzi, zdá se to být i jako PowerGaming v mnoha případech.", source, 255, 0, 0, true)
+			end			
 		elseif (itemID==14) then -- cookie
-			giveHealth(source, 80)
+			PridatUtilitu(source, 1, 1, 5)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
-			triggerEvent('sendAme', source, "eats a cookie.")
+			triggerEvent('sendAme', source, "snědl cookie.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==15) then -- water
-			giveHealth(source, 90)
+			PridatUtilitu(source, 2, math.random(3, 6), 5)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
-			triggerEvent('sendAme', source, "drinks a bottle of water.")
+			triggerEvent('sendAme', source, "vypil flašku s vodou.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==16) then -- clothes
-			--disallowing dogs, only via /setskin
-			if skin == 300 then return false end
-
-			local gender = getElementData(source, 'gender')
-			local race = getElementData(source, 'race')
+			local result = mysql:query_fetch_assoc("SELECT gender,skincolor FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
+			local gender = tonumber(result["gender"])
+			local race = tonumber(result["skincolor"])
 
 			--local skin = tonumber(itemValue)
 			local skin, clothingid = unpack(split(tostring(itemValue), ':'))
 			skin = tonumber(skin)
 			clothingid = tonumber(clothingid) or nil
-			local fits = false
-
-			local skinTable = exports.npc:getFittingSkins()
-			for _, skin_id in pairs(skinTable[gender][race]) do
-				if skin_id == skin then
-					fits = true
-				end
-			end
-			if clothingid or fits then
+			--if fittingskins[gender] and fittingskins[gender][race] and fittingskins[gender][race][skin] then
 				setElementModel(source, skin)
-				exports.anticheat:setEld(source, "clothing:id", clothingid, 'all')
-				dbExec ( exports.mysql:getConn('mta') , "UPDATE characters SET skin=?, clothingid="..( clothingid or 'NULL' ) .. " WHERE id=?", skin, getElementData( source, "dbid" ) )
-				triggerEvent('sendAme', source, "changes their clothes.")
-			else
+				exports.anticheat:changeProtectedElementDataEx(source, "clothing:id", clothingid, true)
+				mysql:query_free( "UPDATE characters SET skin = " .. skin .. ", clothingid = " .. ( clothingid or 'NULL' ) .. " WHERE id = " .. getElementData( source, "dbid" ) )
+				triggerEvent('sendAme', source, "se převlékl.")
+			--[[else
 				outputChatBox("These clothes do not fit you.", source, 255, 0, 0)
-			end
+			end]]
 		elseif (itemID==17) then -- watch
-			local metaName = getItemName(itemID, itemValue, metadata)
-			triggerEvent('sendAme', source, "looks at their " ..metaName .. ".")
-			outputChatBox("The time is " .. string.format("%02d:%02d", getTime()) .. ".", source, 255, 194, 14)
+			triggerEvent('sendAme', source, "se podíval na hodinky.")
+			outputChatBox("Právě je " .. string.format("%02d:%02d", getTime()) .. ".", source, 255, 194, 14)
 			exports.global:applyAnimation(source, "COP_AMBIENT", "Coplook_watch", 4000, false, true, true)
 		elseif (itemID==20) then -- STANDARD FIGHTING
 			setPedFightingStyle(source, 4)
-			outputChatBox("You read a book on how to do Standard Fighting.", source, 255, 194, 14)
+			outputChatBox("Přečetl si si knihu základniho boje.", source, 255, 194, 14)
 			mysql:query_free("UPDATE characters SET fightstyle = 4 WHERE id = " .. getElementData( source, "dbid" ) )
 		elseif (itemID==21) then -- BOXING
 			setPedFightingStyle(source, 5)
-			outputChatBox("You read a book on how to do Boxing.", source, 255, 194, 14)
+			outputChatBox("Přečetl si si knihu o boxu.", source, 255, 194, 14)
 			mysql:query_free("UPDATE characters SET fightstyle = 5 WHERE id = " .. getElementData( source, "dbid" ) )
 		elseif (itemID==22) then -- KUNG FU
 			setPedFightingStyle(source, 6)
-			outputChatBox("You read a book on how to do Kung Fu.", source, 255, 194, 14)
+			outputChatBox("Přečetl si si knihu o Kung Fu.", source, 255, 194, 14)
 			mysql:query_free("UPDATE characters SET fightstyle = 6 WHERE id = " .. getElementData( source, "dbid" ) )
 		elseif (itemID==23) then -- KNEE HEAD
 			--setPedFightingStyle(source, 7)
-			outputChatBox("You open the book, and notice that the book is written in old greek.", source, 255, 194, 14)
+			outputChatBox("Otevřel si knihu a zjistil si že je napsana v staré řečtině.", source, 255, 194, 14)
 			--mysql:query_free("UPDATE characters SET fightstyle = 7 WHERE id = " .. getElementData( source, "dbid" ) )
 		elseif (itemID==24) then -- GRAB KICK
 			setPedFightingStyle(source, 15)
-			outputChatBox("You read a book on how to do Grab Kick Fighting.", source, 255, 194, 14)
+			outputChatBox("Přečetl si si knihu na obranu.", source, 255, 194, 14)
 			mysql:query_free( "UPDATE characters SET fightstyle = 15 WHERE id = " .. getElementData( source, "dbid" ) )
 		elseif (itemID==25) then -- ELBOWS
 			setPedFightingStyle(source, 16)
-			outputChatBox("You read a book on how to do Elbow Fighting.", source, 255, 194, 14)
+			outputChatBox("Přečetl si si knihu o bojovani s loktem.", source, 255, 194, 14)
 			mysql:query_free("UPDATE characters SET fightstyle = 16 WHERE id = " .. getElementData( source, "dbid" ) )
 		elseif (itemID==27) then -- FLASHBANG
 			takeItemFromSlot(source, itemSlot)
@@ -288,13 +319,13 @@ function useItem(itemSlot, additional)
 			local obj = createObject(343, unpack(additional))
 			exports.pool:allocateElement(obj)
 			setTimer(explodeFlash, math.random(400, 800), 1, obj)
-			triggerEvent('sendAme', source, "throws a flashbang.")
+			triggerEvent('sendAme', source, "hodil flashbang.")
 			setElementInterior(obj, getElementInterior(source))
 			setElementDimension(obj, getElementDimension(source))
 		elseif (itemID==28) then -- GLOWSTICK
 			takeItemFromSlot(source, itemSlot)
 
-			local x, y, groundz, int, dim = unpack(additional)
+			local x, y, groundz = unpack(additional)
 			local marker = nil
 			if tostring(itemValue) == "2" then
 				marker = createMarker(x, y, groundz, "corona", 1, 255, 0, 0, 150)
@@ -310,28 +341,69 @@ function useItem(itemSlot, additional)
 				marker = createMarker(x, y, groundz, "corona", 1, 255, 255, 255, 150)
 			else
 				marker = createMarker(x, y, groundz, "corona", 1, 0, 0, 255, 150)
-            end
-            if isElement(marker) then
-               setElementInterior(marker, int)
-               setElementDimension(marker, dim)
-            end
+			end
 			exports.pool:allocateElement(marker)
-			triggerEvent('sendAme', source, "drops a glowstick.")
+			triggerEvent('sendAme', source, "položil glowstick.")
 			setTimer(destroyElement, 600000, 1, marker)
 		elseif (itemID==29) then -- RAM
-			outputChatBox("Please report to use this item.", source, 255, 0, 0)
+			--if (getElementData(source, "duty") > 0) and (getElementModel(source) == 285) then
+				local found = false
+				local lastDistance = 5
+				local posX, posY, posZ = getElementPosition(source)
+				local dimension = getElementDimension(source)
+				local possibleInteriors = getElementsByType("interior")
+				for _, interior in ipairs(possibleInteriors) do
+					local interiorEntrance = getElementData(interior, "entrance")
+					local interiorExit = getElementData(interior, "exit")
+
+					for _, point in ipairs( { interiorEntrance, interiorExit } ) do
+						if (point[5] == dimension) then
+							local distance = getDistanceBetweenPoints3D(posX, posY, posZ, point[1], point[2], point[3])
+							if (distance < lastDistance) then
+								found = interior
+								lastDistance = distance
+							end
+						end
+					end
+				end
+
+				if not (found) then
+					outputChatBox("You are not near a door.", source, 255, 194, 14)
+				else
+					local dbid = getElementData(found, "dbid")
+					local interiorStatus = getElementData(found, "status")
+
+					if (interiorStatus[1] ~= 2) and (interiorStatus[4] < 0) and (interiorStatus[3]) and not (interiorStatus[2]) then
+						outputChatBox("Tyhle dveře nevlastní hráč.", source, 255, 0, 0)
+					elseif interiorStatus[2] then
+						outputChatBox("Tyhle dveře jsou nedostupné.", source, 255, 0, 0)
+					elseif (interiorStatus[3]) then
+						interiorStatus[3] = false
+						exports.anticheat:changeProtectedElementDataEx(found, "status", interiorStatus, true)
+						mysql:query_free("UPDATE interiors SET locked='0' WHERE id='" .. mysql:escape_string(dbid) .. "' LIMIT 1")
+						triggerEvent('sendAme', source, "swings the ram into the door, opening it.")
+						exports.global:sendMessageToAdmins("Player "..getPlayerName(source).." otevřel interiér "..dbid.." s beranidlem")
+						exports.logs:dbLog(source, 31, { source, found }, "UNLOCK WITH DOORRAM")
+					else
+						outputChatBox("Tyhle dveře nejsou zamknuté.", source, 255, 0, 0)
+					end
+				end
+			--[[else
+				outputChatBox("You are not on SWAT duty.", source, 255, 0, 0)
+			end]]
+
 		elseif (itemID==34) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "sniffs some Cocaine.")
+			triggerEvent('sendAme', source, "čouchl si k kokainu.")
 		elseif (itemID==35) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "swallows a Morphine pill.")
+			triggerEvent('sendAme', source, "polkl pilulku morfia.")
 		elseif (itemID==36) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "swallows a Ecstasy pill.")
+			triggerEvent('sendAme', source, "polkl pilulku extázy.")
 		elseif (itemID==37) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "injects some Heroin.")
+			triggerEvent('sendAme', source, "si dal injekci heroinu.")
 		elseif (itemID==38) then
             local sucess, key, itemvalue = hasItem(source, 181)
             local itemVal = {}
@@ -348,43 +420,135 @@ function useItem(itemSlot, additional)
                             giveItem(source, itemID, tonumber(itemVal[1]) - 1)
                             giveItem(source, 182, 1)
                             takeItem(source, 181, itemvalue)
-                            exports.global:sendLocalMeAction(source, "grabs a marijuana bud out of the bag, begining to roll the joint afterwards.")
+                            exports.global:sendLocalMeAction(source, "vzal par gramů marihuany, nasadil filtr a obalil ho papírem.")
                             giveItem(source, 181, itemvalue - 1)
                         else
-                            outputChatBox( "Your Inventory is full.", source, 255, 0, 0 )
+                            outputChatBox( "Tvůj inventář je plný.", source, 255, 0, 0 )
                         end
                     else
-                        outputChatBox("That Rolling Papers pack is over!", source, 255, 0, 0)
+                        outputChatBox("V baličku, kde jsou papírky, tak neni žadny papír", source, 255, 0, 0)
                     end
                 else
-                    outputChatBox("You need a pack of Smoking Rolling Papers to use this.", source, 255, 0, 0)
+                    outputChatBox("Potřebuješ balíček s papírkama aby jsi mohl tohle udělat.", source, 255, 0, 0)
                 end
             else
-                triggerEvent('sendAme', source, "looks inside their bag of Marijuana. It's empty.")
+                triggerEvent('sendAme', source, "koukl do balíčku s marihuanou. Je prázdny")
             end
 		elseif (itemID==39) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "sniffs some Methamphetamine.")
+			triggerEvent('sendAme', source, "čichl si k metamfataminu.")
 		elseif (itemID==40) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "injects a Epinephrine pen.")
+			triggerEvent('sendAme', source, "použil epipen.")
 		elseif (itemID==41) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "pours a drop of LSD down into his mouth.")
+			triggerEvent('sendAme', source, "dal si pár kousku lsd do pusy.")
 		elseif (itemID==42) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "eats some dried shrooms")
+			triggerEvent('sendAme', source, "snědl nějake vysušené houby")
 		elseif (itemID==43) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "swallows some PCP pills")
-		elseif itemID == 48 then -- Briefcase
+			triggerEvent('sendAme', source, "polkl PCP pilulky")
+		elseif itemID == 48 then -- Batoh
+			triggerEvent("artifacts:toggle", source, source, "backpack")
+               elseif itemID == 233 then -- Batoh
 			triggerEvent("artifacts:toggle", source, source, "backpack")
 		elseif (itemID==49) then
 			triggerEvent("artifacts:toggle", source, source, "rod")
 			triggerEvent( "fish", source )
+		elseif itemID == 750 then
+			triggerEvent("artifacts:toggle", source, source, "bandanared")
+		elseif itemID == 751 then
+			triggerEvent("artifacts:toggle", source, source, "bandanagang3")
+		elseif itemID == 752 then
+			triggerEvent("artifacts:toggle", source, source, "bandanablue3")
+		elseif itemID == 753 then
+			triggerEvent("artifacts:toggle", source, source, "bandanablack3")
+		elseif itemID == 770 then
+			triggerEvent("artifacts:toggle", source, source, "beret")
+		elseif itemID == 771 then
+			triggerEvent("artifacts:toggle", source, source, "maskdemon")
+		elseif itemID == 772 then
+			triggerEvent("artifacts:toggle", source, source, "maskpig")
+		elseif itemID == 773 then
+			triggerEvent("artifacts:toggle", source, source, "maskfriday13")
+		elseif itemID == 774 then
+			triggerEvent("artifacts:toggle", source, source, "maskmonkey")
+		elseif itemID == 775 then
+			triggerEvent("artifacts:toggle", source, source, "masksugarskull")
+		elseif itemID == 776 then
+			triggerEvent("artifacts:toggle", source, source, "maskOwl")
+		elseif itemID == 777 then
+			triggerEvent("artifacts:toggle", source, source, "maskBaby1")
+		elseif itemID == 778 then
+			triggerEvent("artifacts:toggle", source, source, "maskBaby2")
+		elseif itemID == 779 then
+			triggerEvent("artifacts:toggle", source, source, "maskBaby3")
+		elseif itemID == 780 then
+			triggerEvent("artifacts:toggle", source, source, "maskBaby4")
+		elseif itemID == 781 then
+			triggerEvent("artifacts:toggle", source, source, "hatsanta")
+		elseif itemID == 782 then
+			triggerEvent("artifacts:toggle", source, source, "hatmacersun")
+		elseif itemID == 800 then
+			triggerEvent("artifacts:toggle", source, source, "capback")
+		elseif itemID == 801 then
+			triggerEvent("artifacts:toggle", source, source, "capbraves")
+		elseif itemID == 802 then
+			triggerEvent("artifacts:toggle", source, source, "capbulls")
+		elseif itemID == 803 then
+			triggerEvent("artifacts:toggle", source, source, "capcavalier")
+		elseif itemID == 804 then
+			triggerEvent("artifacts:toggle", source, source, "capcelctics")
+		elseif itemID == 805 then
+			triggerEvent("artifacts:toggle", source, source, "capCN")
+		elseif itemID == 806 then
+			triggerEvent("artifacts:toggle", source, source, "capdodgers")
+		elseif itemID == 807 then
+			triggerEvent("artifacts:toggle", source, source, "capdodgersALL")
+		elseif itemID == 808 then
+			triggerEvent("artifacts:toggle", source, source, "capdodgerscamo")
+		elseif itemID == 809 then
+			triggerEvent("artifacts:toggle", source, source, "capkeine")
+		elseif itemID == 810 then
+			triggerEvent("artifacts:toggle", source, source, "caplakers")
+		elseif itemID == 811 then
+			triggerEvent("artifacts:toggle", source, source, "caplakersCAMO")
+		elseif itemID == 812 then
+			triggerEvent("artifacts:toggle", source, source, "caplakerschwart")
+		elseif itemID == 813 then
+			triggerEvent("artifacts:toggle", source, source, "capphillies")
+		elseif itemID == 814 then
+			triggerEvent("artifacts:toggle", source, source, "capsox")
+		elseif itemID == 815 then
+			triggerEvent("artifacts:toggle", source, source, "capsoxblack")
+		elseif itemID == 816 then
+			triggerEvent("artifacts:toggle", source, source, "capsoxCAMO")
+		elseif itemID == 817 then
+			triggerEvent("artifacts:toggle", source, source, "capstlouisgreen")
+		elseif itemID == 818 then
+			triggerEvent("artifacts:toggle", source, source, "capstlouisred")
+		elseif itemID == 819 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesBABYBLAU")
+		elseif itemID == 820 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesBRAUN")
+		elseif itemID == 821 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesCAMO")
+		elseif itemID == 822 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesCIRCLE")
+		elseif itemID == 823 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesGRAU")
+		elseif itemID == 824 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesGRAUlogo")
+		elseif itemID == 825 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesNAVY")
+		elseif itemID == 826 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesRED")
+		elseif itemID == 827 then
+			triggerEvent("artifacts:toggle", source, source, "capyankeesROT")
 		elseif (itemID==50) then -- highway code book
 			local bookTitle = "The Los Santos Highway Code"
-			local bookName = "LSHighwayCode"
+			local bookName = "SFHighwayCode"
 			triggerEvent('sendAme', source, "reads ".. bookTitle ..".")
 			triggerClientEvent( source, "showBook", source, bookName, bookTitle )
 		elseif (itemID==51) then -- chemistry book
@@ -398,10 +562,13 @@ function useItem(itemSlot, additional)
 			triggerEvent('sendAme', source, "reads ".. bookTitle ..".")
 			triggerClientEvent( source, "showBook", source, bookName, bookTitle )
 		elseif (itemID==54) then -- GHETTOBLASTER
-			triggerEvent('sendAme', source, "places a ghettoblaster on the ground.")
+			triggerEvent('sendAme', source, "položil radio na zem.")
 			local x, y, z = unpack(additional)
 
 			triggerEvent("dropItem", source, itemSlot, x, y, z+0.3)
+		elseif (itemID==55) then -- Stevie's business card
+			triggerEvent('sendAme', source, "koukl na kus papíru.")
+			outputChatBox("Na kartě je napsáno: 'Steven Pullman - L.V. Freight Depot, Tel: 12555'", source, 255, 51, 102)
 		elseif (itemID==57) then -- FUEL CAN
 			local nearbyVehicles = exports.global:getNearbyElements(source, "vehicle")
 
@@ -421,84 +588,299 @@ function useItem(itemSlot, additional)
 			if found then
 				triggerEvent("fillFuelTankVehicle", source, found, itemValue)
 			else
-				outputChatBox("You are too far from a vehicle.", source, 255, 194, 14)
+				outputChatBox("Jsi moc daleko od vozidla.", source, 255, 194, 14)
 			end
 		elseif (itemID==58) then
-			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "drinks some good Ziebrand Beer.")
+                        takeItemFromSlot(source, itemSlot)
+			giveHealth(source, 20)
+			triggerEvent('sendAme', source, "vypil pivo.")
 			setElementHealth(source,getElementHealth(source)-5)
+				elseif (itemID==1558) then
+                        takeItemFromSlot(source, itemSlot)
+			giveHealth(source, 20)
+			triggerEvent('sendAme', source, "vypil červené víno.")
+			setElementHealth(source,getElementHealth(source)-5)
+			
+							elseif (itemID==2021) then
+                        takeItemFromSlot(source, itemSlot)
+			giveHealth(source, 1)
+			triggerEvent('sendAme', source, "snědl palačinky a začal se dávit.")
+			setElementHealth(source,getElementHealth(source)-100)
+			
+			
+			
+										elseif (itemID==9885) then
+			triggerEvent('sendAme', source, "zmáčkl tlačítko pod stolem")
+		executeCommandHandler ( "66555745554485", source )
+		
+													elseif (itemID==9888) then
+			triggerEvent('sendAme', source, "zazvonil zvonečkem na přivolání obsluhy")
+		executeCommandHandler ( "66555745554487", source )
+			
+			
+													elseif (itemID==7200) then
+
+			triggerEvent('sendAme', source, "se podíval na volební letáček")
+				outputChatBox("Alex Lewis! Navýšení platů pro policisty, hasiče a lékaře! Dostupnější zbraně! Volte Alexe Lewise!", source, 255, 194, 14)
+									
+													elseif (itemID==7300) then
+
+			triggerEvent('sendAme', source, "se podíval na letáček hotelu Lewis")
+				outputChatBox("Navštivte nově otevřený Hotel Lewis!", source, 255, 194, 14)
+				outputChatBox("Nabízíme kvalitní restauraci, fitness centrum a několik pokojů.", source, 255, 194, 14)
+				outputChatBox("Rezervaci lze provvést po domluvě s Alexem Lewisem na čísle 11122.", source, 255, 194, 14)
+				outputChatBox("Hotel se nachází v budově StarTower (Ikonka TT v F11).", source, 255, 194, 14)
+						
+													elseif (itemID==3050) then
+                        takeItemFromSlot(source, itemSlot)
+			giveHealth(source, 1)
+			triggerEvent('sendAme', source, "se podíval na nápovědu.")
+				outputChatBox("U velkého vysílače známý jako big ear tě čeká další nápověda.", source, 255, 194, 14)
+			
+			
+										elseif (itemID==2226) then
+                        takeItemFromSlot(source, itemSlot)
+			giveHealth(source, 1)
+			triggerEvent('sendAme', source, "vytáhl řízek a snědl ho.")
+			setElementHealth(source,getElementHealth(source)+20)
+			
+					elseif (itemID==1559) then
+                        takeItemFromSlot(source, itemSlot)
+			giveHealth(source, 20)
+			triggerEvent('sendAme', source, "vypil bílé víno.")
+			setElementHealth(source,getElementHealth(source)-5)
+			
+				elseif (itemID==1560) then
+                        takeItemFromSlot(source, itemSlot)
+			giveHealth(source, 20)
+			triggerEvent('sendAme', source, "vypil růžové víno.")
+			setElementHealth(source,getElementHealth(source)-5)			
+			
+							elseif (itemID==3000) then
+                        takeItemFromSlot(source, itemSlot)
+				outputChatBox("Získal jsi víno.", source, 255, 194, 14)	
+                            giveItem(source, 1559, 1)		
+
+							
+							elseif (itemID==7896) then
+                        takeItemFromSlot(source, itemSlot)
+				outputChatBox("Peněžní poukázka (šek) na 5.000$ of firmy Lewis Servie´s.", source, 255, 194, 14)	
+				exports.global:giveMoney(source, 5000) 
+							
+														elseif (itemID==9090) then
+                        takeItemFromSlot(source, itemSlot)
+										setPedArmor(source, 100)
+													triggerEvent('sendAme', source, "si nasazuje neprůstřelnou vestu.")
+
+							
+						
+			
+			
 		elseif (itemID==59) then -- MUDKIP
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "eats a mudkip.")
+			giveHealth(source, 20)
+			triggerEvent('sendAme', source, "snědl Twix.")
 			--killPed(source)
+			
+				elseif (itemID==1234) then -- atlas
+			--takeItemFromSlot(source, itemSlot)
+		--	giveHealth(source, 20)
+			triggerEvent('sendAme', source, "vzal atlas zvířat a slabě bouchl osobu po hlavě")
+			
+					
+				elseif (itemID==4321) then -- atlas
+			--takeItemFromSlot(source, itemSlot)
+		--	giveHealth(source, 20)
+			triggerEvent('sendAme', source, "vzal knihu 350 tipů pro nejlepší sex a bouchl osobu po hlavě")	
+		
 		elseif (itemID==60) then
-			local dim = getElementDimension( source )
-			local int = getElementInterior( source )
-			local pos = { getElementPosition( source ) }
-			local rot = getElementRotation( source, 'ZXY' )
-			-- world map.
-			if dim == 0 then
-				exports.hud:sendBottomNotification( source, itemName, "This safe can only be placed inside an interior." )
-				playSoundFrontEnd( source, 4 )
-			-- vehicle interiors
-			elseif dim >= 20000 then
-				local vid = dim - 20000
-				if exports.vehicle:getSafe( vid ) then
-					exports.hud:sendBottomNotification( source, itemName, "There is already a safe in this property. Type /movesafe to move it to where you stand." )
-				elseif hasItem( source, 3, vid ) then
-					pos[3] = pos[3] - 0.5
-					rot = rot + 180
-					if exports.vehicle:addSafe( vid, unpack( pos ), rot, int ) then
-						dbExec( exports.mysql:getConn('mta'), "UPDATE vehicles SET safepositionX=?, safepositionY=?, safepositionZ=?, safepositionRZ=? WHERE id=? ", unpack( pos ), rot, vid )
-					end
-				end
-			-- temp vehicle interiors
-			elseif dim >= 19000 then
-				exports.hud:sendBottomNotification( source, itemName, "You can not place a safe in a temporary vehicle interior." )
-				playSoundFrontEnd( source, 4 )
-			-- normal interiors.
-			elseif hasItem( source, 5, dim ) or hasItem( source, 4, dim) then
-				if exports.interior_system:getSafe( dim ) then
-					exports.hud:sendBottomNotification( source, itemName, "There is already a safe in this property. Type /movesafe to move it." )
-					playSoundFrontEnd( source, 4 )
-				else
-					if exports.interior_system:addSafe( dim, nil, pos, int, rot, true, false ) then
-						exports.hud:sendBottomNotification( source, itemName, "Placed." )
-						takeItemFromSlot( source, itemSlot )
-					end
-				end
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil trezor.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox("Nejsi v interiéru.", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox("Nevlastníš tento interiér!", source, 255, 0, 0)
 			end
+               elseif (itemID==234) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil dveře.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end 
+               elseif (itemID==235) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil dveře.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+                elseif (itemID==236) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil gril.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+               elseif (itemID==237) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil pračku.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+               elseif (itemID==238) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil sedačku.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+               elseif (itemID==239) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil křeslo.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+               elseif (itemID==240) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil stůl.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+               elseif (itemID==241) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil stůl k pc.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+               elseif (itemID==242) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil židli k pc.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+         elseif (itemID==243) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil postel.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
+         elseif (itemID==244) then
+			local x,y,z = getElementPosition(source)
+			local rz = getPedRotation(source)
+			local dimension = getElementDimension(source)
+			local retval = call(getResourceFromName("interior-system"), "addSafeAtPosition", source, x,y,z, rz) --0 no error, 1 safe already exists, 2 player does not own interior
+			if (retval == 0) then
+				triggerEvent('sendAme', source, "položil skříň.")
+				takeItemFromSlot(source, itemSlot)
+			elseif (retval == 2) then
+				outputChatBox(".", source, 255, 0, 0)
+			elseif (retval == 3) then
+				outputChatBox(".", source, 255, 0, 0)
+                         end
 		elseif (itemID==62) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "drinks some pure Bastradov Vodka.")
+			triggerEvent('sendAme', source, "vypil vodku.")
 			setElementHealth(source,getElementHealth(source)-10)
 		elseif (itemID==63) then
 			takeItemFromSlot(source, itemSlot)
-			triggerEvent('sendAme', source, "drinks some Scottish Whiskey.")
+			triggerEvent('sendAme', source, "vypil whiskey.")
 			setElementHealth(source,getElementHealth(source)-10)
 		elseif (itemID==68) then
-			triggerEvent('sendAme', source, "looks at their lottery ticket.")
-			outputChatBox("You glance at the lottery ticket and read the number: " .. itemValue, source, 0, 255, 0)
+			triggerEvent('sendAme', source, "si prohlíží loterijní lístek.")
+			outputChatBox("Loterijní lístek s číslem: " .. itemValue, source, 0, 255, 0)
 		elseif (itemID==69) then -- Dictionary
 			local learned = call(getResourceFromName("language-system"), "learnLanguage", source, itemValue, true)
 			local lang = call(getResourceFromName("language-system"), "getLanguageName", itemValue)
 
 			if (learned) then
 				takeItem(source, itemID, itemValue)
-				outputChatBox("You have learnt basic " .. lang .. ", Press F6 to manage your languages.", source, 0, 255, 0)
+				outputChatBox("Naučil jsi se základy " .. lang .. ", stiskni F6 pro správu jazyků.", source, 0, 255, 0)
 			end
 		elseif (itemID==72) then -- Note
-			triggerEvent('sendAme', source, "reads a note.")
-		--[=[ REMOVED :> mabako, 11th January 2012 (plus it'd be broken, /lazy)
-		elseif (itemID==74) then
+			triggerEvent('sendAme', source, "si přečetl poznámku.")
+			
+		elseif (itemID==74) then -- Bomba
 			takeItemFromSlot(source, itemSlot)
 			local x, y, z = getElementPosition(source)
 			createExplosion( x, y, z, 10, source )
 			createExplosion( x, y, z, 10, source )
-		elseif (itemID==75) then
-			triggerEvent('sendAme', source, "pushes some kind of red button which reads 'do not push'.")
+			
+		elseif (itemID==75) then -- Ovladač od bomby
+			triggerEvent('sendAme', source, "stiskl červené tlačítko na ovladači.")
 			local px, py, pz = getElementPosition(source)
-			for k, v in pairs( getElementsByType( "object", getResourceRootElement( ) ) ) do
+			for k, v in pairs( getElementsByType( "object", getResourceRootElement(getResourceFromName("item-world")) ) ) do
 				if isElement( v ) and getElementData( v, "itemID" ) == 74 and getElementData( v, "itemValue" ) == itemValue then
 					local x, y, z = getElementPosition( v )
 					if getDistanceBetweenPoints3D( x, y, z, px, py, pz ) < 200 then
@@ -531,9 +913,8 @@ function useItem(itemSlot, additional)
 					end
 				end
 			end
-		]=]
+			
 		elseif (itemID==76) then -- SHIELD
-			--[[
 			if (shields[source]) then -- Already using the shield
 				destroyElement(shields[source])
 				shields[source] = nil
@@ -545,68 +926,78 @@ function useItem(itemSlot, additional)
 				y = y + math.cos(math.rad(rot)) * 1.5
 
 				local object = createObject(1631, x, y, z)
-				attachElements(object, source, 0, 1, 0)
+				setElementInterior(object, getElementInterior(source))
+				setElementDimension(object, getElementDimension(source))
+				
+				setElementData(object, "kolize", 1, true)
+				if tonumber(itemValue) then
+					exports.bone_attach:attachElementToBone(object, source, 4, 0, -1.158+tonumber(itemValue), -0.83, 270, 10, 10)
+				else
+					attachElements(object, source, 0, 1, 0)
+				end
+				
+				setElementCollisionsEnabled(object, true)
 				shields[source] = object
 			end
-			--]]
-			triggerEvent("artifacts:toggle", source, source, "shield")
 		elseif (itemID==77) then -- Card Deck
-			exports.cards:openCardDeck(source, itemValue, itemName)
+			local cards = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" }
+			local sign = { "Spades", "Clubs", "Hearts", "Diamonds" }
+			local number = math.random( 1, #cards )
+			local snumber = math.random( 1, #sign )
+			exports.global:sendLocalText(source, " ✪ " .. getPlayerName(source):gsub("_", " ") .. " draws a card and gets a" .. ( number == 1 and "n" or "" ) .. " " .. cards[number] .." of ".. sign[snumber] ..".", 255, 51, 102)
 		elseif (itemID==79) then -- Porn tape
 			exports.global:applyAnimation( source, "PAULNMAC", "wank_loop", -1, true, false, false)
 		elseif (itemID==80) then -- Generic Item
-			local metaName = getItemName(itemID, itemValue, metadata)
-			showItem(removeOOC(metaName))
+			showItem(removeOOC(itemName))
 		elseif (itemID==83) then -- Coffee
-			giveHealth(source, 40)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
-			triggerEvent('sendAme', source, "drinks a cup of coffee.")
+			triggerEvent('sendAme', source, "vypil kafe.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==88) then -- earpiece
 			outputChatBox("You can use this earpiece with an radio.", source, 255, 194, 14)
 		elseif (itemID==89) then -- Generic Food
-			giveHealth(source, 50)
-			exports.global:applyAnimation(source, "food", "eat_burger", 2000, false, true, true)
-			local itemExploded = explode(":", itemValue)
-			triggerEvent('sendAme', source, "eats a " .. itemExploded[1] .. ".")
+			giveHealth(source, 20)
+			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
+			triggerEvent('sendAme', source, "snědl " .. itemValue .. ".")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==91) then
+			giveHealth(source, 20)
 			takeItemFromSlot(source, itemSlot)
-			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
-			triggerEvent('sendAme', source, "drinks some good Eggnog.")
+			triggerEvent('sendAme', source, "slízal nanuk Calippo.")
 			setElementHealth(source, 100)
 		elseif (itemID==92) then
-			setElementHealth(source, 100)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
-			triggerEvent('sendAme', source, "eats some Turkey.")
+			triggerEvent('sendAme', source, "slízal nanuk.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==93) then
-			setElementHealth(source, 100)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
 			triggerEvent('sendAme', source, "eats some Christmas Pudding.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==94) then
-
-			local id = math.random(1, 10)
-			local prizeID = presents[id]
+  			giveHealth(source, 20)
+			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
+			toggleAllControls(source, true, true, true)
+			triggerClientEvent(source, "onClientPlayerWeaponCheck", source)
+			triggerEvent('sendAme', source, "snědl brambůrky Bohemia.")
 			takeItemFromSlot(source, itemSlot)
-			giveItem(source, prizeID, 1)
-			triggerEvent('sendAme', source, "opens a Christmas Present")
+			
 		elseif (itemID==95) then -- Generic Drink
-			giveHealth(source, 50)
-			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 2000, false, true, true)
-			local itemExploded = explode(":", itemValue)
-			triggerEvent('sendAme', source, "drinks some " .. itemExploded[1] .. ".")
+			giveHealth(source, 20)
+			giveHealth(source, tonumber(getItemValue(itemID, itemValue)))
+			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
+			triggerEvent('sendAme', source, "vypil " .. itemValue .. ".")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==96) then -- PDA
-			triggerEvent('sendAme', source, "turns their " .. itemName .. " on.")
-			triggerClientEvent(source, "useCompItem", source, itemName)
+			triggerEvent('sendAme', source, "si zapnul " .. ( itemValue == 1 and "notebook" or itemValue ) .. ".")
+			triggerClientEvent(source, "useCompItem", source)
 		elseif (itemID==97) then -- SFES Procedures Manual (book)
-			--[[local bookTitle = "SFES Procedure Manual"
+			local bookTitle = "SFES Procedure Manual"
 			local bookName = "SFESProcedureManual"
-			triggerEvent('sendAme', source, "reads ".. bookTitle ..".")
-			triggerClientEvent( source, "showBook", source, bookName, bookTitle )]]
-			outputChatBox("This item has been disabled and is no longer in use.", source, 255, 0, 0)
+			triggerEvent('sendAme', source, "čte ".. bookTitle ..".")
+			triggerClientEvent( source, "showBook", source, bookName, bookTitle )
 		elseif (itemID==98) then -- Garage Remote
 			local id = tonumber( itemValue )
 			if id and id >= 0 and id <= 49 then
@@ -619,38 +1010,38 @@ function useItem(itemSlot, additional)
 				mysql:query_free("UPDATE settings SET value = '" .. mysql:escape_string( toJSON( garages ) ) .. "' WHERE name = 'garagestates'" )
 			end
 		elseif (itemID==99) then --[ADDED: 2/22/10 by herbjr] tray
-			giveHealth(source, 50)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
 			toggleAllControls(source, true, true, true)
-
-			triggerEvent('sendAme', source, "eats the food from the tray.")
+			triggerClientEvent(source, "onClientPlayerWeaponCheck", source)
+			triggerEvent('sendAme', source, "slízal nanuk.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==100) then --[ADDED: 2/22/10 by herbjr] milk
-			giveHealth(source, 30)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
 			toggleAllControls(source, true, true, true)
-
-			triggerEvent('sendAme', source, "drinks a small carton of milk.")
+			triggerClientEvent(source, "onClientPlayerWeaponCheck", source)
+			triggerEvent('sendAme', source, "vypil malou krabičku mlíka.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==101) then --[ADDED: 2/22/10 by herbjr] juice
-			giveHealth(source, 30)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
 			toggleAllControls(source, true, true, true)
-
-			triggerEvent('sendAme', source, "drinks a small carton of juice.")
+			triggerClientEvent(source, "onClientPlayerWeaponCheck", source)
+			triggerEvent('sendAme', source, "vypil malou krabičku džusu.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==102) then --[ADDED: 2/23/10 by herbjr] Cabbage (Asked for by Misha)
-			giveHealth(source, 15)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
 			toggleAllControls(source, true, true, true)
-
-			triggerEvent('sendAme', source, "eats a head of Cabbage.")
+			triggerClientEvent(source, "onClientPlayerWeaponCheck", source)
+			triggerEvent('sendAme', source, "snědl head of Cabbage.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==104) then -- portable TV
 			triggerEvent("useTV", source, source)
 			local isTvUsed = getElementData(source, "isTvUsed")
 			if isTvUsed == nil or isTvUsed == false then
-				triggerEvent('sendAme', source, "turns on a small portable TV.")
+				triggerEvent('sendAme', source, "zapnul malou přenosnou televizi.")
 				exports.anticheat:changeProtectedElementDataEx(source, "isTvUsed", true, false)
 			else
 				exports.anticheat:changeProtectedElementDataEx(source, "isTvUsed", false, false)
@@ -661,49 +1052,63 @@ function useItem(itemSlot, additional)
 					takeItemFromSlot(source, itemSlot)
 					giveItem(source, itemID, itemValue - 1)
 					giveItem(source, 106, 1)
-					triggerEvent('sendAme', source, "looks inside their pack of cigarettes, and takes one out.")
+					triggerEvent('sendAme', source, "otevřel krabičku cigaret a jednu vytáhl.")
 				else
-					outputChatBox( "Your Inventory is full.", source, 255, 0, 0 )
+					outputChatBox( "Tvůj inventář je plný.", source, 255, 0, 0 )
 				end
 			else
-				triggerEvent('sendAme', source, "looks inside their pack of cigarettes. It's empty.")
+				triggerEvent('sendAme', source, "otevřel krabičku cigaret, ale ta je prázdná.")
 			end
-		elseif (itemID == 106) then -- Cigarette
+			
+		elseif (itemID == 2020) then -- Cigarette
 			if hasItem( source, 107 ) then
-				triggerEvent('sendAme', source, "lights up a cigarette.")
-				outputChatBox( "(( /throwaway to throw it away, /switchhand to change hand ))", source )
+				triggerEvent('sendAme', source, "si zapálil doutník.")
+				outputChatBox( "(( /throwaway pro zahození, /switchhand pro přehození do druhé ruky ))", source )
 				triggerEvent("realism:startsmoking", source, 0) -- 0 = left hand -- 1 = right hand
 				takeItemFromSlot(source, itemSlot)
 			else
-				triggerEvent('sendAme', source, "shows everyone a cigarette.")
-				outputChatBox( "You'll need a lighter to use it properly, tho.", source, 255, 0, 0 )
+				triggerEvent('sendAme', source, "si prohlíží doutník.")
+				outputChatBox( "Nemáš zapalovač.", source, 255, 0, 0 )
+			end				
+
+
+		elseif (itemID == 106) then -- Cigarette
+			if hasItem( source, 107 ) then
+				triggerEvent('sendAme', source, "si zapálil cigaretu.")
+				outputChatBox( "(( /throwaway pro zahození, /switchhand pro přehození do druhé ruky ))", source )
+				triggerEvent("realism:startsmoking", source, 0) -- 0 = left hand -- 1 = right hand
+				takeItemFromSlot(source, itemSlot)
+			else
+				triggerEvent('sendAme', source, "si prohlíží cigaretu.")
+				outputChatBox( "Nemáš zapalovač.", source, 255, 0, 0 )
 			end
 		elseif (itemID == 107) then
-			triggerEvent('sendAme', source, "shows everyone a lighter.")
+			triggerEvent('sendAme', source, "hodil zapalovač do vzduchu a zase ho chytil.")
 		elseif (itemID==108) then -- donut
-			setElementHealth(source, 100)
+			giveHealth(source, 20)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
-			triggerEvent('sendAme', source, "eats a pancake.")
+			triggerEvent('sendAme', source, "snědl palačinky.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==109) or (itemID==110) then -- Fruit
+			giveHealth(source, 20)
 			giveHealth(source, tonumber(getItemValue(itemID, itemValue)))
 			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
-			triggerEvent('sendAme', source, "eats a " .. itemName .. ".")
+			triggerEvent('sendAme', source, "snědl " .. itemName .. ".")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID == 113) then -- Pack of glowsticks, Withdraw one if it still has one
-			if tonumber(itemValue) and tonumber(itemValue) > 0 then
+			if (itemValue > 0) then
 				if (hasSpaceForItem(source, 28, 1)) then
 					glowStickColour = 1 + ( ( glowStickColour or 0 ) + 1 ) % 7
 
 					takeItemFromSlot(source, itemSlot)
 					giveItem(source, itemID, itemValue - 1)
 					giveItem(source, 28, glowStickColour)
-					triggerEvent('sendAme', source, "looks inside their pack of glowsticks, sliding one out.")
+					triggerEvent('sendAme', source, "otevřel balíček glowsticků a jeden vytáhl.")
 				else
-					outputChatBox( "Your Inventory is full.", source, 255, 0, 0 )
+					outputChatBox( "Tvůj inventář je plný.", source, 255, 0, 0 )
 				end
 			else
-				triggerEvent('sendAme', source, "looks inside their pack of glowsticks. It's empty.")
+				triggerEvent('sendAme', source, "otevřel balíček glowsticků, ale ten je prázdný.")
 			end
 		elseif itemID == 114 then
 			local vehicle = getPedOccupiedVehicle(source)
@@ -712,29 +1117,27 @@ function useItem(itemSlot, additional)
 			if vehicle and not noUpgrades[getVehicleType(vehicle)] --[[and getElementDimension(vehicle) > 0]] and getItemDescription(itemID, itemValue) ~= "?" then
 				addUpgrade( source, vehicle, itemSlot, itemID, itemValue )
 			else
-				outputChatBox("Use this in a vehicle to add it as permanent upgrade.", source, 255, 194, 14)
+				outputChatBox("Toto je vylepšení do vozidla, aplikuje se ve vozidle.", source, 255, 194, 14)
 			end
 		elseif itemID == 126 then
-			outputChatBox("Nice duty belt you got there. ;)", source, 0, 255, 0)
+			outputChatBox("Služební opasek, slouží pro zachycení zbraní.", source, 255, 220, 150)
 		elseif itemID == 130 then
-			outputChatBox("Place this alarm system in a vehicle inventory to install it.", source, 0, 255, 0)
+			outputChatBox("Polož alarm do vozidla, aby jsi ho nainstaloval.", source, 0, 255, 0)
 		elseif itemID == 132 then
 			takeItemFromSlot(source, itemSlot)
-			outputChatBox("You took your " .. itemValue .. " prescription.", source)
-			triggerEvent('sendAme', source, "takes some prescription medicine.")
+			outputChatBox("Vzal jsi si prášek " .. itemValue .. ".", source)
+			triggerEvent('sendAme', source, "otevřel krabičku léků a vzal si prášek.")
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
 		elseif itemID == 134 then
-			outputChatBox("$" .. exports.global:formatMoney(itemValue) .. " of currency.", source)
+			outputChatBox("" .. exports.global:formatMoney(itemValue) .. "$ v hotovosti.", source)
 		elseif itemID == 137 then -- New snake cam, Adams
 			triggerEvent('snakecam:toggleSnakeCam', root, source)
 		elseif itemID == 138 then
-			outputChatBox("Place this device in a vehicle inventory to install it.", source, 0, 255, 0)
+			outputChatBox("Polož tohle zařízeni do vozidla, aby jsi ho nainstaloval.", source, 0, 255, 0)
 		elseif itemID == 160 then -- Briefcase
 			triggerEvent("artifacts:toggle", source, source, "briefcase")
 		elseif itemID == 163 then
 			triggerEvent("artifacts:toggle", source, source, "dufflebag")
-		elseif itemID == 164 then
-			triggerEvent("artifacts:toggle", source, source, "medicbag")
 		elseif badges[itemID] then
 			toggleBadge(source, badges, itemID ,itemValue) --TO BE ABLE TO USED BY MULTIPLE SYSTEMS / MAXIME
 		elseif masks[itemID] then
@@ -753,11 +1156,9 @@ function useItem(itemSlot, additional)
 					triggerEvent("artifacts:remove", source, source, "bikerhelmet")
 				elseif itemID == 172 then -- Full Face Helmet
 					triggerEvent("artifacts:remove", source, source, "fullfacehelmet")
-				elseif itemID == 240 then -- Christmas Hat
-					triggerEvent("artifacts:remove", source, source, "christmashat")
 				end
 			elseif getPedOccupiedVehicle(source) and getElementData(getPedOccupiedVehicle(source), "job") > 0 and getVehicleOccupant(getPedOccupiedVehicle(source)) == source then
-				outputChatBox("You can't use this in a Civilian vehicle.", source, 255, 0, 0)
+				outputChatBox("Nelze použít v civilním vozidle.", source, 255, 0, 0)
 			else
 				triggerEvent('sendAme', source, data[2]:gsub("#name",itemName) ..".")
 				exports.anticheat:changeProtectedElementDataEx(source, data[1], true, true)
@@ -771,7 +1172,7 @@ function useItem(itemSlot, additional)
 						exports.anticheat:changeProtectedElementDataEx(source, "fullfacehelmet", false, true)
 						triggerEvent("artifacts:remove", source, source, "fullfacehelmet")
 					end
-					local customTexture = getItemTexture(itemID, itemValue, metadata)
+					local customTexture = getItemTexture(itemID, itemValue)
 					triggerEvent("artifacts:add", source, source, "helmet", false, customTexture)
 				elseif itemID == 26 then -- Gas mask
 					triggerEvent("artifacts:add", source, source, "gasmask")
@@ -797,51 +1198,73 @@ function useItem(itemSlot, additional)
 					end
 					local customTexture = getItemTexture(itemID, itemValue)
 					triggerEvent("artifacts:add", source, source, "fullfacehelmet", false, customTexture)
-				elseif itemID == 240 then -- Christmas Hat
-					triggerEvent("artifacts:add", source, source, "christmashat")
 				end
 			end
 		elseif itemID == 139 then
-			outputChatBox("((Have an Admin install this in your vehicle.))", source, 255, 0, 0)
+			outputChatBox("((Potřebuješ admina, aby jsi tohle nainstaloval do vozidla.))", source, 255, 0, 0)
 		elseif itemID == 143 then
-			outputChatBox("Place this device in a vehicle inventory to install it.", source, 0, 255, 0)
+			outputChatBox("Polož tohle zařízeni do vozidla, aby jsi ho nainstaloval.", source, 0, 255, 0)
+		elseif itemID == 145 then
+			outputChatBox("Broken.", source, 255, 0, 0)
 		elseif itemID == 173 then
 			local px, py, pz = getElementPosition ( source )
-			local distance = getDistanceBetweenPoints3D(px, py, pz, 1086.8466796875, -1761.6396484375, 13.368750572205)
+			local distance = getDistanceBetweenPoints3D(px, py, pz, -2078.353515625, -95.5927734375, 35.1640625)
 			if distance < 25 then
-				triggerClientEvent(source, "build_carsale_gui", source, itemValue)
+				triggerClientEvent(source, "build_carsale_gui", source)
 			else
-				outputChatBox("In order to sell your vehicle, you must be at the DMV parking.", source, 0, 255, 0)
+				outputChatBox("Pro prodej vozidla musíš být před licenčním úřadem.", source, 0, 255, 0)
 			end
 		elseif itemID == 151 then
-			local px, py, pz = getElementPosition(source)
-			for i, v in ipairs(getElementsByType("object")) do
-				local x, y, z = getElementPosition(v)
-				local distance = getDistanceBetweenPoints3D(px, py, pz, x, y, z)
-				if distance < 30 and getElementData(v, "dbid") == tonumber(itemValue) then
-					triggerClientEvent(source, "showRampControls", source, v)
-				end
-			end
+            local px, py, pz = getElementPosition ( source )
+
+            for i,v in ipairs ( getElementsByType ( "object" ) ) do
+                local x, y, z = getElementPosition ( v )
+                local distance = getDistanceBetweenPoints3D ( px, py, pz, x, y, z )
+
+                if distance < 30 and getElementData ( v, "dbid" ) == tonumber ( itemValue ) and not getElementData ( v, "lift.moving" ) then
+                    local lift = getElementData ( v, "lift" )
+                    local lx, ly, lz = getElementPosition ( lift )
+
+                    setElementData ( v, "lift.moving", true )
+
+                    if not getElementData ( v, "lift.up" ) then
+                        setElementData ( v, "lift.up", true )
+                        moveObject ( lift, 4000, lx, ly, lz + 2.33 )
+                        triggerEvent('sendAme',  source, "zmačkl tlačítko na ovladači a rampa jde nahoru" )
+                        mysql:query_free ( "UPDATE ramps SET state = 1 WHERE id = " .. getElementData ( v, "dbid" ) )
+                    else
+                        setElementData ( v, "lift.up", false )
+                        moveObject ( lift, 4000, lx, ly, lz - 2.33 )
+                        triggerEvent('sendAme',  source, "zmačkl tlačítko na ovladači a rampa jde dolů" )
+                        mysql:query_free ( "UPDATE ramps SET state = 0 WHERE id = " .. getElementData ( v, "dbid" ) )
+                    end
+
+                    setTimer ( setElementData, 4000, 1, v, "lift.moving", false )
+                end
+            end
         elseif itemID == 181 then
-        	triggerEvent("sendAme", source, "shows everyone a Smoking package.")
+        	triggerEvent("sendAme", source, "všem ukazuje balíček papírků.")
     	elseif (itemID == 182) then
             if hasItem( source, 107 ) then -- If da player has a lighter, how else would he smoke it dawg
-                exports.global:sendLocalMeAction(source, "lights up a rolled joint.")
-                outputChatBox( "(( /throwaway to throw it away, /switchhand to change hand, /passjoint to pass your joint ))", source )
+                exports.global:sendLocalMeAction(source, "si zapálil joint.")
+                outputChatBox( "(( /throwaway pro zahození, /switchhand pro přehození ruky, /passjoint pro předání jointu ))", source )
                 setElementData(source, "realism:joint", true) -- For the cigarette + new joint system
                 triggerEvent("realism:startsmoking", source, 0) -- For the cigarette + new joint system
                 takeItemFromSlot(source, itemSlot)
             else
-                exports.global:sendLocalMeAction(source, "shows everyone a rolled joint.")
-                outputChatBox("You'll need a lighter to use it properly.", source, 255, 0, 0)
+                exports.global:sendLocalMeAction(source, "si prohlíží joint.")
+                outputChatBox("Potřebuješ zapalovač.", source, 255, 0, 0)
             end
         elseif (itemID == 209) then
         	triggerEvent("gunlicense:weaponlicenses", root, source)
 		elseif (itemID==210) then -- Coca-Cola Christmas Edition
+			--if(getElementData(source,"drinking")) then
+			--	return
+			--end
+			--setElementData(source, "drinking", true)
 			if cokeBottles[source] then
 				return
 			end
-
 			takeItemFromSlot(source, itemSlot)
 			local x, y, z = getElementPosition(source)
 			local int = getElementInterior(source)
@@ -854,30 +1277,28 @@ function useItem(itemSlot, additional)
 			setElementDoubleSided(bottleObj, false)
 			exports.bone_attach:attachElementToBone(bottleObj,source,11,0,0,0,0,0,0)
 			thePlayer = source
-			exports.global:applyAnimation(thePlayer, "VENDING", "VEND_Drink_P", 4000, false, true, true)
-			toggleAllControls(thePlayer, true, true, true)
-			--triggerClientEvent(thePlayer, "onClientPlayerWeaponCheck", thePlayer)
-			--exports.global:sendLocalMeAction(thePlayer, "drinks a coke.")
-			triggerEvent('sendAme', thePlayer, "drinks a coke.")
-			setTimer(giveHealth,4000,1,thePlayer,5)
-
-			if getResourceState(getResourceFromName("xmas")) == "running" then
-				if exports.xmas:isItChristmas() then
-					setTimer(function(thePlayer)
-						exports.xmas:christmasCoke(thePlayer)
-					end, 4000, 1, thePlayer)
-				end
-			end
-
-			setTimer(function(bottleObj, thePlayer)
-					destroyElement(bottleObj)
+			setTimer(function()
+				exports.global:applyAnimation(thePlayer, "VENDING", "VEND_Drink_P", 4000, false, true, true)
+				toggleAllControls(thePlayer, true, true, true)
+				triggerClientEvent(thePlayer, "onClientPlayerWeaponCheck", thePlayer)
+				exports.global:sendLocalMeAction(thePlayer, "vypil kolu.")
+				setTimer(giveHealth,4000,1,thePlayer,5)
+				--setTimer(christmasCoke,4000,1,thePlayer) --DISABLE THIS LINE WHEN ITS NOT CHRISTMAS OR XMAS RESOUCE NOT RUNNING
+				--setTimer(destroyElement,5000,1,bottleObj)
+				setTimer(function()
+					destroyElement(cokeBottles[thePlayer])
+				end,4000,1)
+				setTimer(function()
 					cokeBottles[thePlayer] = nil
-				end
-			,5000,1,bottleObj, thePlayer)
+				end,5000,1)
+				--setTimer(setElementData,6000,1,thePlayer,"drinking",false)
+			end,3000,1)
+			return
 		elseif (itemID==213) then --pinnekjott
-			giveHealth(source, 10)
+			giveHunger(source, 45)
+			takeThirst(source, 3)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
-			triggerEvent('sendAme', source, "eats a pinnekjott.")
+			triggerEvent('sendAme', source, "snědl pinnekjott.")
 			takeItemFromSlot(source, itemSlot)
 			--local thisAnimFunc = exports.global:applyAnimation
 			setTimer(function()
@@ -887,47 +1308,64 @@ function useItem(itemSlot, additional)
 				setTimer(triggerClientEvent, 7000, 1, "xmas:santaSound", getRootElement(), "hoho", source)
 			end
 		elseif (itemID==214) then
-			triggerEvent('sendAme', source, "takes a ".. itemName ..".")
+			triggerEvent('sendAme', source, "si vzal ".. itemName ..".")
 			takeItemFromSlot(source, itemSlot)
-		elseif (itemID >= 224 and itemID <= 228) then
-			triggerEvent('sendAme', source, "takes some ".. itemName ..".")
+		elseif (itemID==215) then
+			triggerEvent('sendAme', source, "nese termální vrtačku.")
+		elseif (itemID==216) then
+			cistsmlouvu(source, itemValue)
+		elseif (itemID==259) then -- Made by RecuvaPumDEV
+			exports.global:sendLocalMeAction(source, "vytáhl z kapsy Tablet.")
+            exports.recu_tablet:tablet_openi(source)
+		elseif (itemID==221) then
 			takeItemFromSlot(source, itemSlot)
-		elseif itemID == 232 then -- car battery charger
-			local veh = additional
-			local batt = getElementData( veh, 'battery' ) or 100
-			if batt == 100 then
-				exports.hud:sendBottomNotification( source, itemName, "The battery of this "..exports.global:getVehicleName(veh).." is already full." )
-			else
-				if takeItemFromSlot( source, itemSlot) then
-					exports.anticheat:setEld( veh, 'battery', math.min( 100, batt + 20 ) )
-					exports.hud:sendBottomNotification( source, itemName, "The battery of this "..exports.global:getVehicleName(veh).." has been charged up by 20%." )
-					triggerEvent( 'fuel:sync', veh, source )
-				end
+			
+			if(math.random(1,2)==1)then
+				exports.global:giveItem(source, 220, 1)
 			end
-		elseif itemID == 260 then
+			if(math.random(1,2)==1)then
+				exports.global:giveItem(source, 220, 1)
+			end
+			
+			exports.global:giveItem(source, 30, 1)
+			exports.global:giveItem(source, 30, 1)
+			
+			if(math.random(1,3)==1)then
+				exports.global:giveItem(source, 30, 1)
+			end
+			if(math.random(1,3)==1)then
+				exports.global:giveItem(source, 30, 1)
+			end
+			if(math.random(1,3)==1)then
+				exports.global:giveItem(source, 30, 1)
+			end
+			if(math.random(1,3)==1)then
+				exports.global:giveItem(source, 30, 1)
+			end
+		elseif itemID == 225 then
+			takeItemFromSlot(source, itemSlot)
+			outputChatBox("Vzal jsi si pilulku s označením " .. itemValue .. ".", source)
+			triggerEvent('sendAme', source, "si vzal pilulku.")
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
-			exports.global:sendLocalMeAction(source, "drinks some Ammonia.")
-			setElementHealth(source, 0)
-			takeItemFromSlot(source, itemSlot)
-		elseif itemID == 268 then --Surfboard
-			--exports.activities:toggleSurfboard(source)
-		elseif itemID == 270 then
-			local metaName = getItemName(itemID, itemValue, metadata)
-			if getElementData(source, "gloves") then
-				triggerEvent('sendAme', source, "slips a pair of " .. metaName .. " from their hands.")
-				exports.anticheat:changeProtectedElementDataEx(source, "gloves", false, true)
-				exports.anticheat:changeProtectedElementDataEx(source, "gloves:name", false, true)
-			else
-				triggerEvent('sendAme', source, "slips a pair of " .. metaName .. " onto their hands.")
-				exports.anticheat:changeProtectedElementDataEx(source, "gloves", true, true)
-				exports.anticheat:changeProtectedElementDataEx(source, "gloves:name", metaName, true)
+		elseif itemID == 226 then -- Reflexní vesta
+			triggerEvent("artifacts:toggle", source, source, "reflexnivesta")
+		elseif itemID == 227 then -- Vojenský batoh
+			triggerEvent("artifacts:toggle", source, source, "backpack-military")
+		elseif itemID == 228 then -- Medaile
+			local medaile = {
+				"medaile-cti",
+				"medaile-hrdinstvi",
+				"medaile-statecnost",
+				"medaile-obrana",
+				"medaile-zasluhy",
+				"medaile-zasluhy2",
+				"medaile-bezpecnost",
+     }
+			
+			if(medaile[itemValue])then
+				triggerEvent("artifacts:toggle", source, source, medaile[itemValue])
 			end
-		elseif (armor[itemID]) then
-			local data = armor[itemID]
-			triggerEvent('sendAme', source, data[3]:gsub("#name",itemName) ..".")
-			setPedArmor(source, armor[itemID][1])
-			takeItemFromSlot(source, itemSlot)
-		else
+		else 
 			-- WHY? This does not really mean there's a bug. Just that we didnt add any click functionality to the item. Thus, commented out. --Exciter 2014-07-11
 			--outputChatBox("Error J" .. ("%04d"):format(tonumber(itemID) or 9999) .. " - Report on http://forums.owlgaming.net/forms.php?do=form&fid=2", source, 255, 0, 0)
 		end
@@ -953,16 +1391,9 @@ addCommandHandler("useitem",
 	end
 )
 
-addEventHandler("onPlayerSpawn", getRootElement(), function()
-    if getElementData(source, "gloves") then
-		exports.anticheat:changeProtectedElementDataEx(source, "gloves", false, true)
-		exports.anticheat:changeProtectedElementDataEx(source, "gloves:name", false, true)
-    end
-end)
-
 function npcUseItem(element, itemID)
 	local source = element
-	if itemID then
+	if itemID then	
 		local hasItem, key, itemValue, itemIndex = hasItem(element, tonumber(itemID))
 		--outputDebugString(" hasItem="..tostring(hasItem).." key="..tostring(key).." itemValue="..tostring(itemValue).." itemIndex="..tostring(itemIndex))
 		if(hasItem) then
@@ -972,7 +1403,7 @@ function npcUseItem(element, itemID)
 					exports.anticheat:changeProtectedElementDataEx(source, badges[itemID][1], false, true)
 					if pedname then
 						--exports.global:sendLocalMeAction(source, "removes " .. badges[itemID][2] .. ".")
-						exports.global:sendLocalText(source, "* "..tostring(pedname).." removes "..badges[itemID][2]..".", 255, 51, 102, 5)
+						exports.global:sendLocalText(source, "* "..tostring(pedname).." si sundal "..badges[itemID][2]..".", 255, 51, 102, 5)
 					end
 				else
 					for key, badge in pairs ( badges ) do
@@ -981,7 +1412,7 @@ function npcUseItem(element, itemID)
 								exports.anticheat:changeProtectedElementDataEx( source, badge[1], false, true )
 								if pedname then
 									--exports.global:sendLocalMeAction( source, "removes " .. badge[2] .. "." )
-									exports.global:sendLocalText(source, "* "..tostring(pedname).." removes "..badge[2]..".", 255, 51, 102, 5)
+									exports.global:sendLocalText(source, "* "..tostring(pedname).." si sundal "..badge[2]..".", 255, 51, 102, 5)
 								end
 							end
 						end
@@ -990,7 +1421,7 @@ function npcUseItem(element, itemID)
 					exports.anticheat:changeProtectedElementDataEx( source, badges[itemID][1], removeOOC(tostring(itemValue)), true )
 					if pedname then
 						--exports.global:sendLocalMeAction( source, "puts on " .. badges[itemID][2] .. "." )
-						exports.global:sendLocalText(source, "* "..tostring(pedname).." puts on "..badges[itemID][2]..".", 255, 51, 102, 5)
+						exports.global:sendLocalText(source, "* "..tostring(pedname).." si nasadil "..badges[itemID][2]..".", 255, 51, 102, 5)
 					end
 					return true
 				end
@@ -1031,7 +1462,7 @@ function isBadge(item)
 	if badges[item] then
 		return true
 	else
-		return false
+		return false		
 	end
 end
 function isWearingBadge(element, item)
@@ -1054,7 +1485,7 @@ function isWearingBadge(element, item)
 			if ( getElementData ( source, badge[1] ) ) then
 				return true
 			end
-		end
+		end		
 	end
 	return false
 end
@@ -1064,6 +1495,9 @@ function addPlayerArtifacts(player)
 	if hasItem(player,48) then --backpack
 		triggerEvent("artifacts:add", player, player, "backpack", true)
 	end
+	if hasItem(player,227) then --backpack
+		triggerEvent("artifacts:add", player, player, "backpack-military", true)
+	end
 	if hasItem(player,162) then --body armour
 		triggerEvent("artifacts:add", player, player, "kevlar")
 	end
@@ -1072,11 +1506,6 @@ function addPlayerArtifacts(player)
 	end
 	if hasItem(player,164) then --medical bag
 		triggerEvent("artifacts:add", player, player, "medicbag")
-	end
-	if hasItem(player,268) then --surfboard
-		local hasItem, slot, itemValue, itemIndex, metadata = hasItem(player, 268)
-		local customTexture = getItemTexture(268, itemValue, metadata)
-		triggerEvent("artifacts:add", player, player, "surfboard", false, customTexture)
 	end
 end
 addEvent("item-system:addPlayerArtifacts", true)
@@ -1088,6 +1517,11 @@ function addAllArtifacts()
 end
 addEvent("item-system:addAllArtifacts", true)
 addEventHandler("item-system:addAllArtifacts", getRootElement(), addAllArtifacts)
+addEventHandler("onCharacterLogin", getRootElement(), function()
+	if not source then source = client end
+	addPlayerArtifacts(source)
+end)
+
 
 function explodeFlash(obj)
 	local players = exports.global:getNearbyElements(obj, "player")
@@ -1121,7 +1555,6 @@ function destroyItem(itemID)
 	if itemID and itemID > 0 then
 		local itemSlot = itemID
 		local item = getItems( source )[itemSlot]
-		local metadata = item[5]
 		if item then
 			local itemID = item[1]
 			local itemValue = item[2]
@@ -1131,7 +1564,12 @@ function destroyItem(itemID)
 					return
 				end
 			end
-
+			
+			if itemID == 227 and countItems( source, 227 ) == 1 then -- vojenský batoh
+				if getCarriedWeight( source ) - getItemWeight( 227, 1 ) > 10 then
+					return
+				end
+			end
 
 			if itemID == 126 and countItems( source, 126 ) == 1 then -- duty belt
 				if getCarriedWeight( source ) - getItemWeight( 126, 1 ) > 10 then
@@ -1143,27 +1581,26 @@ function destroyItem(itemID)
 				exports.global:takeMoney(source, itemValue)
 			end
 
-			itemName = getItemName( itemID, itemValue, metadata )
+			itemName = getItemName( itemID, itemValue )
 			takeItemFromSlot(source, itemSlot)
 
 			triggerClientEvent(source, "item:updateclient", source)
 
 			doItemGiveawayChecks(source, itemID)
-		
 		else
 			return
 		end
 	else
 		if itemID == -100 then
 			setPedArmor(source, 0)
-			itemName = "Body Armor"
+			itemName = "neprůstřelnou vestu"
 		else
 			exports.global:takeWeapon(source, tonumber(-itemID))
 			itemName = getWeaponNameFromID( -itemID )
 		end
 	end
-	outputChatBox("You destroyed a " .. itemName .. ".", source, 255, 194, 14)
-	triggerEvent('sendAme', source, "destroyed a "..itemName..".")
+	outputChatBox("Zničil jsi " .. string.lower(itemName) .. ".", source, 255, 194, 14)
+	triggerEvent('sendAme', source, "zničil "..string.lower(itemName)..".")
 end
 addEvent("destroyItem", true)
 addEventHandler("destroyItem", getRootElement(), destroyItem)
@@ -1179,7 +1616,7 @@ end
 
 function showItem(itemName)
 	if isPedDead(source) or getElementData(source, "injuriedanimation") then return end
-	triggerEvent('sendAme', source, "shows everyone "..(isVowel(itemName) and "an" or "a").." " .. removeOOC(itemName) .. ".")
+	triggerEvent('sendAme', source, "všem ukazuje " .. removeOOC(itemName) .. ".")
 end
 addEvent("showItem", true)
 addEventHandler("showItem", getRootElement(), showItem)
@@ -1191,12 +1628,12 @@ end
 function showInventoryRemote(thePlayer, commandName, targetPlayer)
 	if exports.integration:isPlayerTrialAdmin(thePlayer) then
 		if not (targetPlayer) then
-			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
+			outputChatBox("SYNTAX: /" .. commandName .. " [Čast jmena / ID]", thePlayer, 255, 194, 14)
 		else
 			local targetPlayer = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			if targetPlayer then
 				triggerEvent("subscribeToInventoryChanges",thePlayer,targetPlayer)
-				triggerClientEvent(thePlayer,"showInventory",thePlayer,targetPlayer, "admin")
+				triggerClientEvent(thePlayer,"showInventory",thePlayer,targetPlayer)
 			end
 		end
 	end
@@ -1214,20 +1651,20 @@ end
 
 function sortMoney(thePlayer, commandName, moneyAmountCurrent, moneyAmountSort)
 	if not (moneyAmountCurrent) or not (moneyAmountSort) or tonumber(moneyAmountCurrent) < 0 or tonumber(moneyAmountSort) < 0 then
-		outputChatBox("SYNTAX: /" .. commandName .. " [Money amount you have] [Money amount to sort]", thePlayer, 255, 194, 14)
+		outputChatBox("SYNTAX: /" .. commandName .. " [Počet peněz které máš] [Počet peněz které chceš rozdělit]", thePlayer, 255, 194, 14)
 	else
 		local playerMoney = getElementData(thePlayer, "money")
 		if tonumber(moneyAmountCurrent) <= tonumber(playerMoney) and tonumber(moneyAmountSort) <= tonumber(playerMoney) then
-			if hasItem(thePlayer, 134, tonumber(moneyAmountCurrent)) then
+			if exports.global:hasItem(thePlayer, 134, tonumber(moneyAmountCurrent)) then
 				outputChatBox("You sorted $" .. exports.global:formatMoney(moneyAmountSort) .. " out of $" .. exports.global:formatMoney(moneyAmountCurrent) .. ".", thePlayer)
-				takeItem(thePlayer, 134, tonumber(moneyAmountCurrent))
-				giveItem(thePlayer, 134, tonumber(moneyAmountSort))
-				giveItem(thePlayer, 134, tonumber(moneyAmountCurrent)-tonumber(moneyAmountSort))
+				exports.global:takeItem(thePlayer, 134, tonumber(moneyAmountCurrent))
+				exports.global:giveItem(thePlayer, 134, tonumber(moneyAmountSort))
+				exports.global:giveItem(thePlayer, 134, tonumber(moneyAmountCurrent)-tonumber(moneyAmountSort))
 			else
-				outputChatBox("You don't have that amount of money in one sorted item.", thePlayer, 255, 0, 0)
+				outputChatBox("Nemaš tam dostatek peněz v rozdělenem itemu.", thePlayer, 255, 0, 0)
 			end
 		else
-			outputChatBox("You don't have that amount of money.", thePlayer, 255, 0, 0)
+			outputChatBox("Nemaš tolik peněz.", thePlayer, 255, 0, 0)
 		end
 	end
 end
@@ -1241,9 +1678,9 @@ function combineMoney(thePlayer, commandName)
 		local playerMoney = getElementData(thePlayer, "money")
 		if tonumber(playerMoney) > 0 then
 			exports.global:giveItem(thePlayer, 134, playerMoney)
-			outputChatBox("You combined $" .. exports.global:formatMoney(playerMoney) .. ".", thePlayer)
+			outputChatBox("Rozložil si $" .. exports.global:formatMoney(playerMoney) .. ".", thePlayer)
 		else
-			outputChatBox("You can't combine money you don't have!", thePlayer, 255, 0, 0)
+			outputChatBox("Nemůžeš rozdělit peníze které nemáš!", thePlayer, 255, 0, 0)
 		end
 end
 addCommandHandler("combinemoney", combineMoney)
@@ -1251,31 +1688,31 @@ addCommandHandler("combinemoney", combineMoney)
 function toggleBadge(source, badges, itemID , itemValue)
 	if ( getElementData( source, badges[itemID][1] ) ) then
 		exports.anticheat:changeProtectedElementDataEx(source, badges[itemID][1], false, true)
-		if itemID == 122 or itemID == 123 or itemID == 124 or itemID == 125 or itemID == 135 or itemID == 136 or itemID == 158 or itemID == 168 then
-			triggerEvent('sendAme',  source, "removes a " .. badges[itemID][1] .. " from their head." )
+		if itemID == 122 or itemID == 123 or itemID == 124 or itemID == 125 or itemID == 135 or itemID == 136 or itemID == 158 or itemID == 168 or itemID == 246 or itemID == 251 or itemID == 245 then
+			triggerEvent('sendAme',  source, "si sundal " .. badges[itemID][2] .. " z krku." )
 		else
-			triggerEvent('sendAme', source, "removes a " .. badges[itemID][1] .. ".")
+			triggerEvent('sendAme', source, "si odepnul " .. badges[itemID][2] .. ".")
 		end
 	else
 		for key, badge in pairs ( badges ) do
 			if key ~= itemID then
 				if ( getElementData ( source, badge[1] ) ) then
 					exports.anticheat:changeProtectedElementDataEx( source, badge[1], false, true )
-					if itemID == 122 or itemID == 123 or itemID == 124 or itemID == 125 or itemID == 135 or itemID == 136 or itemID == 158 or itemID == 168 then
-					triggerEvent('sendAme',  source, "removes a " .. badge[1] .. " from their head." )
+					if itemID == 122 or itemID == 123 or itemID == 124 or itemID == 125 or itemID == 135 or itemID == 136 or itemID == 158 or itemID == 168 or itemID == 246 or itemID == 251 or itemID == 245 then
+						triggerEvent('sendAme',  source, "si sundal " .. badge[2] .. " z krku." )
 					else
-					triggerEvent('sendAme',  source, "removes a " .. badge[1] .. "." )
+						triggerEvent('sendAme',  source, "si odepnul " .. badge[2] .. "." )
 					end
 				end
 			end
 		end
 
-		if itemID == 122 or itemID == 123 or itemID == 124 or itemID == 125 or itemID == 135 or itemID == 136 or itemID == 158 or itemID == 168 then
-		exports.anticheat:changeProtectedElementDataEx( source, badges[itemID][1], true )
-		triggerEvent('sendAme',  source, "wraps a " .. badges[itemID][1] .. " around their head." )
+		if itemID == 122 or itemID == 123 or itemID == 124 or itemID == 125 or itemID == 135 or itemID == 136 or itemID == 158 or itemID == 168 or itemID == 246 or itemID == 245 then
+			exports.anticheat:changeProtectedElementDataEx( source, badges[itemID][1], true )
+			triggerEvent('sendAme',  source, "si dal " .. badges[itemID][2] .. " na krk." )
 		else
 			exports.anticheat:changeProtectedElementDataEx( source, badges[itemID][1], removeOOC(itemValue), true )
-			triggerEvent('sendAme',  source, "puts on a " .. badges[itemID][1] .. "." )
+			triggerEvent('sendAme',  source, "si nasadil " .. badges[itemID][2] .. "." )
 		end
 	end
 	exports.global:updateNametagColor(source)
@@ -1283,6 +1720,175 @@ end
 addEvent("item-system:toggleBadge", true)
 addEventHandler("item-system:toggleBadge", getRootElement(), toggleBadge)
 
+
+---------------------------------------
+-- START CHRISTMAS BOTTLES (Exciter) --
+---------------------------------------
+--SETTINGS:
+local santaCharID = 19379
+local santaCokeID = 210
+local santaLotteryTicketID = 211
+
+local christmasLotteryPrizes = {
+	--itemID,value
+	{210,"1"}, --A coke bottle
+	{17,"1"}, --Watch
+	{10,"1"}, --Dice
+	{55,"Santa Claus. 1, North Pole."}, --Business Card
+	{113,"3"}, --Pack of glowsticks
+	{59,"1"}, --Mudkip
+	{160,"1"}, --Briefcase
+	{91,"1"}, --Eggnog
+	{92,"1"}, --Turkey
+	{93,"1"}, --Christmas Pudding
+	{94,"1"}, --Christmas Present
+	{213,"1"}, --Pinnekjott
+
+}
+function giveHunger( player, amount )
+	--if player and amount then
+		--local playerHunger = getElementData(player, "hunger")
+		--if playerHunger + tonumber(amount) >= 100 then
+			--setElementData(player, "hunger", 100)
+		--else
+			--setElementData(player, "hunger", playerHunger + tonumber(amount))
+		--end
+	--end
+end
+
+function giveThirst( player, amount )
+	--[[if player and amount then
+		local playerThirst = getElementData(player, "thirst")
+		if playerThirst + tonumber(amount) >= 100 then
+			setElementData(player, "thirst", 100)
+		else
+			setElementData(player, "thirst", playerThirst + tonumber(amount))
+		end
+	end]]
+end
+
+function takeHunger( player, amount )
+	--[[if player and amount then
+		local playerHunger = getElementData(player, "hunger")
+		if playerHunger - tonumber(amount) <= 0 then
+			setElementData(player, "hunger", 0)
+		else
+			setElementData(player, "hunger", playerHunger - tonumber(amount))
+		end
+	end]]
+end
+
+function takeThirst( player, amount )
+	--[[if player and amount then
+		local playerThirst = getElementData(player, "thirst")
+		if playerThirst - tonumber(amount) <= 0 then
+			setElementData(player, "thirst", 0)
+		else
+			setElementData(player, "thirst", playerThirst - tonumber(amount))
+		end
+	end]]
+end
+function christmasCoke(thePlayer)
+	local santaCars = {}
+	for k,v in ipairs(getElementsByType("Vehicle")) do
+		if(tonumber(getElementData(v,"owner")) == santaCharID and getElementData(v,"faction") == -1) then
+			table.insert(santaCars,v)
+		end
+	end
+	if(#santaCars > 0) then
+		local chance = 2 --percentage chance of getting a car
+		local chanceSuper = 1 --percentage chance of getting a supercar
+		for k,v in ipairs(santaCars) do
+			local vehID = tonumber(getElementData(v,"dbid"))
+			local thisChance = 0
+			if(vehID == 2439) then --enter supercar ids here
+				thisChance = chanceSuper
+			--elseif(getElementData(thePlayer,"username") == "Exciter") then
+			--	thisChance = 50
+			elseif(getPlayerName(thePlayer) == "Santa_Claus") then
+					thisChance = 100
+			else
+				thisChance = chance
+			end
+
+			if math.random(100) >= thisChance then --if no car won
+				--do nothing, we'll give the chance of other prizes at the end of this func
+			else
+				outputChatBox("Našel si klič od auta ve flašce!",thePlayer,0,255,0)
+				local gender = tonumber(getElementData(thePlayer, "gender")) or 0
+				local gendertext
+				if gender > 0 then
+					gendertext = "her"
+				else
+					gendertext = "his"
+				end
+				exports.global:sendLocalMeAction(thePlayer, "našel klič od auta v"..tostring(gendertext).." vánočni coca-cole.")
+				giveItem(thePlayer, 3, vehID) --give the vehicle key
+				return
+			end
+		end
+	end
+
+	if math.random(100) >= 40 then
+		--no prize
+	else
+		local prizes = christmasLotteryPrizes
+		local prize = math.random(1,#prizes)
+		local ticketValue = prize+89027548971875
+		outputChatBox("Našel si vanočni loterírni ticket ve flašce",thePlayer,0,255,0)
+		giveItem(thePlayer, santaLotteryTicketID, tostring(ticketValue)) --give a christmas lottery ticket
+		local gender = tonumber(getElementData(thePlayer, "gender")) or 0
+		local gendertext
+		if gender > 0 then
+			gendertext = "her"
+		else
+			gendertext = "his"
+		end
+		exports.global:sendLocalMeAction(thePlayer, "našel loterírni ticket v  "..tostring(gendertext).." vánoční coca-cole.")
+	end
+end
+
+function christmasLotteryUseTicket(santa)
+	local thePlayer = client
+	local hasItem, itemSlot, itemValue = exports.global:hasItem(thePlayer, santaLotteryTicketID)
+	if hasItem then
+		takeItemFromSlot(thePlayer, itemSlot)
+		local prizes = christmasLotteryPrizes
+		local prize = tonumber(itemValue)-89027548971875
+		if prizes[prize] then
+			giveItem(thePlayer, prizes[prize][1], prizes[prize][2])
+			local itemName = g_items[prizes[prize][1]][1]
+			local playerName = getPlayerName(thePlayer):gsub("_", " ")
+			exports.global:sendLocalMeAction(santa, "dal "..tostring(playerName).." a "..tostring(itemName)..".")
+		else
+			outputChatBox("Promiň, nic si nevyhral na tom ticketu.",thePlayer,255,0,0)
+			outputDebugString("item-system/s_item_system: Prize was "..tostring(prize).." (invalid)")
+		end
+	end
+end
+addEvent("item-system:useChristmasLotteryTicket", true)
+addEventHandler("item-system:useChristmasLotteryTicket", getRootElement(), christmasLotteryUseTicket)
+
+function christmasGetCokeFromSanta(santa)
+	local thePlayer = client
+	--local cokesGotten = tonumber(getElementData(thePlayer, "cokesgotten")) or 0
+	--if(cokesGotten > 5) then
+	--	return
+	--end
+	giveItem(thePlayer, santaCokeID, "1")
+	--setElementData(thePlayer, "cokesgotten", cokesGotten+1)
+	local playerName = getPlayerName(thePlayer):gsub("_", " ")
+	exports.global:sendLocalMeAction(santa, "gives "..tostring(playerName).." a coke.")
+end
+addEvent("item-system:santaGetCoke", true)
+addEventHandler("item-system:santaGetCoke", getRootElement(), christmasGetCokeFromSanta)
+
+function christmasInitialize()
+	for k,v in ipairs(getElementsByType("Player")) do
+		setElementData(v,"drinking",false)
+	end
+end
+addEventHandler("onResourceStart", getResourceRootElement(getThisResource()), christmasInitialize)
 
 addEventHandler("onPlayerQuit", getRootElement(),
 function()

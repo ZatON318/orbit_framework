@@ -1,7 +1,0 @@
-{"action":27,"origin":"ac2","date":"2024-02-06T16:58:53","phones":[],"objects":[],"characters":[],"vehicles":[],"interiors":[],"accounts":[2],"content":"Connected from 192.168.56.1 - 9F9B2E173D6A3E6B999F7DCB30480170","factions":[]}
-{"action":27,"origin":"ac2","date":"2024-02-06T16:59:03","phones":[],"objects":[],"characters":[2],"vehicles":[],"interiors":[],"accounts":[2],"content":"Spawned","factions":[]}
-{"action":4,"origin":"ch2","date":"2024-02-06T16:59:32","phones":[],"objects":[],"characters":[],"vehicles":[],"interiors":[],"accounts":[],"content":"MAKE FACTION","factions":[1]}
-{"action":4,"origin":"ch2","date":"2024-02-06T16:59:43","phones":[],"objects":[],"characters":[2],"vehicles":[],"interiors":[],"accounts":[],"content":"SET INTO FACTION LEADER","factions":[1]}
-{"action":4,"origin":"ch2","date":"2024-02-06T17:03:55","phones":[],"objects":[],"characters":[],"vehicles":[],"interiors":[],"accounts":[],"content":"DELETE FACTION","factions":[1]}
-{"action":4,"origin":"ch2","date":"2024-02-06T17:04:06","phones":[],"objects":[],"characters":[],"vehicles":[],"interiors":[],"accounts":[],"content":"MAKE FACTION","factions":[2]}
-{"action":4,"origin":"ch2","date":"2024-02-06T17:04:10","phones":[],"objects":[],"characters":[2],"vehicles":[],"interiors":[],"accounts":[],"content":"SET INTO FACTION LEADER","factions":[2]}

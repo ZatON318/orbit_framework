@@ -482,7 +482,7 @@ drawScoreboard = function ()
 	local rowHeight = dxGetFontHeight ( 1, "default-bold" )
 
 	-- Draw the headers
-	drawRowBounded ( "ID", "Player Name", "Hours", "Ping",
+	drawRowBounded ( "ID", "Jmeno", "Hodiny", "Ping",
 					 { SCOREBOARD_HEADERS_COLOR, SCOREBOARD_HEADERS_COLOR, SCOREBOARD_HEADERS_COLOR },
 					 "default-bold", top )
 

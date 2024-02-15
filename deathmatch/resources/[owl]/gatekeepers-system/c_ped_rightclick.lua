@@ -44,7 +44,7 @@ function clickPed(button, state, absX, absY, wx, wy, wz, element)
 				wPedRightClick = guiCreateStaticImage(ax-w/2, ay-h/2, w, h , ":resources/window_body.png", false)
 				local l1 = guiCreateLabel(0, 0.08, 1, 0.25, pedName, true, wPedRightClick)
 				guiLabelSetHorizontalAlign(l1, "center")
-				bTalkToPed = guiCreateButton(0.05, 0.3, 0.87, 0.25, "Talk", true, wPedRightClick)
+				bTalkToPed = guiCreateButton(0.05, 0.3, 0.87, 0.25, "Mluvit", true, wPedRightClick)
 				addEventHandler("onClientGUIClick", bTalkToPed,  function (button, state)
 					if(button == "left" and state == "up") then
 
@@ -133,7 +133,7 @@ function clickPed(button, state, absX, absY, wx, wy, wz, element)
 					end
 				end, false)
 
-				bClosePedMenu = guiCreateButton(0.05, 0.6, 0.87, 0.25, "Close Menu", true, wPedRightClick)
+				bClosePedMenu = guiCreateButton(0.05, 0.6, 0.87, 0.25, "Zrušit", true, wPedRightClick)
 				addEventHandler("onClientGUIClick", bClosePedMenu, hidePedMenu, false)
 				sent=true
 			end

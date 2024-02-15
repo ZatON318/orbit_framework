@@ -13,6 +13,8 @@
 	<script src="trucker/c_trucker_job.lua" type="client"/>
 	-->
 
+	<script src="delivery/c_deliver.lua"/>
+
 	<script src="fishing/s_fishing_job.lua" type="server"/>
 	<script src="fishing/c_fishing_job.lua" type="client"/>
 	
@@ -25,6 +27,9 @@
 	
 	<script src="taxi/s_taxi_job.lua" type="server"/>
 	<script src="taxi/c_taxi_job.lua" type="client"/>
+
+	<script src="sweeper/c_streetsweeper_job.lua" type="server"/>
+	<script src="sweeper/s_streetsweeper_job.lua" type="client"/>
 
 	<script src="taximeter/g_taximeter.lua" type="server"/>
 	<script src="taximeter/g_taximeter.lua" type="client"/>

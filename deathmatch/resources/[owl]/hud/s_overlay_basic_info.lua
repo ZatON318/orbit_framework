@@ -142,33 +142,33 @@ function showStats(thePlayer, commandName, targetPlayerName)
 	local info = {}
 	if isOverlayDisabled then
 		outputChatBox(getPlayerName(thePlayer):gsub("_", " "), showPlayer , 255, 194, 14)
-		outputChatBox(" Drivers License: " .. carlicense, showPlayer)
-		outputChatBox(" Motorcycle License: " .. bikelicense, showPlayer)
-		outputChatBox(" Boating License: " .. boatlicense, showPlayer)
-		outputChatBox(" Pilots License: " .. pilotlicense, showPlayer)
-		outputChatBox(" Tier 1 Firearms License: " .. gunlicense , showPlayer)
-		outputChatBox(" Tier 2 Firearms License: " .. gun2license , showPlayer)
-		outputChatBox(" Fishing Permit: " .. fishlicense, showPlayer)
-		outputChatBox(" Vehicles (" .. printCar .. "): " .. string.sub(carids, 1, string.len(carids)-2) , showPlayer)
-		outputChatBox(" Properties (" .. numproperties .. "/"..(getElementData(thePlayer, "maxinteriors") or 10).."): " .. string.sub(properties, 1, string.len(properties)-2) , showPlayer)
-		outputChatBox(" Time spent on this character: " .. hoursplayed .. " hours." , showPlayer)
-		outputChatBox(" Languages: " , showPlayer)
+		outputChatBox(" Řidičský průkaz B: " .. carlicense, showPlayer)
+		outputChatBox(" Řidičský průkaz A: " .. bikelicense, showPlayer)
+		outputChatBox(" Lodní licence: " .. boatlicense, showPlayer)
+		outputChatBox(" Pilotní průkaz: " .. pilotlicense, showPlayer)
+		outputChatBox(" Zbrojní průkaz úrovně 1: " .. gunlicense , showPlayer)
+		outputChatBox(" Zbrojní průkaz úrovně 2: " .. gun2license , showPlayer)
+		outputChatBox(" Povolení k rybolovu: " .. fishlicense, showPlayer)
+		outputChatBox(" Vozidla (" .. printCar .. "): " .. string.sub(carids, 1, string.len(carids)-2) , showPlayer)
+		outputChatBox(" Nemovitosti (" .. numproperties .. "/"..(getElementData(thePlayer, "maxinteriors") or 10).."): " .. string.sub(properties, 1, string.len(properties)-2) , showPlayer)
+		outputChatBox(" Čas strávený na této postavě: " .. hoursplayed .. " hodin." , showPlayer)
+		outputChatBox(" Jazyky: " , showPlayer)
 	else
 		info = {
 			{getPlayerName(thePlayer):gsub("_", " ")},
 			{""},
-			{" Date of birth: "..exports.global:getPlayerDoB(thePlayer)},
-			{" Drivers License: " .. carlicense},
-			{" Motorcycle License: " .. bikelicense},
-			{" Boating License: " .. boatlicense},
-			{" Pilots License: " .. pilotlicense},
-			{" Tier 1 Firearms License: " .. gunlicense},
-			{" Tier 2 Firearms License: " .. gun2license},
-			{" Fishing Permit: " .. fishlicense},
-			{" Vehicles (" .. printCar .. "): " .. string.sub(carids, 1, string.len(carids)-2)},
-			{" Properties (" .. numproperties .. "/"..(getElementData(thePlayer, "maxinteriors") or 10).."): " .. string.sub(properties, 1, string.len(properties)-2)},
-			{" Time spent on this character: " .. hoursplayed .. " hours."},
-			{" Languages: "},
+			{" Datum narození: "..exports.global:getPlayerDoB(thePlayer)},
+			{" Řidičský průkaz B: " .. carlicense},
+			{" Řidičský průkaz A: " .. bikelicense},
+			{" Lodní licence: " .. boatlicense},
+			{" Pilotní průkaz: " .. pilotlicense},
+			{" Zbrojní průkaz úrovně 1: " .. gunlicense},
+			{" Zbrojní průkaz úrovně 2: " .. gun2license},
+			{" Povolení k rybolovu: " .. fishlicense},
+			{" Vozidla (" .. printCar .. "): " .. string.sub(carids, 1, string.len(carids)-2)},
+			{" Nemovitosti (" .. numproperties .. "/"..(getElementData(thePlayer, "maxinteriors") or 10).."): " .. string.sub(properties, 1, string.len(properties)-2)},
+			{" Čas strávený na této postavě: " .. hoursplayed .. " hours."},
+			{" Jazyky: "},
 		}
 	end
 	--LANGUAGES
@@ -190,26 +190,26 @@ function showStats(thePlayer, commandName, targetPlayerName)
 	local job = getElementData(thePlayer, "job") or 0
 	if job == 0 then
 		if isOverlayDisabled then
-			outputChatBox(" Career: Unemployed", showPlayer)
+			outputChatBox(" Kariéra: Bez práce", showPlayer)
 		else
-			table.insert(info, {" Career: Unemployed"})
+			table.insert(info, {" Kariéra: Bez práce"})
 		end
 	else
 		local jobName = exports["job-system"]:getJobTitleFromID(job)
 		local joblevel = getElementData(thePlayer, "jobLevel") or 1
 		local jobProgress = getElementData(thePlayer, "jobProgress") or 0
 		if isOverlayDisabled then
-			outputChatBox(" Career: "..jobName, showPlayer)
-			outputChatBox("   - Skill Level: "..joblevel, showPlayer)
-			outputChatBox("   - Progress: "..jobProgress, showPlayer)
+			outputChatBox(" Kariéra: "..jobName, showPlayer)
+			--outputChatBox("   - Úroveň dovedností: "..joblevel, showPlayer)
+			--outputChatBox("   - Pokrok: "..jobProgress, showPlayer)
 		else
-			table.insert(info, {" Career: "..jobName})
-			table.insert(info, {"   - Skill Level: "..joblevel})
-			table.insert(info, {"   - Progress: "..jobProgress})
+			table.insert(info, {" Kariéra: "..jobName})
+			--table.insert(info, {"   - Úroveň dovedností: "..joblevel})
+			--table.insert(info, {"   - Pokrok: "..jobProgress})
 		end
 	end
 	--CARRIED
-	local carried = " Carried Weight: "..("%.2f/%.2f" ):format( exports["item-system"]:getCarriedWeight( thePlayer ), exports["item-system"]:getMaxWeight( thePlayer ) ).." kg(s)"
+	local carried = " Přenášená hmotnost: "..("%.2f/%.2f" ):format( exports["item-system"]:getCarriedWeight( thePlayer ), exports["item-system"]:getMaxWeight( thePlayer ) ).." kg(s)"
 	if isOverlayDisabled then
 		outputChatBox( carried, showPlayer)
 	else
@@ -221,14 +221,14 @@ function showStats(thePlayer, commandName, targetPlayerName)
 	local money = getElementData(thePlayer, "money") or 0
 	if isOverlayDisabled then
 		outputChatBox( " Finance: ", showPlayer)
-		outputChatBox( "   - GCs: "..exports.global:formatMoney(currentGC), showPlayer)
-		outputChatBox( "   - Money: $"..exports.global:formatMoney(money), showPlayer)
-		outputChatBox( "   - Bank money: $"..exports.global:formatMoney(bankmoney), showPlayer)
+		--outputChatBox( "   - GCs: "..exports.global:formatMoney(currentGC), showPlayer)
+		outputChatBox( "   - Peníze: $"..exports.global:formatMoney(money), showPlayer)
+		outputChatBox( "   - Peníze v bance: $"..exports.global:formatMoney(bankmoney), showPlayer)
 	else
 		table.insert(info, {" Finance: "})
-		table.insert(info, {"   - GCs: "..exports.global:formatMoney(currentGC)})
-		table.insert(info, {"   - Money: $"..exports.global:formatMoney(money)})
-		table.insert(info, {"   - Bank money: $"..exports.global:formatMoney(bankmoney)})
+		--table.insert(info, {"   - GCs: "..exports.global:formatMoney(currentGC)})
+		table.insert(info, {"   - Peníze: $"..exports.global:formatMoney(money)})
+		table.insert(info, {"   - Peníze v bance: $"..exports.global:formatMoney(bankmoney)})
 	end
 	
 	if not isOverlayDisabled then

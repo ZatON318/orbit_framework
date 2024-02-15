@@ -236,7 +236,7 @@ function options_showmenu()
 		wHeight = wHeight + bHeight
 	end
 
-	bLogout = guiCreateButton(margin, wHeight, 230, 30, "Logout", false, wOptions)
+	bLogout = guiCreateButton(margin, wHeight, 230, 30, "Odhlasit", false, wOptions)
 	addEventHandler("onClientGUIClick", bLogout,
 		function ()
 			if not isPedDead ( localPlayer ) and isCameraOnPlayer() then

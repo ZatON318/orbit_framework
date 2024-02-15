@@ -1,84 +1,68 @@
 local easyHotlines = {
 	[911] = {
-		name = "Emergency Hotline",
-		order = 5,
-		factions = { 1, 2, 164 },
-		require_radio = true,
-		operator = "911 Operator",
-		dialogue = {
-			{
-				q = "911 emergency, Which emergency service do you require?",
-				as = "service",
-				check = function(service)
-					-- return which factions should receive the call
-					local found, factions = checkService(service)
-					return factions, found, "Sorry, I'm not sure what you mean."
-				end
-			},
-			{ q = "Can you tell me your name please?", as = "name" },
-			{ q = "Please state your emergency.", as = "emergency" },
-			done = "Thanks for your call, we've dispatched a unit to your location."
-		},
-		done = function(caller, callstate, players)
-			-- pick players depending on which service was dialled
-			local players = collectReceivingPlayersForHotline { factions = callstate.service, require_radio = true }
-
-			local zonelocation = string.gsub(exports.global:getElementZoneName(caller.element), "'", "''")
-			local streetlocation = exports.gps:getPlayerStreetLocation(caller.element)
-
-			local query = exports.mysql:query_insert_free("INSERT INTO `mdc_calls` (`caller`,`number`,`description`) VALUES ('" .. getElementData(caller.element, "dbid") .. "','" .. caller.phone .. "','" .. exports.mysql:escape_string(tostring(zonelocation) .. " - " .. callstate.emergency) .. "')")
-			if query then
-
-				log911("[911 Call] Player: " .. getPlayerName(caller.element) .. " || Situation: " .. callstate.emergency .. ", over.")
-				players:send({
-					"[RADIO] This is dispatch, we've got an emergency report from " .. callstate.name .. " (#" .. caller.phone .. "), over.",
-					"[RADIO] Situation: '" .. callstate.emergency .. "', over.",
-					streetlocation and ("[RADIO] Location: '" .. streetlocation .. " in " .. zonelocation .. "', out.") or ("[RADIO] Location: '" .. zonelocation .. "', out.")
-				}, 0, 183, 239)
-				players:beep()
-			else
-				caller:respond("There was an error processing your request. Try again later.")
-			end
-		end
-	},
-	[311] = {
-		name = "LSPD Non-Emergency", -- name of the hotline shown on the client-side
-		order = 10, -- sort order; smaller numbers are displayed first in the hotlines app on the client-side phone
-		factions = { 1, 142, 50 }, -- which factions are going to receive notifications? this will later be used by .done; as players:send() will notify all players in those factions
+		name = "Policie LS", -- name of the hotline shown on the client-side
+		order = 0, -- sort order; smaller numbers are displayed first in the hotlines app on the client-side phone
+		factions = { 1 }, -- which factions are going to receive notifications? this will later be used by .done; as players:send() will notify all players in those factions
 		require_radio = true, -- to receive messages, players must have a turned-on radio
-		operator = "LSPD Operator", -- name of the person responding to your calls
+		operator = "Operátor LSPD", -- name of the person responding to your calls
 		dialogue = {
-			{ q = "LSPD Hotline. Please state your location.", as = "location" },
-			{ q = "Can you please describe the reason for your call?", as = "reason" },
-			done = "Thanks for your call, we'll get in touch soon."
+			{ q = "Policie LS. Můžete prosím popsat důvod svého hovoru?", as = "reason" },
+			{ q = "Uveďte prosím svou polohu.", as = "location" },
+			{ q = "Můžete mi říct své jméno?", as = "name" },
+			done = "Děkujeme za zavolání, brzy se ozveme."
 		},
 		-- with the dialogue options above, callstate.location is the location and callstate.reason the reason.
 		-- caller.element is the player who called, caller.phone is the player's phone number from which he called.
 		-- players is simply a table of all players that should be notified, players:send a shortcut for outputChatBox'ing
 		done = function(caller, callstate, players)
 			players:send({
-				"[RADIO] This is dispatch, We've got a report from #" .. caller.phone .. " via the #311 non-emergency line.",
-				"[RADIO] Reason: '" .. callstate.reason .. "'.",
-				"[RADIO] Location: '" .. callstate.location .. "'."
+				"[VYSÍLAČKA] Tady je dispečink , obdrželi jsme hlášení z čisla #" .. caller.phone .. ". ",
+				"[VYSÍLAČKA] Důvod: '" .. callstate.reason .. "'.",
+				"[VYSÍLAČKA] Lokace: '" .. callstate.location .. "'.",
+				"[VYSÍLAČKA] Jmeno: '" .. callstate.name .. "'.",
+				
+			}, 245, 40, 135)
+		end
+	},
+	[311] = {
+		name = "Záchranna služba LS",
+		order = 20,
+		factions = { 2 },
+		require_radio = true,
+		operator = "Operátor ZSLS",
+		dialogue = {
+			{ q = "ZSLS při telefonu. Uveďte prosím svou polohu.", as = "location" },
+			{ q = "Můžete nám prosím sdělit důvod svého hovoru?", as = "reason" },
+			{ q = "Můžete mi říct své jméno?", as = "name" },
+			done = "Děkujeme za zavolání, brzy se ozveme."
+		},
+		done = function(caller, callstate, players)
+			players:send({
+				"[VYSÍLAČKA] Tady je dispečink , obdrželi jsme hlášení z čisla #" .. caller.phone .. ".",
+				"[VYSÍLAČKA] Důvod: '" .. callstate.reason .. "' .",
+				"[VYSÍLAČKA] Lokace: '" .. callstate.location .. "'. ",
+				"[VYSÍLAČKA] Jmeno: '" .. callstate.name .. "'.",
 			}, 245, 40, 135)
 		end
 	},
 	[411] = {
-		name = "LSFD Non-Emergency",
-		order = 20,
-		factions = { 2 },
+		name = "Hasiči LS",
+		order = 10,
+		factions = { 3 },
 		require_radio = true,
-		operator = "LSFD Operator",
+		operator = "Operátor LSFD",
 		dialogue = {
-			{ q = "LSFD Hotline. Please state your location.", as = "location" },
-			{ q = "Can you please tell us the reason for your call?", as = "reason" },
-			done = "Thanks for your call, we'll get in touch soon."
+			{ q = "LSFD Hotline. ", as = "location" },
+			{ q = "Můžete popsat důvod svého hovoru?", as = "reason" },
+			{ q = "Můžete mi říct své jméno?", as = "name" },
+			done = "Děkujeme za zavolání, brzy se ozveme."
 		},
-		done = function(caller, callstate, players)
+			done = function(caller, callstate, players)
 			players:send({
-				"[RADIO] This is dispatch, We've got a report from #" .. caller.phone .. " via the #411 non-emergency line, over.",
-				"[RADIO] Reason: '" .. callstate.reason .. "', over.",
-				"[RADIO] Location: '" .. callstate.location .. "', out."
+				"[VYSÍLAČKA] Tady je dispečink , obdrželi jsme hlášení z čisla #" .. caller.phone .. ".",
+				"[VYSÍLAČKA] Důvod: '" .. callstate.reason .. "'.",
+				"[VYSÍLAČKA] Lokace: '" .. callstate.location .. "'.",
+				"[VYSÍLAČKA] Jmeno: '" .. callstate.name .. "'.",
 			}, 245, 40, 135)
 		end
 	},
@@ -99,6 +83,7 @@ local easyHotlines = {
 			}, 245, 40, 135)
 		end
 	},
+	--[[
 	[711] = {
 		name = "Report Stolen Vehicle",
 		order = 2000,
@@ -320,24 +305,7 @@ local easyHotlines = {
 				"Call the customer back at #" .. caller.phone .. "."
 			}, 120, 255, 80)
 		end
-	},
-	[2504] = {
-		name = "Sparta Inc",
-		operator = "Operator",
-		factions = { 212 },
-		require_phone = true,
-		dialogue = {
-			{ q = "Hello, Sparta Inc. here, how can we help you?", as = "reason" },
-			{ q = "What is your name?", as = "name" },
-			done = "Thanks for the call, an employee should call back soon!"
-		},
-		done = function(caller, callstate, players)
-			players:send({
-				"SMS from Sparta Inc.: " .. callstate.name .. " is requesting assistance: " .. callstate.reason .. ".",
-				"Call the customer back on phone #" .. caller.phone .. "."
-			}, 120, 255, 80)
-		end
-	},
+	},--]]
 }
 
 ------------------------------------------------------------------------------------------------------------------------

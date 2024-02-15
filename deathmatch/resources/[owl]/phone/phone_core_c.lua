@@ -30,13 +30,13 @@ function drawPhoneGUI()
 	local btnM = 25
 	local btnPosY = 495
 	
-	bHome = guiCreateButton(btnM,btnPosY,btnW,btnH,"Home",false,wPhoneMenu)
+	bHome = guiCreateButton(btnM,btnPosY,btnW,btnH,"Domu",false,wPhoneMenu)
 	guiSetFont ( bHome, font1 )
 
-	bPowerOn = guiCreateButton(btnM,btnPosY,btnW,btnH,"Power On",false,wPhoneMenu)
+	bPowerOn = guiCreateButton(btnM,btnPosY,btnW,btnH,"Zapnout",false,wPhoneMenu)
 	guiSetFont ( bPowerOn, font1 )
 
-	bCancel = guiCreateButton(btnM+btnW+5,btnPosY,btnW,btnH,"Hide",false,wPhoneMenu)
+	bCancel = guiCreateButton(btnM+btnW+5,btnPosY,btnW,btnH,"Schovat",false,wPhoneMenu)
 	guiSetFont ( bCancel, font1 )
 	addEventHandler("onClientGUIClick", getRootElement(), onGuiClick)
 	guiSetEnabled(wPhoneMenu, false)

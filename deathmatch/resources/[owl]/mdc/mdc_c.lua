@@ -101,7 +101,7 @@ addEventHandler("mdc:loginW", localPlayer, openLogin)
 end]]
 
 ------------------------------------------
---addCommandHandler( "mdc", openLogin, false, false ) / Removed it so ppl can only access mdc from vehicles which MDC or with computer only, not everywhere. / Maxime
+addCommandHandler( "mdc", openLogin, false, false )
 
 
 function mdc_errorWin ( text )

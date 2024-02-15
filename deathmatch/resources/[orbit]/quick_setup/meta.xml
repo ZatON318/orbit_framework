@@ -1,0 +1,5 @@
+<meta>
+	<info author="Orbit - ZatON" type="script" name="quick_setup" version="0.1"/>
+	<script src="c_quick_setup.lua" type="client" cache="false" />
+	<script src="s_quick_setup.lua" type="server" />
+</meta>

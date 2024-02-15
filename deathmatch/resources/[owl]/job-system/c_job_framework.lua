@@ -7,9 +7,9 @@ function playerSpawn()
 	if (logged==1) then
 		job = tonumber(getElementData(localPlayer, "job"))
 		if (job==1) then -- TRUCKER
-			exports["job-system-trucker"]:displayTruckerJob()
+			--exports["job-system-trucker"]:displayTruckerJob()
 		else
-			exports["job-system-trucker"]:resetTruckerJob()
+			--exports["job-system-trucker"]:resetTruckerJob()
 		end
 		
 		if (job==2) then -- TAXI
@@ -33,7 +33,7 @@ addEventHandler("onClientPlayerSpawn", localPlayer,
 
 function quitJob(job)
 	if (job==1) then -- TRUCKER JOB
-		exports["job-system-trucker"]:resetTruckerJob()
+		--exports["job-system-trucker"]:resetTruckerJob()
 		outputChatBox("You have now quit your job as a delivery driver.", 0, 255, 0)
 	elseif (job==2) then -- TAXI JOB
 		resetTaxiJob()

@@ -13,7 +13,7 @@ Handles the resource start event to create a dummy entity with information about
 --]]
 addEventHandler ( "onResourceStart", getResourceRootElement(getThisResource()), function ()
 	scoreboardDummy = createElement ( "scoreboard" )
-	setElementData ( scoreboardDummy, "serverName", " OwlGaming MTA Roleplay - "..exports.global:getScriptVersion() )
+	setElementData ( scoreboardDummy, "serverName", " Orbit MTA Roleplay " )
 	-- setElementData ( scoreboardDummy, "maxPlayers", getMaxPlayers () )
 	setElementData ( scoreboardDummy, "allow", true )
 	
