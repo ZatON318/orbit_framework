@@ -124,12 +124,12 @@ CREATE TABLE `account_settings` (
 -- Dumping data for table `account_settings`
 --
 
-INSERT INTO `account_settings` (`id`, `name`, `value`) VALUES
-(1, 'graphic_motionblur', '0'),
-(1, 'graphic_skyclouds', '0'),
-(1, 'graphic_shaderradar', '0'),
-(1, 'graphic_shaderwater', '0'),
-(1, 'graphic_shaderveh', '0');
+--INSERT INTO `account_settings` (`id`, `name`, `value`) VALUES
+--(1, 'graphic_motionblur', '0'),
+--(1, 'graphic_skyclouds', '0'),
+--(1, 'graphic_shaderradar', '0'),
+--(1, 'graphic_shaderwater', '0'),
+--(1, 'graphic_shaderveh', '0');
 
 -- --------------------------------------------------------
 
@@ -3914,6 +3914,12 @@ ALTER TABLE `worlditems`
 ALTER TABLE `worlditems_data`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
+
+
+--Elevator fix
+INSERT INTO mta.elevators (id)
+	VALUES (1);
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

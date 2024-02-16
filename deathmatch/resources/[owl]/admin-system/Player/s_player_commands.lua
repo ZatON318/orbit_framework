@@ -1654,7 +1654,7 @@ function warnPlayer(thePlayer, commandName, targetPlayer, ...)
 		end
 	end
 end
---addCommandHandler("warn", warnPlayer, false, false)
+addCommandHandler("warn", warnPlayer, false, false)
 
 -- RESET CHARACTER
 function resetCharacter(thePlayer, commandName, ...)
