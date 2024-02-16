@@ -90,7 +90,7 @@ function jailPlayer(thePlayer, commandName, who, minutes, ...)
 		end
 	end
 end
---addCommandHandler("jail", jailPlayer, false, false)
+addCommandHandler("jail", jailPlayer, false, false)
 --addCommandHandler("sjail", jailPlayer, false, false)
 
 --OFFLINE JAIL BY MAXIME--------------------
