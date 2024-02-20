@@ -438,26 +438,15 @@ function addNewVehicle(veh)
 	for i = 1,  #carshops do
 		guiComboBoxAddItem(gui["spawnto"], carshops[i].nicename)
 	end
-	addEventHandler("onClientGUIComboBoxAccepted", gui["spawnto"], function()
-		if guiComboBoxGetSelected(gui["spawnto"]) <= 0 then
-			if isElement(edits[7]) then
-				destroyElement(labels["stock"])
-				destroyElement(labels["spawnrate"])
-				destroyElement(edits[7])
-				destroyElement(edits[8])
-			end
-		else
-			if not isElement(edits[7]) then
-				labels["stock"] = guiCreateLabel(0.0251,0.54,0.4292,0.0459,"Total Stock:",true,addVehWindow)
-				guiSetFont(labels["stock"],"default-bold-small")
-				labels["spawnrate"] = guiCreateLabel(0.516,0.54,0.4292,0.0459,"Spawn Rate:",true,addVehWindow)
-				guiSetFont(labels["spawnrate"],"default-bold-small")
 
-				edits[7] = guiCreateEdit(0.0388,0.58,0.4132,0.06,(veh.stock or "0"),true,addVehWindow)
-				edits[8] = guiCreateEdit(0.5388,0.58,0.4132,0.06,(veh.spawn_rate or "0"),true,addVehWindow)
-			end
-		end
-	end, false)
+	labels["stock"] = guiCreateLabel(0.0251,0.54,0.4292,0.0459,"Total Stock:",true,addVehWindow)
+	guiSetFont(labels["stock"],"default-bold-small")
+	labels["spawnrate"] = guiCreateLabel(0.516,0.54,0.4292,0.0459,"Spawn Rate:",true,addVehWindow)
+	guiSetFont(labels["spawnrate"],"default-bold-small")
+
+	edits[7] = guiCreateEdit(0.0388,0.58,0.4132,0.06,(veh.stock or "0"),true,addVehWindow)
+	edits[8] = guiCreateEdit(0.5388,0.58,0.4132,0.06,(veh.spawn_rate or "0"),true,addVehWindow)
+
 	guiComboBoxSetSelected(gui["spawnto"],tonumber(veh.spawnto) or -1 )
 	triggerEvent("onClientGUIComboBoxAccepted", gui["spawnto"])
 
@@ -647,6 +636,7 @@ function validateCreateVehicle(data)
 		veh.price = guiGetText(edits[5])
 		veh.tax = guiGetText(edits[6])
 		veh.note = guiGetText(memos[1])
+
 		if isElement(edits[7]) then
 			veh.stock = math.floor(tonumber(guiGetText(edits[7])))
 			veh.rate = math.floor(tonumber(guiGetText(edits[8])))
