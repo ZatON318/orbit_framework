@@ -53,8 +53,15 @@
 	<script src="jobs_g.lua" type="client"/>
 	<script src="jobs_g.lua" type="server"/>
 
+	<script src="elektrikar/c_ele.lua" type="client" />
+	<script src="elektrikar/s_ele.lua" type="server" />
+	<file src="elektrikar/elekrab.jpg" />
+
+
+
 	<export function="getJobTitleFromID" type="server"/>
 	<export function="getJobTitleFromID" type="client"/>
+
 
 	<min_mta_version server="1.5.2-9.07903"/>
 </meta>

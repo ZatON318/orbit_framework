@@ -3917,7 +3917,7 @@ COMMIT;
 
 
 --Elevator fix
-INSERT INTO mta.elevators (id)
+INSERT INTO elevators (id)
 	VALUES (1);
 
 
