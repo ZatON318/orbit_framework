@@ -32,22 +32,22 @@ addEventHandler("onClientPlayerSpawn", localPlayer,
 )
 
 function quitJob(job)
-	if (job==1) then -- TRUCKER JOB
+	if (job==1) then -- Kurýr
 		--exports["job-system-trucker"]:resetTruckerJob()
-		outputChatBox("You have now quit your job as a delivery driver.", 0, 255, 0)
-	elseif (job==2) then -- TAXI JOB
+		outputChatBox("Dal jsi výpověď", 0, 255, 0)
+	elseif (job==2) then -- Řidič taxíku
 		resetTaxiJob()
-		outputChatBox("You have now quit your job as a taxi driver.", 0, 255, 0)
-	elseif (job==3) then -- BUS JOB
+		outputChatBox("Dal jsi výpověď", 0, 255, 0)
+	elseif (job==3) then -- Řidič autobusu
 		resetBusJob()
-		outputChatBox("You have now quit your job as a bus driver.", 0, 255, 0)
-	elseif (job==4) then -- CITY MAINTENANCE
-		outputChatBox("You have now quit your job as a city maintenance worker.", 0, 255, 0)
+		outputChatBox("Dal jsi výpověď", 0, 255, 0)
+	elseif (job==4) then -- Údržba města
+		outputChatBox("Dal jsi výpověď", 0, 255, 0)
 		triggerServerEvent("cancelCityMaintenance", localPlayer)
 	elseif (job==5) then -- MECHANIC
-		outputChatBox("You have now quit your job as a mechanic.", 0, 255, 0)
-	elseif (job==6) then -- LOCKSMITH
-		outputChatBox("You have now quit your job as a locksmith.", 0, 255, 0)
+		outputChatBox("Dal jsi výpověď", 0, 255, 0)
+	elseif (job==6) then -- Elektrikář
+		outputChatBox("Dal jsi výpověď", 0, 255, 0)
 	end
 end
 addEvent("quitJob", true)

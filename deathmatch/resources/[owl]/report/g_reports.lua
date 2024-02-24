@@ -9,17 +9,18 @@ I used the strings as the values instead of the keys, this way its easier for us
 {NAME, { Staff to send to }, Abbreviation, r, g, b} ]]
 
 reportTypes = {
- 	[1] = {"Issue with another player", {18, 17, 64, 15, 14, 16}, "PLY", 214, 6, 6, "Use this type if you are reporting a player about a issue that has occured." },
-	[2] = {"Interior Issue", {18, 17, 64, 15, 14, 16}, "INT", 255, 126, 0, "Use this type if you are having a issue with a interior." },
-	[3] = {"Item Issue", {18, 17, 64, 15, 14, 16}, "ITM", 255, 126, 0, "Use this type if you need items spawned or anything related to your item invetory." },
-	[4] = {"General Question", {30, 18, 17, 64, 15, 14, 16}, "SUP", 70, 200, 30, "Use this type if you have any questions." },
-	[5] = {"Vehicle Related Issues", {30, 18, 17, 64, 15, 14, 16}, "VEH", 255, 126, 0, "Use this type if you have a issue with a vehicle." },
-	[6] = {"Vehicle Build/Import Requests", {39, 43}, "VCT", 176, 7, 237, "Use this type to contact the VCT." },
-	[7] = {"Scripting Question", {32}, "ScrT", 148, 126, 12, "Use this type if you with to contact the Scripting Team." },
-    [8] = {"Vehicle Break In", {14, 18, 17, 64, 15}, "VEH-BI", 255, 126, 0, "Use this type if you wish to report for a vehicle break in."},
-    [9] = {"Interior Break In", {14, 18, 17, 64, 15}, "INT-BI", 255, 126, 0, "Use this type if you wish to report for an interior break in."},
-	[10] = {"Mapping Issue", {44, 28}, "MAP", 0, 150, 190, "Use this type if you have an issue with your custom mapping or need the mapping team." }
+    [1] = {"Problém s jiným hráčem", {18, 17, 64, 15, 14, 16}, "PLY", 214, 6, 6, "Použijte tento typ, pokud hlásíte hráče kvůli problému, který nastal."},
+    [2] = {"Problém s interiérem", {18, 17, 64, 15, 14, 16}, "INT", 255, 126, 0, "Použijte tento typ, pokud máte problém s interiérem."},
+    [3] = {"Problém s položkou", {18, 17, 64, 15, 14, 16}, "ITM", 255, 126, 0, "Použijte tento typ, pokud potřebujete vytvořit položky nebo cokoli souvisejícího s inventářem položek."},
+    [4] = {"Obecná otázka", {30, 18, 17, 64, 15, 14, 16}, "SUP", 70, 200, 30, "Použijte tento typ, pokud máte nějaké otázky."},
+    [5] = {"Problémy s vozidlem", {30, 18, 17, 64, 15, 14, 16}, "VEH", 255, 126, 0, "Použijte tento typ, pokud máte problém s vozidlem."},
+    [6] = {"Žádosti o stavbu/important vozidla", {39, 43}, "VCT", 176, 7, 237, "Použijte tento typ pro kontaktování VCT."},
+    [7] = {"Otázka ohledně skriptování", {32}, "ScrT", 148, 126, 12, "Použijte tento typ, pokud chcete kontaktovat tým skriptování."},
+    [8] = {"Vloupání do vozidla", {14, 18, 17, 64, 15}, "VEH-BI", 255, 126, 0, "Použijte tento typ, pokud chcete nahlásit vloupání do vozidla."},
+    [9] = {"Vloupání do interiéru", {14, 18, 17, 64, 15}, "INT-BI", 255, 126, 0, "Použijte tento typ, pokud chcete nahlásit vloupání do interiéru."},
+    [10] = {"Problém s mapováním", {44, 28}, "MAP", 0, 150, 190, "Použijte tento typ, pokud máte problém se svým vlastním mapováním nebo potřebujete tým pro mapování."}
 }
+
 
 function getReportTypes( type )
 	return type and reportTypes[type] or reportTypes

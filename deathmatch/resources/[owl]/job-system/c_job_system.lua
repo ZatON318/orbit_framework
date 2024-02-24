@@ -1,10 +1,10 @@
 wEmployment, jobList, bAcceptJob, bCancel = nil
 
 
-local jessie = createPed( 141, 1480.8994140625, -1790.9189453125, 18.861186981201 )
-setPedRotation( jessie, 0 )
-setElementDimension( jessie, 0 )
-setElementInterior( jessie , 0 )
+local jessie = createPed( 141, 359.4169921875, 174.337890625, 1008.3893432617 )
+setPedRotation( jessie, 269 )
+setElementDimension( jessie, 1 )
+setElementInterior( jessie , 3 )
 setElementData( jessie, "talk", 1, false )
 setElementData( jessie, "name", "Jessie Smith", false )
 --setPedAnimation ( jessie, "INT_OFFICE", "OFF_Sit_Idle_Loop", -1, true, false, false )
@@ -38,6 +38,9 @@ function showEmploymentWindow()
 
 	local row = guiGridListAddRow(jobList)
 	guiGridListSetItemText(jobList, row, column, "Údržba města", false, false)
+
+	local row = guiGridListAddRow(jobList)
+	guiGridListSetItemText(jobList, row, column, "Elektrikář", false, false)
 	-- CITY MAINTENACE
 	--if not exports.factions:isInFactionType(getLocalPlayer(), 2) then
 		--local rowmaintenance = guiGridListAddRow(jobList)
@@ -104,8 +107,8 @@ function acceptJob(button, state)
 			elseif (jobtext=="Mechanic") then
 				displayMechanicJob()
 				job = 5
-			elseif (jobtext=="123456") then
-				displayLocksmithJob()
+			elseif(jobtext=="Elektrikář") then
+				displayEleJob()
 				job = 6
 			end
 
