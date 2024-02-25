@@ -32,20 +32,19 @@ function createlicenseBikeTestIntroWindow()
 	local X = (screenwidth - Width)/2
 	local Y = (screenheight - Height)/2
 	
-	guiIntroWindowB = guiCreateWindow ( X , Y , Width , Height , "Bike Theory Test" , false )
+	guiIntroWindowB = guiCreateWindow ( X , Y , Width , Height , "Test Teorie Řízení Motorka" , false )
 	
 	guiCreateStaticImage (0.35, 0.1, 0.3, 0.2, "banner.png", true, guiIntroWindowB)
 	
-	guiIntroLabel1B = guiCreateLabel(0, 0.3,1, 0.5, [[You will now proceed with the motorcycle theory test. You will
-be given seven questions based on basic driving theory. You must score
-a minimum of 80 percent to pass.
-
-Good luck.]], true, guiIntroWindowB)
+	guiIntroLabel1B = guiCreateLabel(0, 0.3,1, 0.5, [[Nyní uděláte test teorie jízdy. Dostaneš sedm otázek založených na základní teorii řízení. Musíte skórovat
+	minimálně 80 procent pro úspěšné zvládnutí.
+	
+	Hodně štěstí.]], true, guiIntroWindowB)
 	
 	guiLabelSetHorizontalAlign ( guiIntroLabel1B, "center", true )
 	guiSetFont ( guiIntroLabel1B,"default-bold-small")
 	
-	guiIntroProceedButtonB = guiCreateButton ( 0.4 , 0.75 , 0.2, 0.1 , "Start Test" , true ,guiIntroWindowB)
+	guiIntroProceedButtonB = guiCreateButton ( 0.4 , 0.75 , 0.2, 0.1 , "Začít Test" , true ,guiIntroWindowB)
 	
 	addEventHandler ( "onClientGUIClick", guiIntroProceedButtonB,  function(button, state)
 		if(button == "left" and state == "up") then
@@ -72,7 +71,7 @@ function createBikeLicenseQuestionWindow(number)
 	local Y = (screenheight - Height)/2
 	
 	-- create the window
-	guiQuestionWindowB = guiCreateWindow ( X , Y , Width , Height , "Question "..number.." of "..NoQuestionToAnswer , false )
+	guiQuestionWindowB = guiCreateWindow ( X , Y , Width , Height , "Otázka "..number.." z "..NoQuestionToAnswer , false )
 	
 	guiQuestionLabelB = guiCreateLabel(0.1, 0.2, 0.9, 0.2, selection[number][1], true, guiQuestionWindowB)
 	guiSetFont ( guiQuestionLabelB,"default-bold-small")
@@ -93,7 +92,7 @@ function createBikeLicenseQuestionWindow(number)
 	
 	-- if there are more questions to go, then create a "next question" button
 	if(number < NoQuestionToAnswer) then
-		guiQuestionNextButtonB = guiCreateButton ( 0.4 , 0.75 , 0.2, 0.1 , "Next Question" , true ,guiQuestionWindowB)
+		guiQuestionNextButtonB = guiCreateButton ( 0.4 , 0.75 , 0.2, 0.1 , "Další otázka" , true ,guiQuestionWindowB)
 		
 		addEventHandler ( "onClientGUIClick", guiQuestionNextButtonB,  function(button, state)
 			if(button == "left" and state == "up") then
@@ -127,7 +126,7 @@ function createBikeLicenseQuestionWindow(number)
 		end, false)
 		
 	else
-		guiQuestionSumbitButtonB = guiCreateButton ( 0.4 , 0.75 , 0.3, 0.1 , "Submit Answers" , true ,guiQuestionWindowB)
+		guiQuestionSumbitButtonB = guiCreateButton ( 0.4 , 0.75 , 0.3, 0.1 , "Odeslat odpovědi" , true ,guiQuestionWindowB)
 		
 		-- handler for when the player clicks submit
 		addEventHandler ( "onClientGUIClick", guiQuestionSumbitButtonB,  function(button, state)
@@ -181,21 +180,21 @@ function createBikeTestFinishWindow()
 	local Y = (screenheight - Height)/2
 		
 	-- create the window
-	guiFinishWindowB = guiCreateWindow ( X , Y , Width , Height , "End of test.", false )
+	guiFinishWindowB = guiCreateWindow ( X , Y , Width , Height , "Konec Testu.", false )
 	
 	if(score >= passPercent) then
 	
 		guiCreateStaticImage (0.35, 0.1, 0.3, 0.2, "pass.png", true, guiFinishWindowB)
 	
-		guiFinalPassLabelB = guiCreateLabel(0, 0.3, 1, 0.1, "Congratulations! You have passed this section of the test.", true, guiFinishWindowB)
+		guiFinalPassLabelB = guiCreateLabel(0, 0.3, 1, 0.1, "Gratulujeme! V této části testu jste prošli.", true, guiFinishWindowB)
 		guiSetFont ( guiFinalPassLabelB,"default-bold-small")
 		guiLabelSetHorizontalAlign ( guiFinalPassLabelB, "center")
 		guiLabelSetColor ( guiFinalPassLabelB ,0, 255, 0 )
 		
-		guiFinalPassTextLabelB = guiCreateLabel(0, 0.4, 1, 0.4, "You scored "..score.."%, and the pass mark is "..passPercent.."%. Well done!" ,true, guiFinishWindowB)
+		guiFinalPassTextLabelB = guiCreateLabel(0, 0.4, 1, 0.4, "Tvoje skóre "..score.."%, skóre potřebné ke zvládnutí testu "..passPercent.."%. Výborně!" ,true, guiFinishWindowB)
 		guiLabelSetHorizontalAlign ( guiFinalPassTextLabelB, "center", true)
 		
-		guiFinalRegisterButtonB = guiCreateButton ( 0.35 , 0.8 , 0.3, 0.1 , "Continue" , true ,guiFinishWindowB)
+		guiFinalRegisterButtonB = guiCreateButton ( 0.35 , 0.8 , 0.3, 0.1 , "Pokračovat" , true ,guiFinishWindowB)
 		
 		-- if the player has passed the quiz and clicks on register
 		addEventHandler ( "onClientGUIClick", guiFinalRegisterButtonB,  function(button, state)
@@ -242,12 +241,12 @@ function createBikeTestFinishWindow()
 	
 		guiCreateStaticImage (0.35, 0.1, 0.3, 0.2, "fail.png", true, guiFinishWindowB)
 	
-		guiFinalFailLabelB = guiCreateLabel(0, 0.3, 1, 0.1, "Sorry, you have not passed this time.", true, guiFinishWindowB)
+		guiFinalFailLabelB = guiCreateLabel(0, 0.3, 1, 0.1, "Omlouváme se, tentokrát jste neprošli.", true, guiFinishWindowB)
 		guiSetFont ( guiFinalFailLabelB,"default-bold-small")
 		guiLabelSetHorizontalAlign ( guiFinalFailLabelB, "center")
 		guiLabelSetColor ( guiFinalFailLabelB ,255, 0, 0 )
 		
-		guiFinalFailTextLabelB = guiCreateLabel(0, 0.4, 1, 0.4, "You scored "..math.ceil(score).."%, and the pass mark is "..passPercent.."%." ,true, guiFinishWindowB)
+		guiFinalFailTextLabelB = guiCreateLabel(0, 0.4, 1, 0.4, "Tvoje skóre"..math.ceil(score).."%, skóre potřebné ke zvládnutí testu "..passPercent.."%." ,true, guiFinishWindowB)
 		guiLabelSetHorizontalAlign ( guiFinalFailTextLabelB, "center", true)
 		
 		guiFinalCloseButtonB = guiCreateButton ( 0.2 , 0.8 , 0.25, 0.1 , "Close" , true ,guiFinishWindowB)
@@ -408,7 +407,7 @@ function initiateBikeTest()
 	marker = createMarker(x, y, z, "checkpoint", 4, 0, 255, 0, 150) -- start marker.
 	addEventHandler("onClientMarkerHit", marker, startBikeTest)
 	
-	outputChatBox("#FF9933You are now ready to take your practical driving examination. Collect a DoL test bike and begin the route.", 255, 194, 14, true)
+	outputChatBox("#FF9933Nyní jste připraveni podstoupit praktickou řidičskou zkoušku. Seberte testovací motorku autoškoly a vydejte se na cestu.", 255, 194, 14, true)
 	
 end
 
@@ -416,7 +415,7 @@ function startBikeTest(element)
 	if element == getLocalPlayer() then
 		local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 		if not vehicle or not testBike[getElementModel(vehicle)] then
-			outputChatBox("#FF9933You must be riding a DoL test bike when passing through the checkpoints.", 255, 0, 0, true ) -- Wrong  type.
+			outputChatBox("#FF9933Při průjezdu kontrolními stanovišti musíte být na testovací motorce autoškoly.", 255, 0, 0, true ) -- Wrong  type.
 		else
 			destroyElement(blip)
 			destroyElement(marker)
@@ -435,7 +434,7 @@ function startBikeTest(element)
 				
 			addEventHandler("onClientMarkerHit", marker, UpdateBikeCheckpoints)
 				
-			outputChatBox("#FF9933You will need to complete the route without damaging the test bike. Good luck and drive safe.", 255, 194, 14, true)
+			outputChatBox("#FF9933Budete muset absolvovat trasu bez poškození testovací motorku. Hodně štěstí a jezděte bezpečně.", 255, 194, 14, true)
 		end
 	end
 end
@@ -444,10 +443,10 @@ function UpdateBikeCheckpoints(element)
 	if (element == localPlayer) then
 		local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 		if not vehicle or not testBike[getElementModel(vehicle)] then
-			outputChatBox("You must be on a DoL test bike when passing through the check points.", 255, 0, 0) -- Wrong car type.
+			outputChatBox("Při průjezdu kontrolními body musíte být na testovací motorce autoškoly.", 255, 0, 0) -- Wrong car type.
 		elseif getElementData(vehicle, "dbid") ~= vehicleIdUsedToStartTest then
-			outputChatBox("You are not using the bike you started this test with.", 255, 194, 14)
-			outputChatBox("You have failed the practical driving test.", 255, 0, 0)
+			outputChatBox("Nepoužíváte vozidlo, se kterým jste tento test zahájili.", 255, 194, 14)
+			outputChatBox("Neuspěli jste u zkoušky z praktické jízdy.", 255, 0, 0)
 
 			destroyElement(blip)
 			destroyElement(marker)
@@ -463,7 +462,7 @@ function UpdateBikeCheckpoints(element)
 			local max_number = getElementData(getLocalPlayer(), "drivingTest.checkmarkers")
 			
 			if (tonumber(max_number-1) == tonumber(m_number)) then -- if the next checkpoint is the final checkpoint.
-				outputChatBox("#FF9933Park your bike at the #FF66CCin the parking lot #FF9933to complete the test.", 255, 194, 14, true)
+				outputChatBox("#FF9933Zaparkujte své vozidlo na #FF66CCparkovišti #FF9933pro splnení testu.", 255, 194, 14, true)
 				
 				local newnumber = m_number+1
 				setElementData(getLocalPlayer(), "drivingTest.marker", newnumber, false)
@@ -500,25 +499,25 @@ function EndBikeTest(element)
 	if (element == localPlayer) then
 		local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 		if not vehicle or not testBike[getElementModel(vehicle)] then
-			outputChatBox("You must be on a DoL test bike when passing through the check points.", 255, 0, 0)
+			outputChatBox("Při průjezdu kontrolními body musíte být na testovací motorce autoškoly.", 255, 0, 0)
 		else
 			local vehicleHealth = getElementHealth ( vehicle )
 			if getElementData(vehicle, "dbid") ~= vehicleIdUsedToStartTest then
-				outputChatBox("You are not using the bike you started this test with.", 255, 194, 14)
-				outputChatBox("You have failed the practical driving test.", 255, 0, 0)
+				outputChatBox("Nepoužíváte vozidlo, se kterým jste tento test zahájili.", 255, 194, 14)
+				outputChatBox("Neuspěli jste u zkoušky z praktické jízdy.", 255, 0, 0)
 			elseif (vehicleHealth >= 800) then
 				----------
 				-- PASS --
 				----------
-				outputChatBox("After inspecting the vehicle we can see no damage.", 255, 194, 14)
+				outputChatBox("Po prohlídce vozidla nevidíme žádné poškození.", 255, 194, 14)
 				triggerServerEvent("acceptBikeLicense", getLocalPlayer())
 			
 			else
 				----------
 				-- Fail --
 				----------
-				outputChatBox("After inspecting the vehicle we can see that it's damage.", 255, 194, 14)
-				outputChatBox("You have failed the practical driving test.", 255, 0, 0)
+				outputChatBox("Po prohlídce vozidla vidíme, že je poškozené.", 255, 194, 14)
+				outputChatBox("Neuspěli jste u zkoušky z praktické jízdy.", 255, 0, 0)
 			end
 			
 			destroyElement(blip)

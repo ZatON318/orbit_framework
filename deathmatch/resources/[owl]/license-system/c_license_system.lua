@@ -1,19 +1,19 @@
 wLicense, licenseList, bAcceptLicense, bCancel, bBuyLicense = nil
-local Johnson = createPed(211,  1099, -767.7998046875, 976.52996826172)
-setPedRotation(Johnson, 180)
-setElementDimension(Johnson, 4)
-setElementInterior(Johnson, 5)
+local Johnson = createPed(211,  359.294921875, 174.3447265625, 1008.3893432617)
+setPedRotation(Johnson, 278)
+setElementDimension(Johnson, 3)
+setElementInterior(Johnson, 3)
 setElementData( Johnson, "talk", 1, false )
 setElementData( Johnson, "name", "Carla Cooper", false )
-setPedAnimation ( Johnson, "FOOD", "FF_Sit_Look", -1, true, false, false )
+--setPedAnimation ( Johnson, "FOOD", "FF_Sit_Look", -1, true, false, false )
 
-local dominick = createPed(187,  1108.599609375, -767.2998046875, 976.59997558594)
-setPedRotation(dominick, 180)
-setElementDimension(dominick, 4)
-setElementInterior(dominick, 5)
+local dominick = createPed(187,  356.1298828125, 168.369140625, 1008.3766479492)
+setPedRotation(dominick, 285)
+setElementDimension(dominick, 3)
+setElementInterior(dominick, 3)
 setElementData( dominick, "talk", 1, false )
 setElementData( dominick, "name", "Dominick Hollingsworth", false )
-setPedAnimation ( dominick, "FOOD", "FF_Sit_Look", -1, true, false, false )
+--setPedAnimation ( dominick, "FOOD", "FF_Sit_Look", -1, true, false, false )
 
 local localPlayer = getLocalPlayer()
 local cost = {
@@ -37,39 +37,39 @@ function showLicenseWindow()
 	local x = scrWidth/2 - (width/2)
 	local y = scrHeight/2 - (height/2)
 
-	wLicense= guiCreateWindow(x, y, width, height, "DMV - Apply for a new license", false)
+	wLicense= guiCreateWindow(x, y, width, height, "Dopravní inspektorát - žádost o nový řidičák", false)
 
 	licenseList = guiCreateGridList(0.05, 0.05, 0.9, 0.8, true, wLicense)
-	local column = guiGridListAddColumn(licenseList, "License", 0.6)
-	local column2 = guiGridListAddColumn(licenseList, "Cost", 0.3)
+	local column = guiGridListAddColumn(licenseList, "Řidičák", 0.6)
+	local column2 = guiGridListAddColumn(licenseList, "Cena", 0.3)
 
 	if (vehiclelicense~=1) then
 		local row = guiGridListAddRow(licenseList)
-		guiGridListSetItemText(licenseList, row, column, "Car License", false, false)
+		guiGridListSetItemText(licenseList, row, column, "Řidičák B", false, false)
 		guiGridListSetItemText(licenseList, row, column2, "$"..cost["car"], true, false)
 	end
 
 	if (bikelicense~=1) then
 		local row2 = guiGridListAddRow(licenseList)
-		guiGridListSetItemText(licenseList, row2, column, "Bike License", false, false)
+		guiGridListSetItemText(licenseList, row2, column, "Řidičák A", false, false)
 		guiGridListSetItemText(licenseList, row2, column2, "$"..cost["bike"], true, false)
 	end
 
-	if (boatlicense~=1) then
+	--[[if (boatlicense~=1) then
 		local row3 = guiGridListAddRow(licenseList)
-		guiGridListSetItemText(licenseList, row3, column, "Boat License", false, false)
+		guiGridListSetItemText(licenseList, row3, column, "Lodní Licence", false, false)
 		guiGridListSetItemText(licenseList, row3, column2, "$"..cost["boat"], true, false)
-	end
+	end]]
 
-	if (fishlicense~=1) then
+	--[[if (fishlicense~=1) then
 		local row4 = guiGridListAddRow(licenseList)
-		guiGridListSetItemText(licenseList, row4, column, "Fishing Permit", false, false)
+		guiGridListSetItemText(licenseList, row4, column, "Rybářské Povolení", false, false)
 		guiGridListSetItemText(licenseList, row4, column2, "$"..cost["fishing"], true, false)
-	end
+	end]]
 
-	bAcceptLicense = guiCreateButton(0.05, 0.85, 0.3, 0.1, "Take test", true, wLicense)
-	bBuyLicense = guiCreateButton(0.05+0.3, 0.85, 0.3, 0.1, "Buy & Skip Test\n("..exports.donators:getPerks(22)[2].." GCs)", true, wLicense)
-	bCancel = guiCreateButton(0.05+0.3+0.3, 0.85, 0.3, 0.1, "Cancel", true, wLicense)
+	bAcceptLicense = guiCreateButton(0.05, 0.85, 0.3, 0.1, "Začít test", true, wLicense)
+	--bBuyLicense = guiCreateButton(0.05+0.3, 0.85, 0.3, 0.1, "Buy & Skip Test\n("..exports.donators:getPerks(22)[2].." GCs)", true, wLicense)
+	bCancel = guiCreateButton(0.05+0.3+0.3, 0.85, 0.3, 0.1, "Zrušit", true, wLicense)
 
 	showCursor(true)
 
@@ -95,27 +95,27 @@ function showRecoverLicenseWindow()
 	local x = scrWidth/2 - (width/2)
 	local y = scrHeight/2 - (height/2)
 
-	gui.wLicense= guiCreateWindow(x, y, width, height, "DMV - Recover lost license", false)
+	gui.wLicense= guiCreateWindow(x, y, width, height, "DI - Obnovit ztracenou licenci", false)
 
 	gui.licenseList = guiCreateGridList(0.05, 0.05, 0.9, 0.8, true, gui.wLicense)
 	gui.column = guiGridListAddColumn(gui.licenseList, "License", 0.6)
 	gui.column2 = guiGridListAddColumn(gui.licenseList, "Cost", 0.3)
 
 	gui.row = guiGridListAddRow(gui.licenseList)
-	guiGridListSetItemText(gui.licenseList, gui.row, gui.column, "Car License", false, false)
+	guiGridListSetItemText(gui.licenseList, gui.row, gui.column, "Řidičák B", false, false)
 	guiGridListSetItemText(gui.licenseList, gui.row, gui.column2, "$"..cost["car"]/10, true, false)
 
 	gui.row2 = guiGridListAddRow(gui.licenseList)
-	guiGridListSetItemText(gui.licenseList, gui.row2, gui.column, "Bike License", false, false)
+	guiGridListSetItemText(gui.licenseList, gui.row2, gui.column, "Řidičák A", false, false)
 	guiGridListSetItemText(gui.licenseList, gui.row2, gui.column2, "$"..cost["bike"]/10, true, false)
 
-	gui.row3 = guiGridListAddRow(gui.licenseList)
-	guiGridListSetItemText(gui.licenseList, gui.row3, gui.column, "Boat License", false, false)
-	guiGridListSetItemText(gui.licenseList, gui.row3, gui.column2, "$"..cost["boat"]/10, true, false)
+	--[[gui.row3 = guiGridListAddRow(gui.licenseList)
+	guiGridListSetItemText(gui.licenseList, gui.row3, gui.column, "Lodní Licence", false, false)
+	guiGridListSetItemText(gui.licenseList, gui.row3, gui.column2, "$"..cost["boat"]/10, true, false)]]
 
-	gui.row4 = guiGridListAddRow(gui.licenseList)
-	guiGridListSetItemText(gui.licenseList, gui.row4, gui.column, "Fishing Permit", false, false)
-	guiGridListSetItemText(gui.licenseList, gui.row4, gui.column2, "$"..cost["fishing"]/10, true, false)
+	--[[gui.row4 = guiGridListAddRow(gui.licenseList)
+	guiGridListSetItemText(gui.licenseList, gui.row4, gui.column, "Rybářské Povolení", false, false)
+	guiGridListSetItemText(gui.licenseList, gui.row4, gui.column2, "$"..cost["fishing"]/10, true, false)]]
 
 	gui.bRecover = guiCreateButton(0.05, 0.85, 0.45, 0.1, "Recover", true, gui.wLicense)
 	gui.bCancel = guiCreateButton(0.5, 0.85, 0.45, 0.1, "Cancel", true, gui.wLicense)
@@ -123,41 +123,41 @@ function showRecoverLicenseWindow()
 	addEventHandler("onClientGUIClick", gui.bRecover, function()
 		local row, col = guiGridListGetSelectedItem(gui.licenseList)
 		if (row==-1) or (col==-1) then
-			exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "Please select a license first!" )
+			exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Nejprve prosím vyberte licenci" )
 			return false
 		end
 
 		local licensetext = guiGridListGetItemText(gui.licenseList, guiGridListGetSelectedItem(gui.licenseList), 1)
 		local licensecost = 0
 
-		if (licensetext=="Car License") then
+		if (licensetext=="Řidičák B") then
 			if vehiclelicense~= 1 then
-				exports.hud:sendBottomNotification(localPlayer, getElementData(dominick, "name"), "Sorry, we are unable to locate a license for you in our records. Please meet agent Carla Cooper in the other room." )
+				exports.hud:sendBottomNotification(localPlayer, getElementData(dominick, "name"), "Litujeme, v našich záznamech pro vás nemůžeme najít licenci. Jdete prosím za Carlou Cooperovou." )
 				return false
 			end
 			triggerServerEvent("license:recover", localPlayer, licensetext, cost["car"]/10, 133, getElementData(dominick, "name"))
 		end
-		if (licensetext=="Bike License") then
+		if (licensetext=="Řidičák A") then
 			if bikelicense~= 1 then
-				exports.hud:sendBottomNotification(localPlayer, getElementData(dominick, "name"), "Sorry, we are unable to locate a license for you in our records. Please meet agent Carla Cooper in the other room." )
+				exports.hud:sendBottomNotification(localPlayer, getElementData(dominick, "name"), "Litujeme, v našich záznamech pro vás nemůžeme najít licenci. Jdete prosím za Carlou Cooperovou." )
 				return false
 			end
 			triggerServerEvent("license:recover", localPlayer, licensetext, cost["bike"]/10, 153, getElementData(dominick, "name"))
 		end
-		if (licensetext=="Boat License") then
+		if (licensetext=="Lodní Licence") then
 			if boatlicense~= 1 then
-				exports.hud:sendBottomNotification(localPlayer, getElementData(dominick, "name"), "Sorry, we are unable to locate a license for you in our records. Please meet agent Carla Cooper in the other room." )
+				exports.hud:sendBottomNotification(localPlayer, getElementData(dominick, "name"), "Litujeme, v našich záznamech pro vás nemůžeme najít licenci. Jdete prosím za Carlou Cooperovou." )
 				return false
 			end
 			triggerServerEvent("license:recover", localPlayer, licensetext, cost["boat"]/10, 155, getElementData(dominick, "name"))
 		end
-		if (licensetext=="Fishing Permit") then
+		--[[if (licensetext=="Rybářské Povolení") then
 			if fishlicense~= 1 then
-				exports.hud:sendBottomNotification(localPlayer, getElementData(dominick, "name"), "Sorry, we are unable to locate a license for you in our records. Please meet agent Carla Cooper in the other room." )
+				exports.hud:sendBottomNotification(localPlayer, getElementData(dominick, "name"), "Litujeme, v našich záznamech pro vás nemůžeme najít licenci. Jdete prosím za Carlou Cooperovou." )
 				return false
 			end
 			triggerServerEvent("license:recover", localPlayer, licensetext, cost["fishing"]/10, 154, getElementData(dominick, "name"))
-		end
+		end]]
 	end, false)
 
 	addEventHandler("onClientGUIClick", gui.bCancel, function()
@@ -180,7 +180,7 @@ function acceptLicense(button, state)
 		if (source==bAcceptLicense) or (source==bBuyLicense)then
 			local row, col = guiGridListGetSelectedItem(licenseList)
 			if (row==-1) or (col==-1) then
-				exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "Please select a license first!" )
+				exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Nejprve prosím vyberte řidičak!" )
 				return false
 			end
 
@@ -188,24 +188,24 @@ function acceptLicense(button, state)
 			local licensetext = guiGridListGetItemText(licenseList, guiGridListGetSelectedItem(licenseList), 1)
 			local licensecost = 0
 
-			if (licensetext=="Car License") then
+			if (licensetext=="Řidičák B") then
 				license = 1
 				licensecost = cost["car"]
 				minimumAge = 16
 			end
-			if (licensetext=="Bike License") then
+			if (licensetext=="Řidičák A") then
 				license = 2
 				licensecost = cost["bike"]
 				minimumAge = 16
 			end
-			if (licensetext=="Boat License") then
+			if (licensetext=="Lodní Licence") then
 				license = 3
 				licensecost = cost["boat"]
 			end
-			if (licensetext=="Fishing Permit") then
+			--[[if (licensetext=="Rybářské Povolení") then
 				license = 5
 				licensecost = cost["fishing"]
-			end
+			end]]
 
 			if license <= 0 then
 				return false
@@ -214,14 +214,14 @@ function acceptLicense(button, state)
 			if minimumAge then
 				local characterAge = tonumber(getElementData(getLocalPlayer(), "age")) or 0
 				if characterAge < minimumAge then
-					exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You must be at least "..tostring(minimumAge).." years to get a "..tostring(licensetext).."." )
+					exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte být alespoň "..tostring(minimumAge).." let pro získaní "..tostring(licensetext).."." )
 					return false
 				end
 			end
 
 			if (source==bAcceptLicense) then
 				if not exports.global:hasMoney( getLocalPlayer(), licensecost ) then
-					exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You do not have the $"..licensecost.." required for this license." )
+					exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "nemáte dostatek finančních prostředků $"..licensecost.." na koupi. Ten řidičák není taky drahy to jen ty maš málo peněz" )
 					return false
 				end
 			end
@@ -229,7 +229,7 @@ function acceptLicense(button, state)
 			if source==bAcceptLicense then
 				if (license == 1) then
 					if  getElementData(getLocalPlayer(), "license.car") < 0 then
-						exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You need to wait another " .. -getElementData(getLocalPlayer(), "license.car") .. " hours before being able to obtain a " .. licensetext .. "." )
+						exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte počkat na dalších " .. -getElementData(getLocalPlayer(), "license.car") .. " hodin, než bude možné získat " .. licensetext .. "." )
 					elseif (getElementData(getLocalPlayer(),"license.car")==0) then
 						triggerServerEvent("payFee", getLocalPlayer(), licensecost, "an automotive driver's license")
 						createlicenseTestIntroWindow() -- take the drivers theory test.
@@ -244,7 +244,7 @@ function acceptLicense(button, state)
 					end
 				elseif (license == 2) then
 					if getElementData(getLocalPlayer(), "license.bike") < 0 then
-						exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You need to wait another " .. -getElementData(getLocalPlayer(), "license.bike") .. " hours before being able to obtain a " .. licensetext .. "." )
+						exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte počkat na dalších " .. -getElementData(getLocalPlayer(), "license.bike") .. " hodin, než bude možné získat " .. licensetext .. "." )
 					elseif (getElementData(getLocalPlayer(),"license.bike")==0) then
 						triggerServerEvent("payFee", getLocalPlayer(), licensecost, "a motorbike driver's license")
 						createlicenseBikeTestIntroWindow() -- take the drivers theory test.
@@ -259,7 +259,7 @@ function acceptLicense(button, state)
 					end
 				elseif (license == 3) then
 					if getElementData(getLocalPlayer(), "license.boat") < 0 then
-						exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You need to wait another " .. -getElementData(getLocalPlayer(), "license.boat") .. " hours before being able to obtain a " .. licensetext .. "." )
+						exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte počkat na dalších " .. -getElementData(getLocalPlayer(), "license.boat") .. " hodin, než bude možné získat " .. licensetext .. "." )
 					elseif (getElementData(getLocalPlayer(),"license.boat")==0) then
 						triggerServerEvent("payFee", getLocalPlayer(), licensecost, "an boat driver's license")
 						createlicenseBoatTestIntroWindow() -- boat theory test
@@ -272,7 +272,7 @@ function acceptLicense(button, state)
 					end
 				elseif (license == 5) then
 					if getElementData(getLocalPlayer(), "license.fish") < 0 then
-						exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You need to wait another " .. -getElementData(getLocalPlayer(), "license.fish") .. " hours before being able to obtain a " .. licensetext .. "." )
+						exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte počkat na dalších " .. -getElementData(getLocalPlayer(), "license.fish") .. " hodin, než bude možné získat " .. licensetext .. "." )
 					elseif (getElementData(getLocalPlayer(),"license.fish")==0) then
 						triggerServerEvent("payFee", getLocalPlayer(), licensecost, "a fishing permit")
 						triggerServerEvent("acceptFishLicense", getLocalPlayer())
@@ -287,28 +287,28 @@ function acceptLicense(button, state)
 			elseif source==bBuyLicense then
 				if license == 1 then
 					if  getElementData(getLocalPlayer(), "license.car") < 0 then
-						exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You need to wait another " .. -getElementData(getLocalPlayer(), "license.car") .. " hours before being able to obtain a " .. licensetext .. "." )
+						exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte počkat na dalších " .. -getElementData(getLocalPlayer(), "license.car") .. " hodin, než bude možné získat " .. licensetext .. "." )
 						return
 					end
 					triggerServerEvent("acceptCarLicense", localPlayer, true)
 					closewLicense()
 				elseif license == 2 then
 					if  getElementData(getLocalPlayer(), "license.bike") < 0 then
-						exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You need to wait another " .. -getElementData(getLocalPlayer(), "license.bike") .. " hours before being able to obtain a " .. licensetext .. "." )
+						exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte počkat na dalších " .. -getElementData(getLocalPlayer(), "license.bike") .. " hodin, než bude možné získat " .. licensetext .. "." )
 						return
 					end
 					triggerServerEvent("acceptBikeLicense", localPlayer, true)
 					closewLicense()
 				elseif license == 3 then
 					if  getElementData(getLocalPlayer(), "license.boat") < 0 then
-						exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You need to wait another " .. -getElementData(getLocalPlayer(), "license.boat") .. " hours before being able to obtain a " .. licensetext .. "." )
+						exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte počkat na dalších " .. -getElementData(getLocalPlayer(), "license.boat") .. " hodin, než bude možné získat " .. licensetext .. "." )
 						return
 					end
 					triggerServerEvent("acceptBoatLicense", localPlayer, true)
 					closewLicense()
 				elseif license == 5 then
 					if  getElementData(getLocalPlayer(), "license.fish") < 0 then
-						exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "You need to wait another " .. -getElementData(getLocalPlayer(), "license.fish") .. " hours before being able to obtain a " .. licensetext .. "." )
+						exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Musíte počkat na dalších " .. -getElementData(getLocalPlayer(), "license.fish") .. " hodin, než bude možné získat " .. licensetext .. "." )
 						return
 					end
 					triggerServerEvent("acceptFishLicense", localPlayer, true)
@@ -344,14 +344,14 @@ bindKey( "accelerate", "down",
 		if veh and getVehicleOccupant( veh ) == getLocalPlayer( ) then
 			if isElementFrozen( veh ) and getVehicleEngineState( veh ) then
 				if getVehicleType(veh) == 'veh' or getVehicleType(veh) == 'Bike' then
-					exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "Kickstand is applied. Use /kickstand to release it." )
+					exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Je použit stojánek. K uvolnění použijte /kickstand." )
 				elseif getVehicleType(veh) == 'Boat' then
-					exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "Your anchor is applied. Use /anchor to raise it." )
+					exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Vaše kotva je použita. K jeho zvýšení použijte /anchor." )
 				else
-					exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "Your handbrake is applied. Use /handbrake to release it." )
+					exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Máte zataženou ruční brzdu. K uvolnění použijte /ruční brzdu nebo 'G'." )
 				end
 			elseif not getVehicleEngineState( veh ) and getVehicleType(veh) ~= 'Bike' and getVehicleType(veh) ~= 'BMX' then
-				exports.hud:sendBottomNotification(localPlayer, "Department of Motor Vehicles", "Your engine is off. Press 'J' to turn it on." )
+				exports.hud:sendBottomNotification(localPlayer, "Dopravní inspektorát", "Váš motor je vypnutý. Stisknutím 'J' jej zapněte." )
 			end
 		end
 	end
