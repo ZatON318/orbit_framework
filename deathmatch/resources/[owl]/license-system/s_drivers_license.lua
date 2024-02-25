@@ -7,7 +7,7 @@ function giveCarLicense(usingGC)
 		if success then
 			exports.donators:addPurchaseHistory(client, perk[1], -perk[2])
 		else
-			exports.hud:sendBottomNotification(client, "Department of Motor Vehicles", "Could not take GCs from your account. Reason: "..reason.."." )
+			exports.hud:sendBottomNotification(client, "Dopravní inspektorát", "Nepodařilo se převzít Groše z vašeho účtu. Důvod: "..reason.."." )
 			return false
 		end
 	end
@@ -22,7 +22,7 @@ function giveCarLicense(usingGC)
 	end
 	exports.anticheat:changeProtectedElementDataEx(client, "license.car", 1)
 	dbExec(exports.mysql:getConn('mta'), "UPDATE characters SET car_license='1' WHERE id = ?", getElementData(client, 'dbid'))
-	exports.hud:sendBottomNotification(client, "Department of Motor Vehicles", "Congratulations! You've passed your driving examination!" )
+	exports.hud:sendBottomNotification(client, "Dopravní inspektorát", "Gratulujeme! Složili jste řidičské zkoušky!" )
 	exports.global:giveItem(client, 133, getPlayerName(client):gsub("_"," "))
 	executeCommandHandler("stats", client, getPlayerName(client))
 end
@@ -44,18 +44,18 @@ function checkDoLCars(player, seat)
 	if getElementData(source, "owner") == -2 and getElementData(source, "faction") == -1 and getElementModel(source) == 410 then
 		if getElementData(player,"license.car") == 3 then
 			if getElementData(player, "license.car.cangetin") then
-				exports.hud:sendBottomNotification(player, "Department of Motor Vehicles", "You can use 'J' to start the engine and /handbrake to release the handbrake." )
+				exports.hud:sendBottomNotification(player, "Dopravní inspektorát", "Pomocí „J“ můžete nastartovat motor a /handbrake nebo „G“ pro uvolnění ruční brzdy." )
 				setVehicleLocked( source, false )
 				setElementFrozen( source, false )
 			else
-				exports.hud:sendBottomNotification(player, "Department of Motor Vehicles", "This vehicle is for the Driving Test only, please see the NPC inside first." )
+				exports.hud:sendBottomNotification(player, "Dopravní inspektorát", "Toto vozidlo je určeno pouze pro autoškolu." )
 				cancelEvent()
 			end
 		elseif seat > 0 then
-			exports.hud:sendBottomNotification(player, "Department of Motor Vehicles", "This vehicle is for the Driving Test only." )
+			exports.hud:sendBottomNotification(player, "Dopravní inspektorát", "Toto vozidlo je určeno pouze pro autoškolu." )
 			--cancelEvent()
 		else
-			exports.hud:sendBottomNotification(player, "Department of Motor Vehicles", "This vehicle is for the Driving Test only." )
+			exports.hud:sendBottomNotification(player, "Dopravní inspektorát", "Toto vozidlo je určeno pouze pro autoškolu." )
 			cancelEvent()
 		end
 	end
