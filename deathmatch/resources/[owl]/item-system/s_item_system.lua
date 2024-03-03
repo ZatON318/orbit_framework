@@ -162,13 +162,13 @@ function useItem(itemSlot, additional, thePlayer)
 				local newRealLockedValue = false
 				mysql:query_free("UPDATE interiors SET locked='" .. locked .. "' WHERE id='" .. found .. "' LIMIT 1")
 				if locked == 0 then
-					triggerEvent('sendAme', source, "puts the key in the door to unlock it.")
+					triggerEvent('sendAme', source, "vloží klíč do dveří a odemkne je.")
 					if not (exports.global:hasItem(source, 4, found)) and not (exports.global:hasItem(source, 5, found)) then
 						exports.logs:logMessage("[INTERIOR-UNLOCK] Interior #" .. found .. " was unlocked by " .. getPlayerName(source), 21)
 					end
 				else
 					newRealLockedValue = true
-					triggerEvent('sendAme', source, "puts the key in the door to lock it.")
+					triggerEvent('sendAme', source, "strčí klíč do dveří a zamkne je.")
 
 					if not (exports.global:hasItem(source, 4, found)) and not (exports.global:hasItem(source, 5, found)) then
 						exports.logs:logMessage("[INTERIOR-LOCK] Interior #" .. found .. " was locked by " .. getPlayerName(source), 21)
