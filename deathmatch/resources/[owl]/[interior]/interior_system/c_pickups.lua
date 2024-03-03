@@ -111,7 +111,7 @@ function renderInteriorName()
     if hitPickup and isElement(hitPickup) then
         local theInterior = hitPickup
         makeFonts()
-        local intInst = "Press F to enter"
+        local intInst = "Stiskněte F pro vstup"
         local intStatus = getElementData(theInterior, "status")
         --Draw int name
         local intName = "Elevator"
@@ -192,30 +192,30 @@ function renderInteriorName()
                 if intStatus.owner > 0 then
                     local ownerName = exports.cache:getCharacterNameFromID(intStatus.owner)
                     if intType == 3 then
-                        intOwner = "Rented by "..(ownerName or "..Loading..")
-                        intInst = "Press F to enter"
+                        intOwner = "Pronajíma "..(ownerName or "..Loading..")
+                        intInst = "Stiskněte F pro vstup"
                     elseif intType ~= 2 then
-                        intOwner = "Owned by "..(ownerName or "..Loading..")
-                        intInst = "Press F to enter"
+                        intOwner = "Ve vlastnictví "..(ownerName or "..Loading..")
+                        intInst = "Stiskněte F pro vstup"
                     end
                 elseif intStatus.faction > 0 then
                     local ownerName = exports.cache:getFactionNameFromId(intStatus.faction)
                     if intType ~= 2 then
-                        intOwner = "Owned by "..(ownerName or "..Loading..")
-                        intInst = "Press F to enter"
+                        intOwner = "Ve vlastnictví "..(ownerName or "..Loading..")
+                        intInst = "Stiskněte F pro vstup"
                     end
                 else
                     if intType == 2 then
-                        intOwner = "Owned by no-one"
-                        intInst = "Press F to enter"
+                        intOwner = "Vlastněno nikým"
+                        intInst = "Stiskněte F pro vstup"
                     elseif intType == 3 then
                         local intPrice = exports.global:formatMoney(intStatus.cost)
-                        intOwner = "For rent: $"..intPrice
-                        intInst = "Press F to rent"
+                        intOwner = "K pronájmu: $"..intPrice
+                        intInst = "Pro pronajem stiskněte F"
                     else
                         local intPrice = exports.global:formatMoney(intStatus.cost)
-                        intOwner = "For sale: $"..intPrice
-                        intInst = "Press F to purchase"
+                        intOwner = "Na prodej: $"..intPrice
+                        intInst = "Pro nákup stiskněte F"
                         local url = getElementData(theInterior, 'interior_id') and exports.cache:getImage(-tonumber(getElementData(theInterior, 'interior_id')))
                         dxDrawImage ( img_l, img_t, img_w, img_h, url and url.tex or ':resources/loading.jpg' )
                     end

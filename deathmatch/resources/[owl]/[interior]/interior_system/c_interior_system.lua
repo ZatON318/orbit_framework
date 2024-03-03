@@ -43,7 +43,7 @@ function showIntName(name, ownerName, inttype, cost, ID, bizMsg)
 			guiSetAlpha(gInteriorName, 0.0)
 
 			if (exports.integration:isPlayerTrialAdmin(localPlayer) and getElementData(localPlayer, "duty_admin") == 1) or exports.global:hasItem(localPlayer, 4, ID) then
-				gOwnerName = guiCreateLabel(0.0, 0.90, 1.0, 0.3, "Rented by: " .. tostring(ownerName), true)
+				gOwnerName = guiCreateLabel(0.0, 0.90, 1.0, 0.3, "Pronajímá: " .. tostring(ownerName), true)
 				guiSetFont(gOwnerName, "default")
 				guiLabelSetHorizontalAlign(gOwnerName, "center", true)
 				guiSetAlpha(gOwnerName, 0.0)
@@ -64,19 +64,19 @@ function showIntName(name, ownerName, inttype, cost, ID, bizMsg)
 			guiLabelSetHorizontalAlign(gInteriorName, "center", true)
 			guiSetAlpha(gInteriorName, 0.0)
 			if (exports.integration:isPlayerTrialAdmin(localPlayer) and getElementData(localPlayer, "duty_admin") == 1) or exports.global:hasItem(localPlayer, 4, ID) or exports.global:hasItem(localPlayer, 5, ID) then
-				gOwnerName = guiCreateLabel(0.0, 0.90, 1.0, 0.3, "Owner: " .. tostring(ownerName), true)
+				gOwnerName = guiCreateLabel(0.0, 0.90, 1.0, 0.3, "Majitel: " .. tostring(ownerName), true)
 				guiSetFont(gOwnerName, "default")
 				guiLabelSetHorizontalAlign(gOwnerName, "center", true)
 				guiSetAlpha(gOwnerName, 0.0)
 			end
 		end
 		if (ownerName=="None") and (inttype==3) then -- Unowned type 3 (rentable)
-			gBuyMessage = guiCreateLabel(0.0, 0.915, 1.0, 0.3, "Press F to rent for $" .. tostring(exports.global:formatMoney(cost)) .. ".", true)
+			gBuyMessage = guiCreateLabel(0.0, 0.915, 1.0, 0.3, "Stiskni F pro pronájem za $" .. tostring(exports.global:formatMoney(cost)) .. ".", true)
 			guiSetFont(gBuyMessage, "default")
 			guiLabelSetHorizontalAlign(gBuyMessage, "center", true)
 			guiSetAlpha(gBuyMessage, 0.0)
 		elseif (ownerName=="None") and (inttype<2) then -- Unowned any other type
-			gBuyMessage = guiCreateLabel(0.0, 0.915, 1.0, 0.3, "Press F to buy for $" .. tostring(exports.global:formatMoney(cost)) .. ".", true)
+			gBuyMessage = guiCreateLabel(0.0, 0.915, 1.0, 0.3, "Stiskni F pro pronájem za $" .. tostring(exports.global:formatMoney(cost)) .. ".", true)
 			guiSetFont(gBuyMessage, "default")
 			guiLabelSetHorizontalAlign(gBuyMessage, "center", true)
 			guiSetAlpha(gBuyMessage, 0.0)
@@ -241,29 +241,29 @@ function showHouseMenu( absX, absY )
 		interior = getElementByID('int' .. houseID) or interior
 	end
 
-	rcMenu = rightclick:create(getElementData(interior, "name") or ("Interior ID #"..tostring( houseID )))
+	rcMenu = rightclick:create(getElementData(interior, "name") or ("Interiér ID #"..tostring( houseID )))
 	local row = { }
 
-	row.lock = rightclick:addRow("Lock/Unlock")
+	row.lock = rightclick:addRow("Zamknout/Odemknout")
 	addEventHandler("onClientGUIClick", row.lock, lockUnlockHouse, false)
 
-	row.knock = rightclick:addRow("Knock on Door")
+	row.knock = rightclick:addRow("Zaklepat na dveře")
 	addEventHandler("onClientGUIClick", row.knock, knockHouse, false)
 
 	if getElementType(house) == "interior" then
 		if hasKey(houseID, true) then
-			row.note = rightclick:addRow("Edit Greeting Msg")
+			row.note = rightclick:addRow("Upravit uvítací zprávu")
 			addEventHandler("onClientGUIClick", row.note, function()
 				guiSetInputEnabled(true)
 				local width, height = 506, 103
 				local sx, sy = guiGetScreenSize()
 				local posX = (sx/2)-(width/2)
 				local posY = (sy/2)-(height/2)
-				wBizNote = guiCreateWindow(posX,posY,width,height,"Edit Business Greeting Message - "..(getElementData(house, "name") or ("Interior ID #"..tostring( houseID ))),false)
+				wBizNote = guiCreateWindow(posX,posY,width,height,"Business Zpráva -"..(getElementData(house, "name") or ("Interiér ID #"..tostring( houseID ))),false)
 				local eBizNote = guiCreateEdit(9,22,488,40,"",false,wBizNote)
-				local bRemove = guiCreateButton(9,68,163,28,"Remove",false,wBizNote)
-				local bSave = guiCreateButton(172,68,163,28,"Save",false,wBizNote)
-				local bCancel = guiCreateButton(335,68,163,28,"Cancel",false,wBizNote)
+				local bRemove = guiCreateButton(9,68,163,28,"Odebrat",false,wBizNote)
+				local bSave = guiCreateButton(172,68,163,28,"Uložit",false,wBizNote)
+				local bCancel = guiCreateButton(335,68,163,28,"Zavřít",false,wBizNote)
 				addEventHandler("onClientGUIClick", bRemove, function()
 					if triggerServerEvent("businessSystem:setBizNote", localPlayer, localPlayer, houseID) then
 						hideHouseMenu()
@@ -289,7 +289,7 @@ function showHouseMenu( absX, absY )
 		local interiorStatus = getElementData(house, "status")
 		local interiorType = interiorStatus.type or 2
 		if interiorType>=0 and interiorType<3 then
-			row.mailbox = rightclick:addRow("Mailbox")
+			row.mailbox = rightclick:addRow("Schránka")
 			addEventHandler("onClientGUIClick", row.mailbox, function(button)
 				if button=="left" and not getElementData(localPlayer, "exclusiveGUI") then
 					triggerServerEvent( "openFreakinInventory", localPlayer, house, absX, absY )
@@ -307,7 +307,7 @@ function knockHouse()
 		hideHouseMenu()
 		lastKnocked = tick
 	else
-		outputChatBox("Please wait a bit before knocking again.", 255, 0, 0)
+		outputChatBox("Vyčkej než zaklepeš znova.", 255, 0, 0)
 	end
 end
 
@@ -527,7 +527,7 @@ addEventHandler( "setPlayerInsideInterior2", getRootElement( ),
 			local adminnote = tostring(getElementData(targetInterior, "adminnote"))
 			if string.sub(tostring(adminnote),1,8) ~= "userdata" and adminnote ~= "\n" and getElementData(localPlayer, "duty_admin") == 1 then
 				outputChatBox("[INT MONITOR]: "..adminnote:gsub("\n", " ").."[..]", 255,0,0)
-				outputChatBox("'/checkint "..getElementData(targetInterior, "dbid").." 'for details.",255,255,0)
+				outputChatBox("'/checkint "..getElementData(targetInterior, "dbid").." 'pro informace.",255,255,0)
 			end
 		end
 	end
@@ -542,7 +542,7 @@ addCommandHandler("setcamint", function (cmd, arg)
 		arg = tonumber(arg) or 0
 		setCameraInterior(arg)
 	else
-		outputChatBox("specify interior world")
+		outputChatBox("Vyber interiérový svět")
 	end
 end)
 
@@ -594,7 +594,7 @@ function showLoadingProgress(stats_numberOfInts, delayTime)
 	if help_icon then
 		removeIcon()
 	end
-	local title = stats_numberOfInts.." interiors(ETA: "..string.sub(tostring((tonumber(delayTime)-5000)/(60*1000)), 1, 3).." minutes) are being loaded. Don't panic if your house hasn't appeared yet. "
+	local title = stats_numberOfInts.." interiérů(ETA: "..string.sub(tostring((tonumber(delayTime)-5000)/(60*1000)), 1, 3).." minut) se načítá. "
 	local screenwidth, screenheight = guiGetScreenSize()
 	help_icon = guiCreateStaticImage(screenwidth-25,6,20,20,"icon.png",false)
 	icon_label_shadow = guiCreateLabel(screenwidth-829,11,800,20,title,false)
@@ -658,7 +658,7 @@ function purchasePropertyGUI(interior, cost, isHouse, isRentable, neighborhood)
 
 	setElementData(localPlayer, "exclusiveGUI", true, false)
 
-	purchaseProperty.window[1] = guiCreateWindow(607, 396, 499, 210, "Purchase Property", false)
+	purchaseProperty.window[1] = guiCreateWindow(607, 396, 499, 210, "Zakoupit Nemovitost", false)
 	guiWindowSetSizable(purchaseProperty.window[1], false)
 	guiSetAlpha(purchaseProperty.window[1], 0.89)
 	exports.global:centerWindow(purchaseProperty.window[1])
@@ -674,13 +674,13 @@ function purchasePropertyGUI(interior, cost, isHouse, isRentable, neighborhood)
 	end
 
 
-	local btnTextSet = {"Purchase using Cash", "Purchase via Bank"}
+	local btnTextSet = {"Zakoupit za Peníze", "Zakoupit z Banky"}
 	if exports.global:hasItem(localPlayer, 262) and (cost <= 40000) and isHouse and not isRentable then
-		btnTextSet = {"Purchase via Token", "Purchase via Bank"}
-		exports.hud:sendBottomNotification(localPlayer, "Tip", "You are using a new character, because of this you have a house token on your character which can be used to purchase this house!")
+		btnTextSet = {"Zakoupit pomocí Tokenu", "Zakoupit z Banky"}
+		exports.hud:sendBottomNotification(localPlayer, "Tip", "Máš novou postavu, to znamená že múžeš využít tvůj token k nákupu tohoto domu!")
 	end
 	if exports.global:countTable(fTable) > 0 then
-		btnTextSet = {"Purchase \nfor personal", "Purchase \nfor faction"}
+		btnTextSet = {"Zaplatit \npro Sebe", "Zaplatit \npro Frakci"}
 	end
 	purchaseProperty.button[1] = guiCreateButton(btnPosX, 156, btnW, 43, btnTextSet[1], false, purchaseProperty.window[1])
 	guiSetProperty(purchaseProperty.button[1], "NormalTextColour", "FFAAAAAA")
@@ -688,26 +688,26 @@ function purchasePropertyGUI(interior, cost, isHouse, isRentable, neighborhood)
 	purchaseProperty.button[2] = guiCreateButton(btnPosX, 156, btnW, 43, btnTextSet[2], false, purchaseProperty.window[1])
 	guiSetProperty(purchaseProperty.button[2], "NormalTextColour", "FFAAAAAA")
 	btnPosX = btnPosX + btnW + margin/2
-	purchaseProperty.button[4] = guiCreateButton(btnPosX, 156, btnW, 43, "Preview Interior", false, purchaseProperty.window[1])
+	purchaseProperty.button[4] = guiCreateButton(btnPosX, 156, btnW, 43, "Prohlídka Interiéru", false, purchaseProperty.window[1])
 	guiSetProperty(purchaseProperty.button[4], "NormalTextColour", "FFAAAAAA")
 	btnPosX = btnPosX + btnW + margin/2
-	purchaseProperty.button[3] = guiCreateButton(btnPosX, 156, btnW, 43, "Close", false, purchaseProperty.window[1])
+	purchaseProperty.button[3] = guiCreateButton(btnPosX, 156, btnW, 43, "Zavřít", false, purchaseProperty.window[1])
 	guiSetProperty(purchaseProperty.button[3], "NormalTextColour", "FFAAAAAA")
 
-	purchaseProperty.label[2] = guiCreateLabel(110, 44, 315, 20, "You may then select your method of payment.", false, purchaseProperty.window[1])
-	purchaseProperty.label[3] = guiCreateLabel(20, 70, 88, 15, "Interior Name:", false, purchaseProperty.window[1])
-	purchaseProperty.label[6] = guiCreateLabel(20, 90, 93, 15, "Neighborhood:", false, purchaseProperty.window[1])
-	purchaseProperty.label[4] = guiCreateLabel(20, 110, 100, 15, "Cost:", false, purchaseProperty.window[1])
-	purchaseProperty.label[5] = guiCreateLabel(250, 110, 73, 15, "Tax:", false, purchaseProperty.window[1])
-	purchaseProperty.label[11] = guiCreateLabel(20, 130, 315, 15, "Would you like furniture to be enabled?", false, purchaseProperty.window[1]) -- Furniture
+	purchaseProperty.label[2] = guiCreateLabel(110, 44, 315, 20, "Vyber si metodu platby.", false, purchaseProperty.window[1])
+	purchaseProperty.label[3] = guiCreateLabel(20, 70, 88, 15, "Název:", false, purchaseProperty.window[1])
+	purchaseProperty.label[6] = guiCreateLabel(20, 90, 93, 15, "Čtvrť:", false, purchaseProperty.window[1])
+	purchaseProperty.label[4] = guiCreateLabel(20, 110, 100, 15, "Náklady:", false, purchaseProperty.window[1])
+	purchaseProperty.label[5] = guiCreateLabel(250, 110, 73, 15, "Daň:", false, purchaseProperty.window[1])
+	purchaseProperty.label[11] = guiCreateLabel(20, 130, 315, 15, "Chcete povolit nábytek?", false, purchaseProperty.window[1]) -- Furniture
 
 	purchaseProperty.label[7] = guiCreateLabel(117, 70, 400, 15, "", false, purchaseProperty.window[1]) -- Name
 	purchaseProperty.label[9] = guiCreateLabel(117, 90, 400, 15, "", false, purchaseProperty.window[1]) -- Area
     purchaseProperty.label[8] = guiCreateLabel(117, 110, 91, 15, "", false, purchaseProperty.window[1]) -- Cost
     purchaseProperty.label[10] = guiCreateLabel(323, 110, 98, 15, "", false, purchaseProperty.window[1]) -- Tax
 
-    purchaseProperty.rad[1] = guiCreateRadioButton(245, 128, 50, 20, "Yes", false, purchaseProperty.window[1])
-    purchaseProperty.rad[2] = guiCreateRadioButton(295, 128, 50, 20, "No", false, purchaseProperty.window[1])
+    purchaseProperty.rad[1] = guiCreateRadioButton(245, 128, 50, 20, "Ano", false, purchaseProperty.window[1])
+    purchaseProperty.rad[2] = guiCreateRadioButton(295, 128, 50, 20, "Ne", false, purchaseProperty.window[1])
     guiRadioButtonSetSelected(purchaseProperty.rad[1], true)
 
     if incompatibleForFurniture[getElementData(interior, "exit")[4]] then
@@ -729,21 +729,21 @@ function purchasePropertyGUI(interior, cost, isHouse, isRentable, neighborhood)
 	addEventHandler( "onClientGUIClick" ,purchaseProperty.button[1],
 	function()
 		local btnText = guiGetText(purchaseProperty.button[1])
-		if btnText == "Purchase using Cash" then
+		if btnText == "Zakoupit za Peníze" then
 			triggerServerEvent("buypropertywithcash", localPlayer, interior, cost, isHouse, isRentable, guiRadioButtonGetSelected(purchaseProperty.rad[1]))
 			closePropertyGUI()
-		elseif btnText == "Purchase via Token" then
+		elseif btnText == "Zakoupit pomocí Tokenu" then
 			triggerServerEvent("buypropertywithtoken", localPlayer, interior, guiRadioButtonGetSelected(purchaseProperty.rad[1]))
 			closePropertyGUI()
 		else
-			btnTextSet = {"Purchase using Cash", "Purchase via Bank", "Purchase via Token"}
+			btnTextSet = {"Zakoupit za Peníze", "Zakoupit z Banky", "Zakoupit pomocí Tokenu"}
 			guiSetText(purchaseProperty.button[1], btnTextSet[1])
 			guiSetText(purchaseProperty.button[2], btnTextSet[2])
 			guiSetText(purchaseProperty.button[4], btnTextSet[3])
 			guiSetEnabled(purchaseProperty.button[4], false)
 			guiSetProperty(purchaseProperty.button[4], "NormalTextColour", "FF00FF00")
 			if exports.global:hasItem(localPlayer, 262) and (cost <= 40000) and isHouse and not isRentable then
-				exports.hud:sendBottomNotification(localPlayer, "Tip", "You are using a new character, because of this you have a house token on your character which can be used to purchase this house!")
+				exports.hud:sendBottomNotification(localPlayer, "Tip", "Máš novou postavu, to znamená že múžeš využít tvůj token!")
 				guiSetEnabled(purchaseProperty.button[4], true)
 			end
 		end
@@ -752,12 +752,12 @@ function purchasePropertyGUI(interior, cost, isHouse, isRentable, neighborhood)
 	addEventHandler( "onClientGUIClick" ,purchaseProperty.button[2],
 	function()
 		local btnText = guiGetText(purchaseProperty.button[2])
-		if btnText == "Purchase via Bank" then
+		if btnText == "Zakoupit z Banky" then
 			triggerServerEvent("buypropertywithbank", localPlayer, interior, cost, isHouse, isRentable, guiRadioButtonGetSelected(purchaseProperty.rad[1]))
 			closePropertyGUI()
 		else
 			if isRentable then
-				outputChatBox("Factions can not own rentable properties at the moment.", 255, 0, 0)
+				outputChatBox("Frakce nemúžou vlastnit nemovitosti na pronájem.", 255, 0, 0)
 			else
 				startBuyingForFaction(interior, cost, isHouse, guiRadioButtonGetSelected(purchaseProperty.rad[1]))
 				--triggerServerEvent("buypropertyForFaction", localPlayer, interior, cost, isHouse, guiRadioButtonGetSelected(purchaseProperty.rad[1]), selectedFaction)
@@ -769,7 +769,7 @@ function purchasePropertyGUI(interior, cost, isHouse, isRentable, neighborhood)
 	addEventHandler( "onClientGUIClick" ,purchaseProperty.button[4],
 	function()
 		local btnText = guiGetText(purchaseProperty.button[4])
-		if btnText == "Preview Interior" then
+		if btnText == "Prohlídka Interiéru" then
 			triggerServerEvent("viewPropertyInterior", localPlayer, intID)
 			closePropertyGUI()
 		else
@@ -783,20 +783,20 @@ function purchasePropertyGUI(interior, cost, isHouse, isRentable, neighborhood)
     local interiorName = getElementData(interior, "name")
 	if isHouse then
 		local theTax = exports.payday:getPropertyTaxRate(0)
-		purchaseProperty.label[1] = guiCreateLabel(50, 26, 419, 18, "Please confirm the following information about this property.", false, purchaseProperty.window[1])
+		purchaseProperty.label[1] = guiCreateLabel(50, 26, 419, 18, "Prosím prověř si následující informace o nemovitosti.", false, purchaseProperty.window[1])
 		guiLabelSetHorizontalAlign(purchaseProperty.label[1], "center", false)
 		taxtax = cost * theTax
 		guiSetText(purchaseProperty.label[10], "$"..exports.global:formatMoney(taxtax).."")
 	elseif isRentable then
 		guiSetText(purchaseProperty.window[1], "Rent Property")
-		purchaseProperty.label[1] = guiCreateLabel(50, 26, 419, 18, "Please confirm the following information about this rentable property.", false, purchaseProperty.window[1])
+		purchaseProperty.label[1] = guiCreateLabel(50, 26, 419, 18, "Prosím prověř si následující informace o nemovitosti na pronájem.", false, purchaseProperty.window[1])
 		guiLabelSetHorizontalAlign(purchaseProperty.label[1], "center", false)
 		guiSetVisible(purchaseProperty.label[5], false)
 		guiSetText(purchaseProperty.label[4], "Cost per Payday:")
 	else
 		local theTax = exports.payday:getPropertyTaxRate(1)
 		guiSetText(purchaseProperty.window[1], "Purchase Business")
-		purchaseProperty.label[1] = guiCreateLabel(50, 26, 419, 18, "Please confirm the following information about this business property.", false, purchaseProperty.window[1])
+		purchaseProperty.label[1] = guiCreateLabel(50, 26, 419, 18, "Prosím prověř si následující informace o biznisu.", false, purchaseProperty.window[1])
 		guiLabelSetHorizontalAlign(purchaseProperty.label[1], "center", false)
 		taxtax = cost * theTax
 		guiSetText(purchaseProperty.label[10], "$"..exports.global:formatMoney(taxtax).."")
@@ -825,16 +825,16 @@ local factionBuyGUI = {
 function startBuyingForFaction(interior, cost, isHouse, furniture)
 	closeStartBuying()
 
-    factionBuyGUI.window[1] = guiCreateWindow(766, 385, 399, 121, "Select the faction for this interior", false)
+    factionBuyGUI.window[1] = guiCreateWindow(766, 385, 399, 121, "Vyber frakci pro tento interiér", false)
     guiWindowSetSizable(factionBuyGUI.window[1], false)
 	guiSetAlpha(factionBuyGUI.window[1], 0.89)
 	exports.global:centerWindow(factionBuyGUI.window[1])
 	guiSetEnabled(purchaseProperty.window[1], false)
 
-    factionBuyGUI.button[1] = guiCreateButton(13, 64, 111, 42, "Cancel", false, factionBuyGUI.window[1])
+    factionBuyGUI.button[1] = guiCreateButton(13, 64, 111, 42, "Zavřít", false, factionBuyGUI.window[1])
     guiSetProperty(factionBuyGUI.button[1], "NormalTextColour", "FFAAAAAA")
-    factionBuyGUI.combobox[1] = guiCreateComboBox(13, 35, 366, 113, "Select a faction to purchase for", false, factionBuyGUI.window[1])
-    factionBuyGUI.button[2] = guiCreateButton(268, 64, 111, 42, "Accept", false, factionBuyGUI.window[1])
+    factionBuyGUI.combobox[1] = guiCreateComboBox(13, 35, 366, 113, "Vyber frakci pro zakoupení", false, factionBuyGUI.window[1])
+    factionBuyGUI.button[2] = guiCreateButton(268, 64, 111, 42, "Zakoupit", false, factionBuyGUI.window[1])
     guiSetProperty(factionBuyGUI.button[2], "NormalTextColour", "FFAAAAAA")
 
     for k,v in pairs(getElementData(localPlayer, "faction")) do
@@ -846,11 +846,11 @@ function startBuyingForFaction(interior, cost, isHouse, furniture)
     addEventHandler("onClientGUIClick", factionBuyGUI.button[2], function()
     	local name = guiComboBoxGetItemText(factionBuyGUI.combobox[1], guiComboBoxGetSelected(factionBuyGUI.combobox[1]))
 
-    	if name ~= "Select a faction to purchase for" then
+    	if name ~= "Vyber frakci pro zakoupení" then
 			triggerServerEvent("buypropertyForFaction", localPlayer, interior, cost, isHouse, guiRadioButtonGetSelected(purchaseProperty.rad[1]), name)
     		closePropertyGUI()
     	else
-    		outputChatBox("Please select a faction.", 255, 0, 0)
+    		outputChatBox("Vyber frakci.", 255, 0, 0)
     	end
     end, false)
 

@@ -21,9 +21,9 @@ function canEnterInterior(theInterior)
 	if interiorID then
 		local interiorStatus = getElementData(theInterior, "status")
 		if interiorStatus.disabled then
-			return false, 1, "This interior is currently disabled."
+			return false, 1, "Tento interiér je momentálně deaktivován."
 		elseif interiorStatus.locked then
-			return false, 2, "You try to move the door handle, but you notice that the door is locked."
+			return false, 2, "Pokusíte se pohnout klikou, ale všimnete si, že jsou dveře zamčené."
 		end
 		return true
 	end
