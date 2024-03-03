@@ -104,9 +104,9 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 
 			if isClientBizOwner or exports.global:hasItem(localPlayer, 5, getElementDimension(localPlayer)) then
 				----------------------START EDIT CONTACT-------------------------------------------------------
-				tGoodBye = guiCreateTab ( "Edit Contact Info" , shopTabPanel )
+				tGoodBye = guiCreateTab ( "Upravit kontaktní informace" , shopTabPanel )
 
-				local lTitle1 = guiCreateLabel(11,19,716,56,("Edit Contact Info - "..bizName),false,tGoodBye)
+				local lTitle1 = guiCreateLabel(11,19,716,56,("Upravit kontaktní informace - "..bizName),false,tGoodBye)
 					--guiLabelSetVerticalAlign(lTitle1[1],"center")
 					guiLabelSetHorizontalAlign(lTitle1,"center",false)
 					guiSetFont(lTitle1, BizNoteFont)
@@ -128,11 +128,11 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 					sForum = sContactInfo[4] or ""
 				end
 
-				local lOwner = guiCreateLabel(11,75,100,20,"- Owner:",false,tGoodBye)
+				local lOwner = guiCreateLabel(11,75,100,20,"- Majitel:",false,tGoodBye)
 				local eOwner = guiCreateEdit(111,75,600,20,sOwner,false,tGoodBye)
-				local lPhone = guiCreateLabel(11,95,100,20,"- Phone Number:",false,tGoodBye)
+				local lPhone = guiCreateLabel(11,95,100,20,"- Telefonní číslo:",false,tGoodBye)
 				local ePhone = guiCreateEdit(111,95,600,20,sPhone,false,tGoodBye)
-				local lEmail = guiCreateLabel(11,115,100,20,"- Email Address:",false,tGoodBye)
+				local lEmail = guiCreateLabel(11,115,100,20,"- Emailová adresa:",false,tGoodBye)
 				local eEmail = guiCreateEdit(111,115,600,20,sEmail,false,tGoodBye)
 				local lForums = guiCreateLabel(11,135,100,20,"((Forums Name)):",false,tGoodBye)
 				local eForums = guiCreateEdit(111,135,600,20,sForum,false,tGoodBye)
@@ -142,12 +142,12 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 				guiEditSetMaxLength ( eEmail, 100 )
 				guiEditSetMaxLength ( eForums, 100 )
 
-				local lBizNote = guiCreateLabel(0.01,0.5,1,0.1,"- Biz Note:",true,tGoodBye)
+				local lBizNote = guiCreateLabel(0.01,0.5,1,0.1,"- Biz Poznámka:",true,tGoodBye)
 
 				local eBizNote = guiCreateEdit ( 0.01, 0.58, 0.98, 0.1,bizNote, true, tGoodBye)
 				guiEditSetMaxLength ( eBizNote, 100 )
 
-				bSend = guiCreateButton(0.01, 0.88, 0.49, 0.1, "Save", true, tGoodBye)
+				bSend = guiCreateButton(0.01, 0.88, 0.49, 0.1, "Uložit", true, tGoodBye)
 				local contactName, contactContent = nil
 
 				addEventHandler( "onClientGUIClick", bSend, function()
@@ -173,9 +173,9 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 				local GUIEditor_Memo = {}
 				local GUIEditor_Label = {}
 
-				tBizManagement = guiCreateTab ( "Business Management" , shopTabPanel )
+				tBizManagement = guiCreateTab ( "Obchodní management" , shopTabPanel )
 
-				GUIEditor_Label[1] = guiCreateLabel(11,19,716,56,"Business Management - "..bizName or "",false,tBizManagement)
+				GUIEditor_Label[1] = guiCreateLabel(11,19,716,56,"Obchodní management - "..bizName or "",false,tBizManagement)
 					--guiLabelSetVerticalAlign(GUIEditor_Label[1],"center")
 					guiLabelSetHorizontalAlign(GUIEditor_Label[1],"center",false)
 					guiSetFont(GUIEditor_Label[1], BizNoteFont)
@@ -186,7 +186,7 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 				local sSales = getElementData(ped, "sSales") or ""
 				local sProfit = sIncome-sPendingWage
 
-				guiSetText(lWelcomeText,'"Welcome boss! How are you doing?" || '..currentCap..'/'..sCapacity..' products , Total Income: $'..exports.global:formatMoney(sIncome)..'.')
+				guiSetText(lWelcomeText,'"Vítejte šéfe! Jak se máš?" || '..currentCap..'/'..sCapacity..' products , Total Income: $'..exports.global:formatMoney(sIncome)..'.')
 
 				GUIEditor_Label[2] = guiCreateLabel(11,75,716,20,"- Capacity: "..sCapacity.." (Max number of products the shop can hold, you have to pay $1/hour more for 5 additional products)",false,tBizManagement)
 				GUIEditor_Label[3] = guiCreateLabel(11,95,716,20,"- Income: $"..exports.global:formatMoney(sIncome),false,tBizManagement)
@@ -322,11 +322,11 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 					sForum = sContactInfo[4] or ""
 				end
 
-				local lOwner = guiCreateLabel(11,75,716,20,"- Owner: "..sOwner.."",false,tGoodBye)
-				local lPhone = guiCreateLabel(11,95,716,20,"- Phone Number: "..sFormatedPhone.."",false,tGoodBye)
-				local lEmail = guiCreateLabel(11,115,716,20,"- Email Address: "..sEmail.."",false,tGoodBye)
+				local lOwner = guiCreateLabel(11,75,716,20,"- Majitel: "..sOwner.."",false,tGoodBye)
+				local lPhone = guiCreateLabel(11,95,716,20,"- Telefonní číslo: "..sFormatedPhone.."",false,tGoodBye)
+				local lEmail = guiCreateLabel(11,115,716,20,"- Emailová adresa: "..sEmail.."",false,tGoodBye)
 				local lForums = guiCreateLabel(11,135,716,20,"- ((Forums Name: "..sForum.."))",false,tGoodBye)
-				local lGuide = guiCreateLabel(0.01,0.5,1,0.1,"        'Hey, I can pass your message to my bosses if you want': ",true,tGoodBye)
+				local lGuide = guiCreateLabel(0.01,0.5,1,0.1,"        'Hej, můžu předat tvůj vzkaz svým šéfům, jestli chceš': ",true,tGoodBye)
 
 				local eBargainName = guiCreateEdit ( 0.01, 0.58, 0.19, 0.1,"your identity", true, tGoodBye)
 				addEventHandler( "onClientGUIClick", eBargainName, function()
@@ -761,7 +761,7 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 				guiLabelSetHorizontalAlign(lWelcomeText,"center",false)
 				guiSetFont(lWelcomeText, BizNoteFont18)
 				if isClientBizOwner then
-					guiSetText(lWelcomeText,'"Welcome boss! How are you doing?"')
+					guiSetText(lWelcomeText,'"Vítejte šéfe! Jak se máš?"')
 				end
 				bCloseStatic[_] = guiCreateButton(0.85, 0.90 , 0.15, 0.089, "Close", true, tab)
 				guiSetFont(bCloseStatic[_], BizNoteFont2)
@@ -770,10 +770,10 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 
 			if isClientBizOwner or exports.global:hasItem(localPlayer, 5, getElementDimension(localPlayer)) then
 				----------------------START EDIT CONTACT-------------------------------------------------------
-				tGoodBye = guiCreateTab ( "Edit Contact Info" , tabpanel )
+				tGoodBye = guiCreateTab ( "Upravit kontaktní informace" , tabpanel )
 				guiSetInputEnabled(true)
 				showCursor(true)
-				local lTitle1 = guiCreateLabel(11,19,716,56,("Edit Contact Info - "..bizName),false,tGoodBye)
+				local lTitle1 = guiCreateLabel(11,19,716,56,("Upravit kontaktní informace - "..bizName),false,tGoodBye)
 					--guiLabelSetVerticalAlign(lTitle1[1],"center")
 					guiLabelSetHorizontalAlign(lTitle1,"center",false)
 					guiSetFont(lTitle1, BizNoteFont)
@@ -795,11 +795,11 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 					sForum = sContactInfo[4] or ""
 				end
 
-				local lOwner = guiCreateLabel(11,75,100,20,"- Owner:",false,tGoodBye)
+				local lOwner = guiCreateLabel(11,75,100,20,"- Majitel:",false,tGoodBye)
 				local eOwner = guiCreateEdit(111,75,600,20,sOwner,false,tGoodBye)
-				local lPhone = guiCreateLabel(11,95,100,20,"- Phone Number:",false,tGoodBye)
+				local lPhone = guiCreateLabel(11,95,100,20,"- Telefonní číslo:",false,tGoodBye)
 				local ePhone = guiCreateEdit(111,95,600,20,sPhone,false,tGoodBye)
-				local lEmail = guiCreateLabel(11,115,100,20,"- Email Address:",false,tGoodBye)
+				local lEmail = guiCreateLabel(11,115,100,20,"- Emailová adresa:",false,tGoodBye)
 				local eEmail = guiCreateEdit(111,115,600,20,sEmail,false,tGoodBye)
 				local lForums = guiCreateLabel(11,135,100,20,"((Forums Name)):",false,tGoodBye)
 				local eForums = guiCreateEdit(111,135,600,20,sForum,false,tGoodBye)
@@ -809,12 +809,12 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 				guiEditSetMaxLength ( eEmail, 100 )
 				guiEditSetMaxLength ( eForums, 100 )
 
-				local lBizNote = guiCreateLabel(0.01,0.5,1,0.1,"- Biz Note:",true,tGoodBye)
+				local lBizNote = guiCreateLabel(0.01,0.5,1,0.1,"- Biz Poznámka:",true,tGoodBye)
 
 				local eBizNote = guiCreateEdit ( 0.01, 0.58, 0.98, 0.1,bizNote, true, tGoodBye)
 				guiEditSetMaxLength ( eBizNote, 100 )
 
-				bSend = guiCreateButton(0.01, 0.88, 0.49, 0.1, "Save", true, tGoodBye)
+				bSend = guiCreateButton(0.01, 0.88, 0.49, 0.1, "Uložit", true, tGoodBye)
 				local contactName, contactContent = nil
 
 				addEventHandler( "onClientGUIClick", bSend, function()
@@ -840,9 +840,9 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 				local GUIEditor_Memo = {}
 				local GUIEditor_Label = {}
 
-				tBizManagement = guiCreateTab ( "Business Management" , tabpanel )
+				tBizManagement = guiCreateTab ( "Obchodní management" , tabpanel )
 
-				GUIEditor_Label[1] = guiCreateLabel(11,19,716,56,"Business Management - "..bizName or "",false,tBizManagement)
+				GUIEditor_Label[1] = guiCreateLabel(11,19,716,56,"Obchodní management - "..bizName or "",false,tBizManagement)
 					--guiLabelSetVerticalAlign(GUIEditor_Label[1],"center")
 					guiLabelSetHorizontalAlign(GUIEditor_Label[1],"center",false)
 					guiSetFont(GUIEditor_Label[1], BizNoteFont)
@@ -852,8 +852,8 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 				local sSales = getElementData(ped, "sSales") or ""
 				local sProfit = sIncome-sPendingWage
 
-				GUIEditor_Label[3] = guiCreateLabel(11,95,716,20,"- Income: $"..exports.global:formatMoney(sIncome),false,tBizManagement)
-				GUIEditor_Label[4] = guiCreateLabel(11,115,716,20,"- Staff Payment: $"..exports.global:formatMoney(sPendingWage),false,tBizManagement)
+				GUIEditor_Label[3] = guiCreateLabel(11,95,716,20,"- Příjem: $"..exports.global:formatMoney(sIncome),false,tBizManagement)
+				GUIEditor_Label[4] = guiCreateLabel(11,115,716,20,"- Platba zaměstnanců: $"..exports.global:formatMoney(sPendingWage),false,tBizManagement)
 				GUIEditor_Label[5] = guiCreateLabel(11,135,716,20,"- Profit: $"..exports.global:formatMoney(sProfit),false,tBizManagement)
 				GUIEditor_Label[6] = guiCreateLabel(11,155,57,19,"- Sales: ",false,tBizManagement)
 				GUIEditor_Memo[1] = guiCreateMemo(11,179,498,184,sSales,false,tBizManagement)
@@ -893,7 +893,7 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 
 				---------------------
 
-				local bOrderSupplies = guiCreateButton(0.695, 0.48, 0.3, 0.1, "Manage Stocks", true, tBizManagement)
+				local bOrderSupplies = guiCreateButton(0.695, 0.48, 0.3, 0.1, "Správa skladu", true, tBizManagement)
 				guiSetFont(bOrderSupplies, BizNoteFont2)
 				guiSetEnabled(bOrderSupplies, true)
 
@@ -975,11 +975,11 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 					sForum = sContactInfo[4] or ""
 				end
 
-				local lOwner = guiCreateLabel(11,75,716,20,"- Owner: "..sOwner.."",false,tGoodBye)
-				local lPhone = guiCreateLabel(11,95,716,20,"- Phone Number: "..sFormatedPhone.."",false,tGoodBye)
-				local lEmail = guiCreateLabel(11,115,716,20,"- Email Address: "..sEmail.."",false,tGoodBye)
+				local lOwner = guiCreateLabel(11,75,716,20,"- Majitel: "..sOwner.."",false,tGoodBye)
+				local lPhone = guiCreateLabel(11,95,716,20,"- Telefonní číslo: "..sFormatedPhone.."",false,tGoodBye)
+				local lEmail = guiCreateLabel(11,115,716,20,"- Emailová adresa: "..sEmail.."",false,tGoodBye)
 				local lForums = guiCreateLabel(11,135,716,20,"- ((Forums Name: "..sForum.."))",false,tGoodBye)
-				local lGuide = guiCreateLabel(0.01,0.5,1,0.1,"        'Hey, I can pass your message to my bosses if you want': ",true,tGoodBye)
+				local lGuide = guiCreateLabel(0.01,0.5,1,0.1,"        'Hej, můžu předat tvůj vzkaz svým šéfům, jestli chceš': ",true,tGoodBye)
 
 				local eBargainName = guiCreateEdit ( 0.01, 0.58, 0.19, 0.1,"your identity", true, tGoodBye)
 				addEventHandler( "onClientGUIClick", eBargainName, function()
@@ -992,7 +992,7 @@ function showGeneralshopUI(shop_type, race, gender, discount, products1)
 					guiSetText(eContent, "")
 				end, false )
 
-				bSend = guiCreateButton(0.01, 0.88, 0.49, 0.1, "Send", true, tGoodBye)
+				bSend = guiCreateButton(0.01, 0.88, 0.49, 0.1, "Poslat", true, tGoodBye)
 				local contactName, contactContent = nil
 				local cooldown = getElementData(localPlayer, "shop:coolDown:contact")
 				if not cooldown or getTickCount() - cooldown > 60000*coolDownSend then
@@ -1060,13 +1060,13 @@ function showStockGUI(ped, shop, intelement, shop_type)
 	if stockWindow and isElement(stockWindow) then
 		return false
 	end
-	stockWindow = guiCreateWindow(511, 293, 485, 333, "Manage Stocks", false)
+	stockWindow = guiCreateWindow(511, 293, 485, 333, "Správa skladu", false)
     guiWindowSetSizable(stockWindow, false)
 
     local stockGrid = guiCreateGridList(10, 27, 439, 260, false, stockWindow)
-    guiGridListAddColumn(stockGrid, "Product", 0.5)
-	guiGridListAddColumn(stockGrid, "$ Cost Per Unit", 0.2)
-    guiGridListAddColumn(stockGrid, "Quantity", 0.2)
+    guiGridListAddColumn(stockGrid, "Produkt", 0.5)
+	guiGridListAddColumn(stockGrid, "$ Cena za kus", 0.2)
+    guiGridListAddColumn(stockGrid, "Množství", 0.2)
 
 	local status = getElementData(intelement, "status") 
 	local supplies = fromJSON(status.supplies)
@@ -1154,10 +1154,10 @@ function showStockGUI(ped, shop, intelement, shop_type)
     local minus1 = guiCreateButton(451, 239, 25, 22, "-1", false, stockWindow)
 
 	local cost = 0
-    local stockCost = guiCreateLabel(25, 302, 157, 15, "Total Cost: $0", false, stockWindow)
+    local stockCost = guiCreateLabel(25, 302, 157, 15, "Celková cená: $0", false, stockWindow)
 	guiSetFont(stockCost, "default-bold-small")
-    local stockSave = guiCreateButton(336, 292, 114, 32, "Order", false, stockWindow)
-    local stockCancel = guiCreateButton(212, 292, 114, 32, "Cancel", false, stockWindow)
+    local stockSave = guiCreateButton(336, 292, 114, 32, "Objednat", false, stockWindow)
+    local stockCancel = guiCreateButton(212, 292, 114, 32, "Zrušit", false, stockWindow)
 
 	addEventHandler("onClientGUIClick", stockWindow, function()
 		if source == stockCancel then

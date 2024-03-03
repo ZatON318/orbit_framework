@@ -419,7 +419,7 @@ function storeKeeperSay(thePlayer, content, pedName)
 	if languagename == "<Invalid/Bugged Language>" then
 		outputDebugString("LANGUAGE " .. tostring(languageslot) .. " " .. tostring(language) )
 	end
-	exports.global:sendLocalText(thePlayer, "["..(languagename or 'English').."] "..tostring(pedName).." says: "..content, 255, 255, 255, 30, {}, true)
+	exports.global:sendLocalText(thePlayer, "["..(languagename or 'English').."] "..tostring(pedName).." říka: "..content, 255, 255, 255, 30, {}, true)
 end
 addEvent("shop:storeKeeperSay", true )
 addEventHandler("shop:storeKeeperSay", getRootElement(), storeKeeperSay)

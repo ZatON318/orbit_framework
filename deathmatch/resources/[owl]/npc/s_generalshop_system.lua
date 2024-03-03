@@ -892,11 +892,11 @@ function updateShopSupplies(interiorID, supplies, thePlayer, cost, pedName)
 	local updateSupplies = fromJSON(status.supplies)
 	local haulSupplies = {}
 	for i, v in pairs(supplies) do
-		updateSupplies[i] = (updateSupplies[i] or 0) + math.ceil(v/2)
-		haulSupplies[i] = math.floor(v/2)
+		updateSupplies[i] = (updateSupplies[i] or 0) + math.ceil(v)
+		haulSupplies[i] = math.floor(0)
 	end
 
-	local success, why = exports['job-system-trucker']:remoteOrderSupplies(thePlayer, haulSupplies, cost, false)
+	local success, why = true, nil--exports['job-system-trucker']:remoteOrderSupplies(thePlayer, haulSupplies, cost, false)
 	if success then
 		local query = mysql:query_free("UPDATE interiors SET supplies='" .. mysql:escape_string(toJSON(updateSupplies)) .. "' WHERE id='" .. interiorID .. "'")
 		if query then
@@ -904,7 +904,7 @@ function updateShopSupplies(interiorID, supplies, thePlayer, cost, pedName)
 			setElementData(source, "status", status)
 			exports.bank:takeBankMoney(thePlayer, cost)
 			exports.bank:addBankTransactionLog(getElementData(thePlayer, "dbid"), nil, cost, 0, "SHOP RESTOCK", "Purchased "..tostring(cost).."$ worth of supplies for business ID"..tostring(interiorID), nil, nil)
-			storeKeeperSay(thePlayer, "We have stocked your business with half of your order. The other half has been sent to RS Haul delivery drivers.", pedName)
+			storeKeeperSay(thePlayer, "Naskladnili jsme vaši firmu.", pedName)
 		end
 	else
 		outputChatBox(why, thePlayer, 255, 0, 0)

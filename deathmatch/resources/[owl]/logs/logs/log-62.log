@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+{"action":27,"origin":"ac2","date":"2024-03-03T21:04:08","phones":[],"objects":[],"characters":[],"vehicles":[],"interiors":[],"accounts":[2],"content":"Connected from 192.168.56.1 - 9F9B2E173D6A3E6B999F7DCB30480170","factions":[]}
+{"action":27,"origin":"ac2","date":"2024-03-03T21:04:16","phones":[],"objects":[],"characters":[2],"vehicles":[],"interiors":[],"accounts":[2],"content":"Spawned","factions":[]}
+=======
 {"action":27,"origin":"ac2","date":"2024-03-03T11:53:27","phones":[],"objects":[],"characters":[],"vehicles":[],"interiors":[],"accounts":[2],"content":"Connected from 192.168.56.1 - 9F9B2E173D6A3E6B999F7DCB30480170","factions":[]}
 {"action":27,"origin":"ac2","date":"2024-03-03T11:53:36","phones":[],"objects":[],"characters":[2],"vehicles":[],"interiors":[],"accounts":[2],"content":"Spawned","factions":[]}
 {"action":37,"origin":"ch2","date":"2024-03-03T11:57:30","phones":[],"objects":[],"characters":[],"vehicles":[],"interiors":[2],"accounts":[],"content":"ADDINTERIOR T:0 I:86 C:1","factions":[]}
@@ -45,3 +49,4 @@
 {"action":31,"origin":"ch2","date":"2024-03-03T15:38:44","phones":[],"objects":[],"characters":[2],"vehicles":[],"interiors":[2],"accounts":[],"content":"EXITED","factions":[]}
 {"action":40,"origin":"ch2","date":"2024-03-03T15:38:54","phones":[],"objects":[],"characters":[2],"vehicles":[],"interiors":[],"accounts":[],"content":"Jarda Lesik strčí klíč do dveří a zamkne je.","factions":[]}
 {"action":31,"origin":"ch2","date":"2024-03-03T15:38:54","phones":[],"objects":[],"characters":[],"vehicles":[],"interiors":[4],"accounts":[],"content":"LOCK INTERIOR","factions":[]}
+>>>>>>> 4ccc645febc6359cadb823041a42a30d7be8e91d
