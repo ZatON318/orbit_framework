@@ -326,6 +326,7 @@ g_items = {
 	[7896] = { "Peněžní poukázka", "Vypisovatel: Hotel John", 4, 2894, 0, 0, 0, -0.01, weight = 0.01 },
 
 	[259] = { "Tablet", "Tablet, vypadá jako nový", 7, 330, 90, 90, 0, 0, weight = 0.3 },
+	[271] = { "Shell Casing", "#v", 4, 2061, 90, 0, 0, 0, weight = 0.1, scale = 0.2 }, 
 
 	--Basic resources
 	--[[[260] = { "Šrot", "spousta různého šrotu", 11, 330, 0, 0, 0, 0, weight = 0.5 },

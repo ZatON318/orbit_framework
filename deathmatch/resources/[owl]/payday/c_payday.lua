@@ -7,32 +7,32 @@ function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, v
 	local info = {}
 	-- output payslip
 	--outputChatBox("-------------------------- PAY SLIP --------------------------", 255, 194, 14)
-	table.insert(info, {"Payslip"})	
+	table.insert(info, {"Výplatní páska"})	
 	table.insert(info, {""})
 	--table.insert(info, {""})
 	-- state earnings/money from faction
 	if not (faction) then
 		if (pay + tax > 0) then
 			--outputChatBox(, 255, 194, 14, true)
-			table.insert(info, {"  State Benefits: $" .. exports.global:formatMoney(pay+tax)})	
+			table.insert(info, {"  Státní přídavky: $" .. exports.global:formatMoney(pay+tax)})	
 		end
 	else
 		if (pay + tax > 0) then
 			--outputChatBox(, 255, 194, 14, true)
-			table.insert(info, {"  Wage Paid: $" .. exports.global:formatMoney(pay+tax)})
+			table.insert(info, {"  Mzda: $" .. exports.global:formatMoney(pay+tax)})
 		end
 	end
 	
 	-- business profit
 	if (profit > 0) then
 		--outputChatBox(, 255, 194, 14, true)
-		table.insert(info, {"  Business Profit: $" .. exports.global:formatMoney(profit)})
+		table.insert(info, {"  Obchodní zisk: $" .. exports.global:formatMoney(profit)})
 	end
 	
 	-- bank interest
 	if (interest > 0) then
 		--outputChatBox(,255, 194, 14, true)
-		table.insert(info, {"  Bank Interest: $" .. exports.global:formatMoney(interest) .. " (≈" ..("%.2f"):format(Perc) .. "%)"})
+		table.insert(info, {"  Bankovní úrok: $" .. exports.global:formatMoney(interest) .. " (≈" ..("%.2f"):format(Perc) .. "%)"})
 	end
 	
 	-- donator money (nonRP)

@@ -19,36 +19,36 @@ ADMIN_GROUPS = {14, 18, 17, 64, 15}
 
 staffTitles = {
 	[1] = {
-		[0] = "Player",
-		[1] = "Trial Administrator",
-		[2] = "Administrator",
-		[3] = "Senior Administrator",
-		[4] = "Lead Administrator",
-		[5] = "Head Administrator"
+		[0] = "Hráč",
+		[1] = "Pomocný Admin",
+		[2] = "Admin",
+		[3] = "Senior Admin",
+		[4] = "Hlavný Admin",
+		[5] = "Majitel"
 	}, 
 	[2] = {
-		[0] = "Player",
-		[1] = "Supporter",
-		[2] = "Supporter Manager",
+		[0] = "Hráč",
+		[1] = "Support",
+		[2] = "Support Manager",
 	}, 
 	[3] = {
-		[0] = "Player",
+		[0] = "Hráč",
 		[1] = "VT Member",
-		[2] = "VT Leader",
+		[2] = "VCT",
 	}, 
 	[4] = {
-		[0] = "Player",
+		[0] = "Hráč",
 		[1] = "Script Tester",
 		[2] = "Trial Scripter",
 		[3] = "Scripter",
 	}, 
 	[5] = {
-		[0] = "Player",
+		[0] = "Hráč",
 		[1] = "Mapper",
-		[2] = "Lead Mapper",
+		[2] = "Hlavný Mapper",
 	}, 
 	[6] = {
-		[0] = "Player",
+		[0] = "Hráč",
 		[1] = "FT Member",
 		[2] = "FT Leader",
 	}

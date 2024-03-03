@@ -179,11 +179,11 @@ function isPlayerIA( player )
 end
 
 adminTitles = {
-	[1] = "Trial Admin",
+	[1] = "Pomocný Admin",
 	[2] = "Admin",
 	[3] = "Senior Admin",
-	[4] = "Lead Admin",
-	[5] = "Head Admin",
+	[4] = "Hlavný Admin",
+	[5] = "Majitel",
 	[10] = "Scripter",
 }
 

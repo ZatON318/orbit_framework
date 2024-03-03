@@ -51,14 +51,14 @@ function getCateIDFromName(name)
 end
 
 local perms = {
-	[0] = "Player",
-	[1] = "Trial Admin",
+	[0] = "Hráč",
+	[1] = "Pomocný Admin",
 	[2] = "Admin",
 	[3] = "Senior Admin",
-	[4] = "Lead Admin",
-	[5] = "Head Admin",
-	[11] = "Supporter",
-	[21] = "VCT Member",
+	[4] = "Hlavný Admin",
+	[5] = "Majitel",
+	[11] = "Support",
+	[21] = "VCT",
 	[31] = "Mapper",
 	[41] = "Scripter",
 }
@@ -81,27 +81,27 @@ function F1RPhelp( key, keyState )
 		local xmlOverview = xmlLoadFile( "commands/overview.xml" )
 		local xmlRules = xmlLoadFile( "commands/rules.xml" )
 
-		myWindow = guiCreateWindow ( 0, 0, 800, 600, "OwlGaming - Help Center", false )
+		myWindow = guiCreateWindow ( 0, 0, 800, 600, "Orbit - Centrum nápovědy", false )
 		exports.global:centerWindow(myWindow)
 		guiWindowSetSizable(myWindow, false)
 		local tabPanel = guiCreateTabPanel ( 0, 0.04, 1, 1, true, myWindow )
 
-		gui.reportWindow.main = guiCreateTab( "Report Center", tabPanel )
+		gui.reportWindow.main = guiCreateTab( "Reporty", tabPanel )
         -- draw the upper part of the tab.
         populateReportCenter()
 
 
-		local tabCommands = guiCreateTab( "Commands & Controls Help", tabPanel )
+		local tabCommands = guiCreateTab( "Nápověda k příkazům a ovládacím prvkům", tabPanel )
 		local tabCommands2, newCmdBtn = nil, nil
 
-		local tabRules = guiCreateTab( "Server Rules", tabPanel )
+		local tabRules = guiCreateTab( "Pravidla serveru", tabPanel )
 		--[[local memoRules = guiCreateMemo (  0.02, 0.02, 0.96, 0.96, getElementData(getResourceRootElement(getResourceFromName("account-system")), "rules:text") or "Error fetching rules...", true, tabRules )
 		guiMemoSetReadOnly(memoRules, true)]]
 		
 		local browserRules = guiCreateBrowser(0.02, 0.02, 0.96, 0.96, false, false, true, tabRules)
 		local browser = guiGetBrowser(browserRules)
 		
-		addEventHandler("onClientBrowserCreated", browser, function()
+		--[[addEventHandler("onClientBrowserCreated", browser, function()
 			if isBrowserDomainBlocked("docs.owlgaming.net") or isBrowserDomainBlocked("media.readthedocs.org") then
 				requestBrowserDomains({"docs.owlgaming.net", "media.readthedocs.org"}, false, function(accepted, newDomains)
 					loadBrowserURL(source, "http://docs.owlgaming.net/")
@@ -109,13 +109,13 @@ function F1RPhelp( key, keyState )
 			else
 				loadBrowserURL(source, "http://docs.owlgaming.net/")
 			end
-		end)
+		end)--]]
 
-		local tabExplained = guiCreateTab( "Roleplay Explained", tabPanel )
+		local tabExplained = guiCreateTab( "Roleplay vysvětleno", tabPanel )
 		local memoExplained = guiCreateMemo ( 0.02, 0.02, 0.96, 0.96, xmlNodeGetValue( xmlExplained ), true, tabExplained )
 		guiMemoSetReadOnly(memoExplained, true)
 
-		local tabOverview = guiCreateTab( "Roleplay Overview", tabPanel )
+		local tabOverview = guiCreateTab( "Přehled roleplay", tabPanel )
 		local memoOverview = guiCreateMemo ( 0.02, 0.02, 0.96, 0.96, xmlNodeGetValue( xmlOverview ), true, tabOverview )
 		guiMemoSetReadOnly(memoOverview, true)
 
@@ -178,17 +178,17 @@ function F1RPhelp( key, keyState )
 		local browserMantis = guiCreateBrowser(0.02, 0.02, 0.96, 0.96, false, false, true, tabMantis)
 		local mantisBrowser = guiGetBrowser(browserMantis)
 		
-		addEventHandler("onClientBrowserCreated", mantisBrowser, function()
+		--[[addEventHandler("onClientBrowserCreated", mantisBrowser, function()
 			if isBrowserDomainBlocked("bugs.owlgaming.net") then
 				requestBrowserDomains({"bugs.owlgaming.net"}, false, function(accepted, newDomains)
-					--[[ The reason I don't use source here on the loadBrowser is that the source of this callback isn't the browser
-					so to prevent the warning and the hassle of the user reopening the UI I just target the browser directly.]] 
+					 The reason I don't use source here on the loadBrowser is that the source of this callback isn't the browser
+					so to prevent the warning and the hassle of the user reopening the UI I just target the browser directly.
 					loadBrowserURL(mantisBrowser, "http://bugs.owlgaming.net/")
 				end)
 			else
 				loadBrowserURL(source, "http://bugs.owlgaming.net/")
 			end
-		end)
+		end)]]
 
 		-- this is to prevent binds while typing.
 		addEventHandler("onClientGUIFocus", myWindow, function()
@@ -208,7 +208,7 @@ addEventHandler("viewF1Help", getRootElement(), F1RPhelp)
 addCommandHandler('report', F1RPhelp)
 
 local function checkReportLength()
-	guiSetText(gui.reportWindow.memo_details_desc, "Length: " .. string.len(tostring(guiGetText(gui.reportWindow.memo_details)))-1 .. "/150")
+	guiSetText(gui.reportWindow.memo_details_desc, "Délka: " .. string.len(tostring(guiGetText(gui.reportWindow.memo_details)))-1 .. "/150")
 
 	if (tonumber(string.len(tostring(guiGetText(gui.reportWindow.memo_details))))-1>150) then
 		guiLabelSetColor(gui.reportWindow.memo_details_desc, 255, 0, 0)
@@ -271,14 +271,14 @@ local function checkNameExists()
 	end
 
 	if (count>1) then
-		guiSetText(gui.reportWindow.label_player_desc, "Multiple Found - Will take yourself to submit.")
+		guiSetText(gui.reportWindow.label_player_desc, "Nalezeno několik shod, buďte konkretnější")
 		guiLabelSetColor(gui.reportWindow.label_player_desc, 255, 255, 0)
 	elseif (count==1) then
-		guiSetText(gui.reportWindow.label_player_desc, "Player Found: " .. getPlayerName(found) .. " (ID #" .. getElementData(found, "playerid") .. ")")
+		guiSetText(gui.reportWindow.label_player_desc, "Hráč nalezen: " .. getPlayerName(found) .. " (ID #" .. getElementData(found, "playerid") .. ")")
 		guiLabelSetColor(gui.reportWindow.label_player_desc, 0, 255, 0)
 		reportedPlayer = found
 	elseif (count==0) then
-		guiSetText(gui.reportWindow.label_player_desc, "Player not found - Will take yourself to submit.")
+		guiSetText(gui.reportWindow.label_player_desc, "Hráč nenalezen ")
 		guiLabelSetColor(gui.reportWindow.label_player_desc, 255, 0, 0)
 	end
 end
@@ -293,19 +293,19 @@ function populateReportCenter( submited )
 	gui.reportWindow.topPanel = guiCreateScrollPane(10+margin, 8+margin, 762, 454, false, gui.reportWindow.main)
 	local pending_report = getElementData( localPlayer, "reportNum")
 	if submited then
-		local l = guiCreateLabel ( 0, 0, 1, 1, "Thank you for submitting your report. Please allow us a couple of minutes to reach back to you.", true, gui.reportWindow.topPanel )
+		local l = guiCreateLabel ( 0, 0, 1, 1, "Děkujeme za odeslání reportu. Dejte nám prosím pár minut, abychom vás kontaktovali.", true, gui.reportWindow.topPanel )
 		guiLabelSetVerticalAlign( l, 'center' )
 		guiLabelSetHorizontalAlign( l, 'center' )
 		exports.global:playSoundSuccess()
 	elseif pending_report then
-		local l = guiCreateLabel ( 0, 0, 1, 1, "Your report ID #" .. (pending_report[8] or "").. " is still pending.\nPlease wait or type /er to close this report before submitting another one.", true, gui.reportWindow.topPanel )
+		local l = guiCreateLabel ( 0, 0, 1, 1, "Tvúj report ID #" .. (pending_report[8] or "").. " stále čeká na zpracování.\nPřed odesláním dalšího čekejte prosím nebo zadejte /er pro uzavření tohoto hlášení.", true, gui.reportWindow.topPanel )
 		guiLabelSetVerticalAlign( l, 'center' )
 		guiLabelSetHorizontalAlign( l, 'center' )
 	else
-		gui.reportWindow.label_type = guiCreateLabel(23, 22, 351, 22, "What are you reporting about?", false, gui.reportWindow.topPanel)
+		gui.reportWindow.label_type = guiCreateLabel(23, 22, 351, 22, "Co chcete reportnout ?", false, gui.reportWindow.topPanel)
         guiSetFont(gui.reportWindow.label_type, "default-bold-small")
 
-        gui.reportWindow.combo_type = guiCreateComboBox(23, 44, 351, 27, "Report type", false, gui.reportWindow.topPanel)
+        gui.reportWindow.combo_type = guiCreateComboBox(23, 44, 351, 27, "Typ reportu", false, gui.reportWindow.topPanel)
         local reportTypes = exports.report:getReportTypes()
         for key, value in ipairs( reportTypes ) do
 			guiComboBoxAddItem(gui.reportWindow.combo_type, value[1])
@@ -316,7 +316,7 @@ function populateReportCenter( submited )
         guiLabelSetHorizontalAlign(gui.reportWindow.label_type_desc, "center", true)
         guiLabelSetVerticalAlign(gui.reportWindow.label_type_desc, "center")
 
-        gui.reportWindow.label_details = guiCreateLabel(23, 81, 351, 22, "Please add any details that might help us help you:", false, gui.reportWindow.topPanel)
+        gui.reportWindow.label_details = guiCreateLabel(23, 81, 351, 22, "Přidejte jakékoli podrobnosti, které by nám mohly pomoci: ", false, gui.reportWindow.topPanel)
         guiSetFont(gui.reportWindow.label_details, "default-bold-small")
 
         gui.reportWindow.memo_details = guiCreateMemo(23, 109, 714, 139, "", false, gui.reportWindow.topPanel)
@@ -327,17 +327,17 @@ function populateReportCenter( submited )
         guiSetFont(gui.reportWindow.memo_details_desc, "default-bold-small")
         guiLabelSetHorizontalAlign(gui.reportWindow.memo_details_desc, "right", false)
 
-        gui.reportWindow.label_player = guiCreateLabel(23, 265, 351, 22, "Player you wish to report (Optional):", false, gui.reportWindow.topPanel)
+        gui.reportWindow.label_player = guiCreateLabel(23, 265, 351, 22, "Hráč, kterého chcete nahlásit (Volitelné):", false, gui.reportWindow.topPanel)
         guiSetFont(gui.reportWindow.label_player, "default-bold-small")
 
-        gui.reportWindow.edit_player = guiCreateEdit(23, 287, 351, 34, "Player Partial Name / ID", false, gui.reportWindow.topPanel)
+        gui.reportWindow.edit_player = guiCreateEdit(23, 287, 351, 34, "Částečné jméno / ID hráče", false, gui.reportWindow.topPanel)
         addEventHandler("onClientGUIChanged", gui.reportWindow.edit_player, checkNameExists, false)
 
         gui.reportWindow.label_player_desc = guiCreateLabel(390, 287, 347, 34, "", false, gui.reportWindow.topPanel)
         guiSetFont(gui.reportWindow.label_player_desc, "default-bold-small")
         guiLabelSetVerticalAlign(gui.reportWindow.label_player_desc, "center")
 
-        gui.reportWindow.btn_submit = guiCreateButton(23, 343, 143, 34, "Submit", false, gui.reportWindow.topPanel)
+        gui.reportWindow.btn_submit = guiCreateButton(23, 343, 143, 34, "Odeslat", false, gui.reportWindow.topPanel)
         guiSetAlpha(gui.reportWindow.btn_submit, 0.50)
         guiSetEnabled( gui.reportWindow.btn_submit, canISubmit() )
 

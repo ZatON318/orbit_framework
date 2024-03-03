@@ -222,7 +222,7 @@ function publicSellProperty(thePlayer, dbid, showmessages, givemoney, CLEANUP)
 				mysql:query_free("DELETE FROM interior_business WHERE intID='" .. dbid .. "'")
 			end
 
-			local gov = exports.factions:getFactionFromID(3)
+			local gov = exports.factions:getFactionFromID(4)
 
 			if interiorStatus.owner == getElementData(thePlayer, "dbid") then
 				local money = math.ceil(interiorStatus.cost * 2/3)
@@ -451,12 +451,12 @@ function buyInterior(player, pickup, cost, isHouse, isRentable)
 	if exports.global:takeMoney(player, cost) then
 		if (isHouse) then
 			outputChatBox("Congratulations! You have just bought this house for $" .. exports.global:formatMoney(cost) .. ".", player, 255, 194, 14)
-			exports.global:giveMoney( getTeamFromName("Government of Los Santos"), cost )
+			exports.global:giveMoney( getTeamFromName("Vláda"), cost )
 		elseif (isRentable) then
 			outputChatBox("Congratulations! You are now renting this property for $" .. exports.global:formatMoney(cost) .. ".", player, 255, 194, 14)
 		else
 			outputChatBox("Congratulations! You have just bought this business for $" .. exports.global:formatMoney(cost) .. ".", player, 255, 194, 14)
-			exports.global:giveMoney( getTeamFromName("Government of Los Santos"), cost )
+			exports.global:giveMoney( getTeamFromName("Vláda"), cost )
 		end
 
 		local charid = getElementData(player, "dbid")
@@ -494,7 +494,7 @@ function buypropertyForFaction(interior, cost, isHouse, furniture, factionName)
 		outputChatBox("Could not take money from your faction bank.", source, 255, 0, 0)
 		return
 	end
-	local gov = getTeamFromName("Government of Los Santos")
+	local gov = getTeamFromName("Vláda")
 	local intName = getElementData(interior,"name")
 	local intId = getElementData(interior, "dbid")
 	exports.global:giveMoney( gov, cost )
@@ -551,16 +551,16 @@ function buyInteriorCash(pickup, cost, isHouse, isRentable, furniture)
 		local charid = getElementData(client, "dbid")
 		local pickupid = getElementData(pickup, "dbid")
 		local intName = getElementData(pickup, "name")
-		local gov = getTeamFromName("Government of Los Santos")
+		local gov = getTeamFromName("Vláda")
 		if (isHouse) then
-			outputChatBox("Congratulations! You have just bought this house for $" .. exports.global:formatMoney(cost) .. ".", client, 255, 194, 14)
+			outputChatBox("Gratulujeme! Právě jste koupili tento dům za $" .. exports.global:formatMoney(cost) .. ".", client, 255, 194, 14)
 			exports.global:giveMoney( gov, cost )
 			exports.bank:addBankTransactionLog(charid, -(getElementData(gov, "id")), cost, 5 , "Interior Purchase", intName.." (ID: "..pickupid..")" )
 		elseif (isRentable) then
-			outputChatBox("Congratulations! You are now renting this property for $" .. exports.global:formatMoney(cost) .. ".", client, 255, 194, 14)
+			outputChatBox("Gratulujeme! Nyní si pronajímáte tuto nemovitost za $" .. exports.global:formatMoney(cost) .. ".", client, 255, 194, 14)
 		else
-			outputChatBox("Congratulations! You have just bought this business for $" .. exports.global:formatMoney(cost) .. ".", client, 255, 194, 14)
-			exports.global:giveMoney( getTeamFromName("Government of Los Santos"), cost )
+			outputChatBox("Gratulujeme! Právě jste koupili tuto firmu za $" .. exports.global:formatMoney(cost) .. ".", client, 255, 194, 14)
+			exports.global:giveMoney( getTeamFromName("Vláda"), cost )
 			exports.bank:addBankTransactionLog(charid, -(getElementData(gov, "id")), cost, 5 , "Interior Purchase", intName.." (ID: "..pickupid..")" )
 		end
 
@@ -610,7 +610,7 @@ function buyInteriorBank(pickup, cost, isHouse, isRentable, furniture)
 	else
 		local charid = getElementData(client, "dbid")
 		local pickupid = getElementData(pickup, "dbid")
-		local gov = getTeamFromName("Government of Los Santos")
+		local gov = getTeamFromName("Vláda")
 		local intName = getElementData(pickup, "name")
 		if (isHouse) then
 			outputChatBox("Congratulations! You have just bought this house for $" .. exports.global:formatMoney(cost) .. ".", client, 255, 194, 14)
@@ -1068,7 +1068,7 @@ function lockUnlockHouseEvent(player, checkdistance)
 					exports["interior-manager"]:addInteriorLogs(itemValue, "unlock without key", source)
 				end
 			else
-				triggerEvent('sendAme', source, "puts the key in the door to unlock it.")
+				triggerEvent('sendAme', source, "vloží klíč do dveří a odemkne je.")
 			end
 			exports.logs:dbLog(source, 31, {  "in"..tostring(itemValue) }, "UNLOCK INTERIOR")
 		else --shit
@@ -1083,7 +1083,7 @@ function lockUnlockHouseEvent(player, checkdistance)
 					exports["interior-manager"]:addInteriorLogs(itemValue, "lock without key", source)
 				end
 			else
-				triggerEvent('sendAme', source, "puts the key in the door to lock it.")
+				triggerEvent('sendAme', source, "strčí klíč do dveří a zamkne je.")
 			end
 			exports.logs:dbLog(source, 31, {  "in"..tostring(itemValue) }, "LOCK INTERIOR")
 		end
@@ -1134,7 +1134,7 @@ addEventHandler( "lockUnlockHouseID", root,
 							exports["interior-manager"]:addInteriorLogs(id, "unlock without key", source)
 						end
 					else
-						triggerEvent('sendAme', source, "puts the key in the door to unlock it.")
+						triggerEvent('sendAme', source, "vloží klíč do dveří a odemkne je.")
 					end
 					exports.logs:dbLog(source, 31, {  "in"..tostring(id) }, "UNLOCK INTERIOR")
 				else
@@ -1148,7 +1148,7 @@ addEventHandler( "lockUnlockHouseID", root,
 							exports["interior-manager"]:addInteriorLogs(id, "lock without key", source)
 						end
 					else
-						triggerEvent('sendAme', source, "puts the key in the door to lock it.")
+						triggerEvent('sendAme', source, "strčí klíč do dveří a zamkne je.")
 					end
 					exports.logs:dbLog(source, 31, {  "in"..tostring(id) }, "LOCK INTERIOR")
 				end
